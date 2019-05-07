@@ -1,154 +1,77 @@
-import {Component} from "@angular/core";
-import * as Hammer from "hammerjs";
-import { MapService } from "./map.service";
-import { Coordinate } from "./utils/coordinate.util"
-// import { BackendService } from "../backend/backend.service";
+import {Component, AfterContentInit} from '@angular/core';
+import * as Hammer from 'hammerjs';
+// import { MapService } from "./map.service";
+import { Coordinate } from './backend/utils/coordinate.util';
+import { MapFile, MapData} from './utils/map.util';
+import { BluetoothBackendService as BackendService} from './backend/bluetooth-backend.service';
 
-interface MapFile {
-    urls: string[];
-    res: number;
-}
-
-// interface IconSet {
-//     self: HTMLImageElement,
-//     frdClr: HTMLImageElement,
-//     frd1: HTMLImageElement,
-//     frd2: HTMLImageElement,
-//     frd3: HTMLImageElement,
-//     foe1: HTMLImageElement,
-//     foe2: HTMLImageElement,
-//     foe3: HTMLImageElement,
-//     unid: HTMLImageElement,
-//     green: HTMLImageElement,
-//     obj: HTMLImageElement,
-// }
+// Test
+import { PrimMap } from './utils/prim.map';
+import { Layer } from './layers/layer';
+import { MapLayer } from './layers/map.layer';
 
 @Component({
-    selector: "map",
-    styleUrls: [ "./map.component.scss" ],
+    selector: 'map',
+    styleUrls: ['./map.component.scss'],
     templateUrl: 'map.component.html',
 
 })
-export class MapComponent {
-    // new //////////////////////////
-    private origin: Coordinate = new Coordinate();
-    /////////////////////////////////
+export class MapComponent implements AfterContentInit {
+    private _canvas: HTMLCanvasElement;
+    private _ctx: CanvasRenderingContext2D;
+    private _mc: HammerManager;
 
-    mapfile: MapFile;
-    map: HTMLImageElement;
-    map2: HTMLImageElement;
-    marker: HTMLImageElement;
-    mc: HammerManager;
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
+    private _layers: Array<Layer> = [];
+    private _mapfile: MapFile = null;
+    private _origin: Coordinate = new Coordinate();
 
-    date: Date = new Date()
+    // //gridColor: string = "rgba(255, 255, 210, 0.4)";
+    // colors = {
+    //     black : "rgba(0,0,0,1)",
+    //     lightBlack: "rgba(0,0,0,0.7)",
+    //     testGray: "rgba(200, 200, 200, 1)"
+    // }
+    // gridColor: string = "rgba(105, 200, 205, 0.35)";
+    // hColor: string = "rgba(105, 200, 205, 0.75)";
+    // hColorSoft: string = "rgba(105, 200, 205, 0.25)"
 
-    // iconset: IconSet;
+    // maps: HTMLImageElement[] = [];
 
-    //gridColor: string = "rgba(255, 255, 210, 0.4)";
-    colors = {
-        black : "rgba(0,0,0,1)",
-        lightBlack: "rgba(0,0,0,0.7)",
-        testGray: "rgba(200, 200, 200, 1)"
+    // // Quick and Dirty
+    // dragX: number = 0;
+    // dragY: number = 0;
+    // dragItemX: number = 0;
+    // dragItemY: number = 0;
+
+
+    constructor(private _backend: BackendService) {
+        this._mapfile = new PrimMap();
     }
-    gridColor: string = "rgba(105, 200, 205, 0.35)";
-    hColor: string = "rgba(105, 200, 205, 0.75)";
-    hColorSoft: string = "rgba(105, 200, 205, 0.25)" 
-
-    dx: number = 0;
-    mx: number = 0;
-    my: number = 0;
-    dy: number = 0;
-    dWidth: number;
-    dHeight: number;
-    mouseX: string = '';
-    mouseY: string = '';
-
-    maps: HTMLImageElement[] = []; 
-
-    // Quick and Dirty
-    dragX: number = 0;
-    dragY: number = 0;
-    dragItemX: number = 0;
-    dragItemY: number = 0;
-    
-
-    constructor(private mapService: MapService, /*public backend: BackendService*/) {
-        this.map = new Image();
-        this.mapfile = {
-            urls: [
-                'assets/maps/mahlwinkel/base.png',
-                'assets/maps/mahlwinkel/streets.png'
-            ],
-            res: 2.6
-        };
-        this.mapService.connect(this);
-
-        for(let url of this.mapfile.urls){
-            let map = new Image();
-
-            map.src = url;
-            this.maps.push(map)
-        }
-
-        //this.loadIcons();
-    }
-
-    /*loadIcons() {
-        this.iconset = {
-            self: new Image(),
-            frdClr: new Image(),
-            frd1: new Image(),
-            frd2: new Image(),
-            frd3: new Image(),
-            foe1: new Image(),
-            foe2: new Image(),
-            foe3: new Image(),
-            unid: new Image(),
-            green: new Image(),
-            obj: new Image(),
-        }
-        this.iconset.frdClr.src = "assets/img/marker/m_friend_big.png";
-        this.iconset.frd1.src = "assets/img/marker/m_friend_1.png";
-        this.iconset.frd2.src = "assets/img/marker/m_friend_2.png";
-        this.iconset.frd3.src = "assets/img/marker/m_friend_3.png";
-        this.iconset.foe1.src = "assets/img/marker/m_foe_1.png";
-        this.iconset.foe2.src = "assets/img/marker/m_foe_2.png";
-        this.iconset.foe3.src = "assets/img/marker/m_foe_3.png";
-        this.iconset.unid.src = "assets/img/marker/m_unid.png";
-        this.iconset.green.src = "assets/img/marker/m_green.png";
-        this.iconset.obj.src = "assets/img/marker/m_object.png";
-    }*/
 
     ngAfterContentInit() {
-        this.canvas = document.getElementById("cMap") as HTMLCanvasElement;
-        this.ctx = this.canvas.getContext("2d");
-        this.mc = new Hammer(this.canvas);
+        this._canvas = document.getElementById('cMap') as HTMLCanvasElement;
+        this._ctx = this._canvas.getContext('2d');
+        this._mc = new Hammer(this._canvas);
 
-        window.addEventListener("resize", this.handleWindowResize.bind(this));
-        // this.canvas.addEventListener("mousemove", (e: any)=>{
-        //     this.mouseX = ((e.offsetX * this.zoom + this.sx) / this.mapfile.res).toFixed(2);
-        // })
+        // Add map layers
+        this._layers.push(new MapLayer(this._canvas, this._ctx, this._mapfile));
 
-        this.maps[0].onload = () => {
-            // this.handleWindowResize();
-            this.addPan.call(this);
-            // this.addPinch.call(this);
-            // this.addScroll.call(this);
-            // this.canvas.addEventListener("click", this.handleCLick.bind(this));
-            // this.canvas.addEventListener("mousedown", this.handleDragDown.bind(this));
-            // this.canvas.addEventListener("mousemove", this.handleDrag.bind(this));
-            // window.addEventListener("mouseup", this.handleDragUp.bind(this));
-            // document.addEventListener("keydown", this.handleDelete.bind(this));
-        };
-
-        window.setInterval(() => {
-            console.log("timeout");
-            this.updateMap();
-        }, 1000);
+        // while (!this._mapfile.isReady) {}
+        // Add event listeners
+        this.startListenToResize();
+        this.startListenToPan();
+        this.startListenToPinch();
+    //         // this.addScroll.call(this);
+    //         // this.canvas.addEventListener("click", this.handleCLick.bind(this));
+    //         // this.canvas.addEventListener("mousedown", this.handleDragDown.bind(this));
+    //         // this.canvas.addEventListener("mousemove", this.handleDrag.bind(this));
+    //         // window.addEventListener("mouseup", this.handleDragUp.bind(this));
+    //         // document.addEventListener("keydown", this.handleDelete.bind(this));
+    // }
+        // this._mapfile.layers[0].image.onload = () => {
+        //     this.update();
+        // };
     }
-
     // handleDelete(ev: KeyboardEvent){
     //     if(this.mapService.selected && ev.key=="Delete"){
     //         let token = this.mapService.selected;
@@ -175,7 +98,7 @@ export class MapComponent {
     //     if(this.mapService.selected && this.mapService.selected.isTracked == false){
     //         let ox = ((this.mapService.selected.px * this.mapfile.res) - this.sx + mx) * (1/this.zoom) + 24;
     //         let oy = ((this.mapService.selected.py * this.mapfile.res) - this.sy + my) * (1/this.zoom) + 24;
-    
+
     //         if(ev.clientX > ox && ev.clientX < (ox + 48) && ev.clientY > oy && ev.clientY < (oy + 48)){
     //             this.mapService.dragged = this.mapService.selected;
     //             this.dragX = ev.clientX;
@@ -212,7 +135,7 @@ export class MapComponent {
     //             return x == this.mapService.dragged;
     //         })
     //         let token = this.mapService.tokens[idx];
-    
+
     //         if(token.type == "fr1" || token.type == "fr2" || token.type == "fr3"){
     //             this.mapService.updateUntrackedToken(token);
     //         }else if(token.type == "foe1" || token.type == "foe2" || token.type == "foe3")
@@ -270,60 +193,64 @@ export class MapComponent {
     //     return pos;
     // }
 
-    public handleWindowResize() {
-        const width = this.canvas.clientWidth;
-        const height = this.canvas.clientHeight;
+    public startListenToResize() {
+        window.addEventListener('resize', () => {
+            const width = this._canvas.clientWidth;
+            const height = this._canvas.clientHeight;
 
-        this.canvas.width = width;
-        this.canvas.height = height;
+            this._canvas.width = width;
+            this._canvas.height = height;
 
-        this.updateMap.call(this);
+            this.update.call(this);
+        });
     }
 
-    private addPan() {
+    private startListenToPan() {
         let offset = {x: 0, y: 0};
 
-        this.mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
-        this.mc.on("panstart", (e) => {
+        this._mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
+        this._mc.on('panstart', (e: HammerInput) => {
             offset = Coordinate.offset;
-        });
-        this.mc.on("pan", (e: any) => {
 
-            if (e.maxPointers == 1) {
-                Coordinate.offset = {
-                    x: offset.x - e.deltaX * Coordinate.scale, //Math.max(Math.min(0, this.mx), Math.min(Math.max(0, this.mx), offset.x - e.deltaX * Coordinate.scale)),
-                    y: offset.y - e.deltaY * Coordinate.scale//Math.max(Math.min(0, this.my), Math.min(Math.max(0, this.my), offset.y - e.deltaY * Coordinate.scale))
-                }
-                this.updateMap();
+            for (const layer of this._layers) {
+                layer.onPanStart(e);
             }
+        });
+        this._mc.on('pan', (e: HammerInput) => {
+            for (const layer of this._layers) {
+                layer.onPan(e, offset);
+            }
+            this.update();
+        });
+    }
+
+    private startListenToPinch() {
+        let pinch = 0;
+        let center = {x: 0, y: 0};
+        let offset = {x: 0, y: 0};
+
+        this._mc.add ( new Hammer.Pinch());
+        this._mc.on('pinchstart', (e: HammerInput) => {
+            pinch = Coordinate.scale;
+            center = {x: e.center.x, y: e.center.y};
+            offset = Coordinate.offset;
+
+            for (const layer of this._layers) {
+                layer.onPinchStart(e);
+            }
+        });
+        this._mc.on('pinch', (e: HammerInput) => {
+            for (const layer of this._layers) {
+                layer.onPinch(e, pinch, center, offset);
+            }
+            this.update();
         });
     }
 
     // private addPinch() {
-    //     let pinch = 0;
-    //     let centerX = 0;
-    //     let centerY = 0;
-    //     let px = 0;
-    //     let py = 0;
+
 
     //     let maxz = Math.max((this.maps[0].width + 128) / this.canvas.width, (this.maps[0].height + 128) / this.canvas.height);
-
-    //     this.mc.add ( new Hammer.Pinch());
-    //     this.mc.on("pinchstart", (e) => {
-    //         pinch = this.zoom;
-    //         centerX = e.center.x;
-    //         centerY = e.center.y;
-    //         px = this.sx;
-    //         py = this.sy;
-    //     });
-    //     this.mc.on("pinch", (e) => {
-    //         this.zoom = Math.min(Math.max(0.75, pinch * (1 / e.scale)), maxz);
-    //         this.mx = this.maps[0].width  - this.canvas.width * this.zoom;
-    //         this.my = this.maps[0].height - this.canvas.height * this.zoom;
-    //         this.sx = Math.max(Math.min(0, this.mx), Math.min(Math.max(0, this.mx), px + (centerX * pinch - centerX * this.zoom)));
-    //         this.sy = Math.max(Math.min(0, this.my), Math.min(Math.max(0, this.my), py + (centerY * pinch - centerY * this.zoom)));
-    //         this.updateMap();
-    //     });
     // }
 
     // private addScroll() {
@@ -341,27 +268,19 @@ export class MapComponent {
     //     });
     // }
 
-    public updateMap() {
-        /*const sWidth = this.zoom * (this.canvas.width);
-        const sHeight = this.zoom * (this.canvas.height);
+    public update() {
+        this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
-        this.mx = this.maps[0].width  - this.canvas.width * this.zoom;
-        this.my = this.maps[0].height - this.canvas.height * this.zoom;
-        */
-
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        for(let map of this.maps){
-            //this.ctx.drawImage(map, this.sx, this.sy, sWidth, sHeight, 0, 0, this.canvas.width, this.canvas.height);
+        for (const layer of this._layers) {
+            layer.draw();
         }
+        // this.ctx.clearRect(0,0,32,this.canvas.height);
+        // this.ctx.clearRect(0,0,this.canvas.width,32);
+        // this.ctx.clearRect(this.canvas.width-32,0,32,this.canvas.height);
+        // this.ctx.clearRect(0,this.canvas.height-32,this.canvas.width,32);
 
-        this.ctx.clearRect(0,0,32,this.canvas.height);
-        this.ctx.clearRect(0,0,this.canvas.width,32);
-        this.ctx.clearRect(this.canvas.width-32,0,32,this.canvas.height);
-        this.ctx.clearRect(0,this.canvas.height-32,this.canvas.width,32);
-        
-        //this.drawGrid();
-        //this.drawMarker();
+        // this.drawGrid();
+        // this.drawMarker();
     }
 
     // private drawGrid() {
@@ -393,19 +312,19 @@ export class MapComponent {
     //         this.ctx.lineTo(ox + 16, wy + oy);
     //         this.ctx.stroke();
     //         this.ctx.closePath();
-    
+
     //         this.ctx.beginPath();
     //         this.ctx.moveTo(wx + ox - 16, oy);
     //         this.ctx.lineTo(wx + ox - 16, wy + oy);
     //         this.ctx.stroke();
     //         this.ctx.closePath();
-    
+
     //         this.ctx.beginPath();
     //         this.ctx.moveTo(ox, oy + 16);
     //         this.ctx.lineTo(ox + wx, oy + 16);
     //         this.ctx.stroke();
     //         this.ctx.closePath();
-    
+
     //         this.ctx.beginPath();
     //         this.ctx.moveTo(ox, wy + oy - 16);
     //         this.ctx.lineTo(ox + wx, wy + oy - 16);
@@ -433,9 +352,9 @@ export class MapComponent {
     //                 this.ctx.strokeStyle= this.hColor;
     //                 this.ctx.lineWidth = 1;
 
-    //                 if((w + 5.5) > 32 && (w + 5.5) < this.canvas.width - 32 && (w + 6) >= (-this.sx + mx) * (1 / this.zoom) && 
+    //                 if((w + 5.5) > 32 && (w + 5.5) < this.canvas.width - 32 && (w + 6) >= (-this.sx + mx) * (1 / this.zoom) &&
     //                    (h + 5.5) > 32 && (h + 5.5) < this.canvas.height - 32 && (h + 6) >= (-this.sy + my)* (1 / this.zoom)){
-    //                     this.ctx.beginPath(); 
+    //                     this.ctx.beginPath();
     //                     this.ctx.moveTo(w, h + 0.5);
     //                     this.ctx.lineTo(w + length, h + 0.5);
     //                     this.ctx.moveTo(w + 0.5, h);
@@ -466,13 +385,13 @@ export class MapComponent {
     //     function drawLines(){
     //         const sWidth = width / 3;
     //         const sHeight = height / 3;
-            
+
     //         const nbx = ex / width;
     //         const nby = ey / height;
-    
+
     //         for(let i = 0; i < nbx; i++) {
     //             let w = Math.floor((i * width - this.sx + mx) * (1 / this.zoom));
-                
+
     //             this.ctx.strokeStyle= this.colors.lightBlack;
     //             this.ctx.lineWidth = 1;
 
@@ -480,7 +399,7 @@ export class MapComponent {
     //                 let sw = Math.floor(w + (j * sWidth) * (1 / this.zoom));
 
     //                 if(sw > 32 && sw < (-this.sx + mx + ex) * (1/this.zoom) && sw < this.canvas.width - 32){
-    //                     this.ctx.beginPath(); 
+    //                     this.ctx.beginPath();
     //                     this.ctx.moveTo(sw + 0.5,  Math.max(32, (-this.sy + my) * (1/this.zoom)));
     //                     this.ctx.lineTo(sw + 0.5, Math.min(oy + wy - 16 ,(-this.sy + my + ey) * (1/this.zoom)));
     //                     this.ctx.stroke();
@@ -495,14 +414,14 @@ export class MapComponent {
     //                 this.ctx.beginPath();
     //                 this.ctx.moveTo(w, oy + 0.5);
     //                 this.ctx.lineTo(w, oy + 15.5);
-    //                 this.ctx.stroke(); 
+    //                 this.ctx.stroke();
     //                 this.ctx.moveTo(w,  Math.max(32, (-this.sy + my) * (1/this.zoom)));
     //                 this.ctx.lineTo(w, Math.min(oy + wy - 16 ,(-this.sy + my + ey) * (1/this.zoom)));
     //                 this.ctx.stroke();
     //                 this.ctx.closePath();
     //             }
     //         }
-    
+
     //         for(let i = 0; i < nby; i++) {
     //             let h = Math.floor((i * height - this.sy + my) * (1 / this.zoom));
 
@@ -513,7 +432,7 @@ export class MapComponent {
     //                 let sh = Math.floor(h + (j * sHeight) * (1 / this.zoom));
 
     //                 if(sh > 32 && sh < (-this.sy + my + ey) * (1/this.zoom) && sh < (oy + wy - 16)){
-    //                     this.ctx.beginPath(); 
+    //                     this.ctx.beginPath();
     //                     this.ctx.moveTo( Math.max(32, (-this.sx + mx) * (1/this.zoom)), sh + 0.5);
     //                     this.ctx.lineTo(Math.min(wx + ox - 16, (-this.sx + mx + ex) * (1/this.zoom)), sh + 0.5);
     //                     this.ctx.stroke();
@@ -525,7 +444,7 @@ export class MapComponent {
     //             this.ctx.lineWidth = 2;
 
     //             if(h > 32 && h < this.canvas.height - 32){
-    //                 this.ctx.beginPath(); 
+    //                 this.ctx.beginPath();
     //                 this.ctx.moveTo( Math.max(32, (-this.sx + mx) * (1/this.zoom)), h);
     //                 this.ctx.lineTo( Math.min(wx + ox, (-this.sx + mx + ex) * (1/this.zoom)), h);
     //                 this.ctx.stroke();
@@ -538,13 +457,13 @@ export class MapComponent {
 
     //         //     for(let j = 0; j < nby; j++) {
     //         //         let h = (j * height - this.sy) * (1 / this.zoom);
-                    
+
     //         //         for(let k = 1; k < 5; k++){
     //         //             let sw = Math.floor(w + (k * sWidth) * (1 / this.zoom));
 
     //         //             for(let l = 1; l < 5; l++){
     //         //                 let sh = Math.floor(h + (l * sHeight) * (1 / this.zoom));
-                            
+
     //         //                 if (sh > 32 && sw > 32 && sh < oy + wy - 16 && sw < ox + wx - 16){
     //         //                     this.ctx.fillStyle = "rgba(0, 200, 200, 0.75)";
     //         //                     //this.ctx.fillRect(sw-0.5, sh-0.5, 1.5, 1.5);
@@ -569,17 +488,17 @@ export class MapComponent {
     //             this.ctx.fillStyle = this.hColor;
     //             this.ctx.fillText("X" + i, w + (width * (1 / this.zoom) / 2) - 7, oy + 4);
     //         }
-    
+
     //         for(let i = 0; i < nby; i++) {
     //             let h = Math.floor((i * height - this.sy + my) * (1 / this.zoom));
-                
+
     //             this.ctx.clearRect(ox - 8, h + (height * (1 / this.zoom) / 2) - 16, 16, 32);
     //             this.ctx.font = "12px Arial";
     //             this.ctx.fillStyle = this.hColor;
     //             this.ctx.fillText("Y" + i, ox - 8, h + (height * (1 / this.zoom) / 2) + 4);
     //         }
     //     }
-        
+
     //     drawBoundary.call(this);
     //     //drawCrosses.call(this);
     //     drawLines.call(this);
@@ -613,39 +532,39 @@ export class MapComponent {
     //             }
     //             case "fr1": {
     //                icon = this.iconset.frd1;
-    //                break; 
+    //                break;
     //             }
     //             case "fr2": {
     //                 icon = this.iconset.frd2;
-    //                 break; 
+    //                 break;
     //              }
     //              case "fr3": {
     //                 icon = this.iconset.frd3;
-    //                 break; 
+    //                 break;
     //              }
     //              case "foe1": {
     //                 icon = this.iconset.foe1;
-    //                 break; 
+    //                 break;
     //              }
     //              case "foe2": {
     //                  icon = this.iconset.foe2;
-    //                  break; 
+    //                  break;
     //               }
     //               case "foe3": {
     //                  icon = this.iconset.foe3;
-    //                  break; 
+    //                  break;
     //               }
     //               case "obj": {
     //                 icon = this.iconset.obj;
-    //                 break; 
+    //                 break;
     //              }
     //              case "green": {
     //                 icon = this.iconset.green;
-    //                 break; 
+    //                 break;
     //              }
     //              case "unid": {
     //                 icon = this.iconset.unid;
-    //                 break; 
+    //                 break;
     //              }
     //         }
 
