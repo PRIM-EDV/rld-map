@@ -7,4 +7,5 @@ export abstract class Layer {
     public onPan(e: HammerInput, offset: {x: number, y: number}) {}
     public onPinchStart(e: HammerInput) {}
     public onPinch(e: HammerInput, pinch: number, center: {x: number, y: number}, offset: {x: number, y: number}) {}
+    public onScroll(e: MouseWheelEvent) {}
 }

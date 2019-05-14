@@ -1,14 +1,16 @@
-import {Component, AfterContentInit} from '@angular/core';
+import {Component, AfterContentInit, ViewChild} from '@angular/core';
 import * as Hammer from 'hammerjs';
 // import { MapService } from "./map.service";
 import { Coordinate } from './backend/utils/coordinate.util';
 import { MapFile, MapData} from './utils/map.util';
 import { BluetoothBackendService as BackendService} from './backend/bluetooth-backend.service';
+import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
 
 // Test
 import { PrimMap } from './utils/prim.map';
 import { Layer } from './layers/layer';
 import { MapLayer } from './layers/map.layer';
+
 
 @Component({
     selector: 'map',
@@ -24,6 +26,9 @@ export class MapComponent implements AfterContentInit {
     private _layers: Array<Layer> = [];
     private _mapfile: MapFile = null;
     private _origin: Coordinate = new Coordinate();
+
+    @ViewChild(WheelMenuComponent)
+    private _wheelMenu: WheelMenuComponent;
 
     // //gridColor: string = "rgba(255, 255, 210, 0.4)";
     // colors = {
@@ -61,6 +66,8 @@ export class MapComponent implements AfterContentInit {
         this.startListenToResize();
         this.startListenToPan();
         this.startListenToPinch();
+        this.startListenToScroll();
+
     //         // this.addScroll.call(this);
     //         // this.canvas.addEventListener("click", this.handleCLick.bind(this));
     //         // this.canvas.addEventListener("mousedown", this.handleDragDown.bind(this));
@@ -247,11 +254,13 @@ export class MapComponent implements AfterContentInit {
         });
     }
 
-    // private addPinch() {
-
-
-    //     let maxz = Math.max((this.maps[0].width + 128) / this.canvas.width, (this.maps[0].height + 128) / this.canvas.height);
-    // }
+    private startListenToScroll() {
+        document.addEventListener('wheel', (e: any) => {
+            for (const layer of this._layers) {
+                layer.onScroll(e);
+            }
+        });
+    }
 
     // private addScroll() {
     //     let maxz = Math.max((this.maps[0].width + 128) / this.canvas.width, (this.maps[0].height + 128) / this.canvas.height);
