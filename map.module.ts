@@ -13,6 +13,6 @@ import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
           ])
     ],
     declarations: [MapComponent, WheelMenuComponent],
-    exports: [MapComponent],
+    exports: [MapComponent, WheelMenuComponent],
 })
 export class MapModule {}

@@ -3,7 +3,7 @@ import * as Hammer from 'hammerjs';
 // import { MapService } from "./map.service";
 import { Coordinate } from './backend/utils/coordinate.util';
 import { MapFile, MapData} from './utils/map.util';
-import { BluetoothBackendService as BackendService} from './backend/bluetooth-backend.service';
+import { HttpBackendService as BackendService} from './backend/http-backend.service';
 import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
 
 // Test
