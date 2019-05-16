@@ -1,7 +1,7 @@
 import { Layer } from './layer';
 import { MapFile } from '../utils/map.util';
 import { Coordinate } from '../backend/utils/coordinate.util';
-import { Direction } from '../backend/utils/Direction.util';
+import { Direction } from '../backend/utils/direction.util';
 import { ViewController } from '@ionic/core';
 import { _createNgProbe } from '@angular/platform-browser/src/dom/debug/ng_probe';
 
@@ -42,6 +42,15 @@ export class MapLayer extends Layer {
         Coordinate.offset = {
             x: offset.x - (center.x * (Coordinate.scale - pinch)),
             y: offset.y - (center.y * (Coordinate.scale - pinch))
+        };
+    }
+
+    public onScroll(e: WheelEvent) {
+        const scale = Coordinate.scale;
+        Coordinate.scale = scale * (1 + e.deltaY / 1000);
+        Coordinate.offset = {
+            x: Coordinate.offset.x - (e.x * (Coordinate.scale - scale)),
+            y: Coordinate.offset.y - (e.y * (Coordinate.scale - scale))
         };
     }
 }

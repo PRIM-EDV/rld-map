@@ -30,18 +30,6 @@ export class MapComponent implements AfterContentInit {
     @ViewChild(WheelMenuComponent)
     private _wheelMenu: WheelMenuComponent;
 
-    // //gridColor: string = "rgba(255, 255, 210, 0.4)";
-    // colors = {
-    //     black : "rgba(0,0,0,1)",
-    //     lightBlack: "rgba(0,0,0,0.7)",
-    //     testGray: "rgba(200, 200, 200, 1)"
-    // }
-    // gridColor: string = "rgba(105, 200, 205, 0.35)";
-    // hColor: string = "rgba(105, 200, 205, 0.75)";
-    // hColorSoft: string = "rgba(105, 200, 205, 0.25)"
-
-    // maps: HTMLImageElement[] = [];
-
     // // Quick and Dirty
     // dragX: number = 0;
     // dragY: number = 0;
@@ -67,8 +55,7 @@ export class MapComponent implements AfterContentInit {
         this.startListenToPan();
         this.startListenToPinch();
         this.startListenToScroll();
-
-    //         // this.addScroll.call(this);
+        this.startListenToClick();
     //         // this.canvas.addEventListener("click", this.handleCLick.bind(this));
     //         // this.canvas.addEventListener("mousedown", this.handleDragDown.bind(this));
     //         // this.canvas.addEventListener("mousemove", this.handleDrag.bind(this));
@@ -200,6 +187,19 @@ export class MapComponent implements AfterContentInit {
     //     return pos;
     // }
 
+    public startListenToClick() {
+        this._canvas.addEventListener('click', (e: MouseEvent) => {
+            if (e.button === 0) {
+                this._wheelMenu.close();
+            }
+        });
+        this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
+            e.preventDefault();
+            const position = {x: e.x, y: e.y};
+            this._wheelMenu.open(position);
+        });
+    }
+
     public startListenToResize() {
         window.addEventListener('resize', () => {
             const width = this._canvas.clientWidth;
@@ -262,34 +262,12 @@ export class MapComponent implements AfterContentInit {
         });
     }
 
-    // private addScroll() {
-    //     let maxz = Math.max((this.maps[0].width + 128) / this.canvas.width, (this.maps[0].height + 128) / this.canvas.height);
-
-    //     this.canvas.addEventListener("wheel", (e: any) => {
-    //         let pinch = this.zoom;
-
-    //         this.zoom = Math.min(Math.max(0.75, this.zoom * (1 + e.deltaY / 1000)), maxz);
-    //         this.mx = this.maps[0].width  - this.canvas.width * this.zoom;
-    //         this.my = this.maps[0].height - this.canvas.height * this.zoom;
-    //         this.sx = Math.max(Math.min(0, this.mx), Math.min(Math.max(0, this.mx), this.sx + (e.x * pinch - e.x * this.zoom)));
-    //         this.sy = Math.max(Math.min(0, this.my), Math.min(Math.max(0, this.my), this.sy + (e.y * pinch - e.y * this.zoom)));
-    //         this.updateMap();
-    //     });
-    // }
-
     public update() {
         this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
 
         for (const layer of this._layers) {
             layer.draw();
         }
-        // this.ctx.clearRect(0,0,32,this.canvas.height);
-        // this.ctx.clearRect(0,0,this.canvas.width,32);
-        // this.ctx.clearRect(this.canvas.width-32,0,32,this.canvas.height);
-        // this.ctx.clearRect(0,this.canvas.height-32,this.canvas.width,32);
-
-        // this.drawGrid();
-        // this.drawMarker();
     }
 
     // private drawGrid() {
