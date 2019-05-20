@@ -1,9 +1,9 @@
-import {Component, AfterContentInit, ViewChild, Injector, Input} from '@angular/core';
+import {Component, ViewChild, Injector, Input, AfterViewInit} from '@angular/core';
 import * as Hammer from 'hammerjs';
+import { BackendService } from './backend/backend.service';
 // import { MapService } from "./map.service";
 import { Coordinate } from './backend/utils/coordinate.util';
 import { MapFile, MapData} from './utils/map.util';
-import { HttpBackendService as BackendService} from './backend/http-backend.service';
 import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
 
 // Test
@@ -12,15 +12,16 @@ import { Layer } from './layers/layer';
 import { MapLayer } from './layers/map.layer';
 
 
+
 @Component({
     selector: 'map',
     styleUrls: ['./map.component.scss'],
     templateUrl: 'map.component.html',
 
 })
-export class MapComponent implements AfterContentInit {
+export class MapComponent implements AfterViewInit {
     @Input() _backend: BackendService;
-    
+
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
     private _mc: HammerManager;
@@ -40,10 +41,12 @@ export class MapComponent implements AfterContentInit {
 
 
     constructor() {
+
         this._mapfile = new PrimMap();
     }
 
-    ngAfterContentInit() {
+    ngAfterViewInit() {
+        alert(this._backend.getMapObject('test'));
         this._canvas = document.getElementById('cMap') as HTMLCanvasElement;
         this._ctx = this._canvas.getContext('2d');
         this._mc = new Hammer(this._canvas);
