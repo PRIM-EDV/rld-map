@@ -3,6 +3,7 @@ import { MapComponent } from './map.component';
 import { RouterModule } from '@angular/router';
 import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
 
+
 @NgModule({
     imports: [
         RouterModule.forChild([
@@ -13,6 +14,6 @@ import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
           ])
     ],
     declarations: [MapComponent, WheelMenuComponent],
-    exports: [MapComponent],
+    exports: [MapComponent, WheelMenuComponent],
 })
 export class MapModule {}

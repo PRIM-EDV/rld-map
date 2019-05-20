@@ -2,8 +2,6 @@ import { Layer } from './layer';
 import { MapFile } from '../utils/map.util';
 import { Coordinate } from '../backend/utils/coordinate.util';
 import { Direction } from '../backend/utils/direction.util';
-import { ViewController } from '@ionic/core';
-import { _createNgProbe } from '@angular/platform-browser/src/dom/debug/ng_probe';
 
 export class MapLayer extends Layer {
     private _canvas: HTMLCanvasElement;
