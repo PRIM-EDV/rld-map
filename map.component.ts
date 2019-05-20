@@ -1,4 +1,4 @@
-import {Component, AfterContentInit, ViewChild} from '@angular/core';
+import {Component, AfterContentInit, ViewChild, Injector, Input} from '@angular/core';
 import * as Hammer from 'hammerjs';
 // import { MapService } from "./map.service";
 import { Coordinate } from './backend/utils/coordinate.util';
@@ -19,6 +19,8 @@ import { MapLayer } from './layers/map.layer';
 
 })
 export class MapComponent implements AfterContentInit {
+    @Input() _backend: BackendService;
+    
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
     private _mc: HammerManager;
@@ -37,7 +39,7 @@ export class MapComponent implements AfterContentInit {
     // dragItemY: number = 0;
 
 
-    constructor(private _backend: BackendService) {
+    constructor() {
         this._mapfile = new PrimMap();
     }
 
