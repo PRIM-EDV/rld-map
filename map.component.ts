@@ -56,12 +56,6 @@ export class MapComponent implements AfterContentInit {
         this.startListenToPinch();
         this.startListenToScroll();
         this.startListenToClick();
-    //         // this.canvas.addEventListener("click", this.handleCLick.bind(this));
-    //         // this.canvas.addEventListener("mousedown", this.handleDragDown.bind(this));
-    //         // this.canvas.addEventListener("mousemove", this.handleDrag.bind(this));
-    //         // window.addEventListener("mouseup", this.handleDragUp.bind(this));
-    //         // document.addEventListener("keydown", this.handleDelete.bind(this));
-    // }
         // this._mapfile.layers[0].image.onload = () => {
         //     this.update();
         // };
@@ -144,35 +138,6 @@ export class MapComponent implements AfterContentInit {
     //         }
     //         this.mapService.dragged = null;
     //     }
-    // }
-
-    // private handleCLick(ev: MouseEvent) {
-    //     const mx = 384;
-    //     const my = 336;
-
-    //     let selected = null;
-
-    //     for(let m of this.mapService.tokens){
-    //         let ox = ((m.px * this.mapfile.res) - this.sx + mx) * (1/this.zoom) + 24;
-    //         let oy = ((m.py * this.mapfile.res) - this.sy + my) * (1/this.zoom) + 24;
-
-    //         if(ev.clientX > ox && ev.clientX < (ox + 48) && ev.clientY > oy && ev.clientY < (oy + 48)){
-    //             console.log(ev.clientX);
-    //             console.log(ev.clientY);
-
-    //             selected = m;
-    //         }
-    //     }
-
-    //     if(selected){
-    //         this.mapService.selected = selected;
-    //     }else{
-    //         this.mapService.selected = null;
-    //     }
-
-    //     console.log(selected);
-
-    //     this.updateMap();
     // }
 
     // getCenter(){
