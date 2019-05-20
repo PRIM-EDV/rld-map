@@ -10,7 +10,7 @@ let url = "http://192.168.2.57:3000/"
 })
 export class HttpBackendService extends BackendService {
 
-    constructor(){
+    constructor(private _http: HttpClient){
         super();
     }
 
