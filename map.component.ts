@@ -11,8 +11,6 @@ import { PrimMap } from './utils/prim.map';
 import { Layer } from './layers/layer';
 import { MapLayer } from './layers/map.layer';
 
-
-
 @Component({
     selector: 'map',
     styleUrls: ['./map.component.scss'],
@@ -46,7 +44,7 @@ export class MapComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        alert(this._backend.getMapObject('test'));
+        console.log(this._backend.getMapObject('test'));
         this._canvas = document.getElementById('cMap') as HTMLCanvasElement;
         this._ctx = this._canvas.getContext('2d');
         this._mc = new Hammer(this._canvas);
