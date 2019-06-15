@@ -1,3 +1,5 @@
-export class Context {
-    public items: Array<any> = [];
+export class Context{
+    public buttons: Array<any>;
+    public sliders: Array<any>;
+
 }
