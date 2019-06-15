@@ -1,4 +1,5 @@
 import {Component, AfterContentInit} from '@angular/core';
+import { ObjectContext } from './contexts/objects.context';
 
 @Component({
     selector: 'wheel-menu',
