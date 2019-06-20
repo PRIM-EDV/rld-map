@@ -10,6 +10,7 @@ import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
 import { PrimMap } from './utils/prim.map';
 import { Layer } from './layers/layer';
 import { MapLayer } from './layers/map.layer';
+import { IconLayer } from './layers/icon.layer';
 
 @Component({
     selector: 'map',
@@ -19,7 +20,7 @@ import { MapLayer } from './layers/map.layer';
 })
 export class MapComponent implements AfterViewInit {
     @Input() _backend: BackendService;
-
+    
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
     private _mc: HammerManager;
@@ -37,20 +38,19 @@ export class MapComponent implements AfterViewInit {
     // dragItemX: number = 0;
     // dragItemY: number = 0;
 
-
     constructor() {
 
         this._mapfile = new PrimMap();
     }
 
     ngAfterViewInit() {
-        console.log(this._backend.getMapObject('test'));
         this._canvas = document.getElementById('cMap') as HTMLCanvasElement;
         this._ctx = this._canvas.getContext('2d');
         this._mc = new Hammer(this._canvas);
 
         // Add map layers
         this._layers.push(new MapLayer(this._canvas, this._ctx, this._mapfile));
+        this._layers.push(new IconLayer(this._canvas, this._ctx, this._backend));
 
         // while (!this._mapfile.isReady) {}
         // Add event listeners

@@ -3,6 +3,7 @@ import { MapComponent } from './map.component';
 import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { PopupMenuComponent } from './popup-menu/popup-menu.component';
 
 
 @NgModule({
@@ -15,7 +16,7 @@ import { RouterModule } from '@angular/router';
             }
           ])
     ],
-    declarations: [MapComponent, WheelMenuComponent],
-    exports: [MapComponent, WheelMenuComponent],
+    declarations: [MapComponent, WheelMenuComponent, PopupMenuComponent],
+    exports: [MapComponent, WheelMenuComponent, PopupMenuComponent],
 })
 export class MapModule {}

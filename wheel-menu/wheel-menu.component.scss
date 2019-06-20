@@ -24,46 +24,98 @@ div#wheel-menu {
     
     div.button {
         position: absolute;
-        image-rendering: pixelated;
+        //image-rendering: pixelated;
         width: 48px;
         height: 48px;
         // border-right: 2px solid #007acc;
-        background-color: rgba(0,0,0, 0.6);
+        background-color: rgba(0,0,0, 0.8);
         background-image: url('../../../assets/imgs/corner_2.png');
+
+        div.label {
+            text-align: center;
+            line-height: 24px;
+            width: 148px;
+            height: 24px;
+            position: absolute;
+            display: none;
+            font-family: 'roboto';
+            font-size: 14px;
+            color: #a0a0a0;
+            background-color: rgba(0,0,0, 0.8);
+//            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
+
         img {
             margin: 12px;
             width: 24px;
             height: 24px;
         }
+
     }
 
-    div.button:nth-child(1) {
+    div.button:hover{
+        div.label {
+            display: block;
+        }
+    }
+
+    div.button.tl {
         background-image: url('../../../assets/imgs/corner_1.png');
         top: 0;
         left: 0;
+
+        div.label {
+            top: 0;
+            left: -150px;
+        }
     }
 
-    div.button:nth-child(2) {
-        top: 50px;
-        left: 0;
-    }
-    
-    div.button:nth-child(3) {
-        top: 100px;
-        left: 0;
-    }
-
-    div.button:nth-child(4) {
+    div.button.tt {
         top: 0;
         left: 50px;
     }
-
-    div.button:nth-child(5) {
+    
+    div.button.tr {
         top: 0;
+        left: 100px;
+    }
+
+    div.button.rr {
+        top: 50px;
+        left: 100px;
+    }
+
+    div.button.br {
+        top: 100px;
         left: 100px ;
     }
 
+    div.button.bb {
+        top: 100px;
+        left: 50px;
+    }
+
+    div.button.bl {
+        top: 100px;
+        left: 0;
+
+        div.label {
+            top: 0;
+            left: -150px;
+        }
+    }
+
+    div.button.ll {
+        top: 50px;
+        left: 0;
+
+        div.label {
+            top: 0;
+            left: -150px;
+        }
+    }
+
     div.button:hover {
-        background-color: rgba(0,0,0, 0.4);
+        background-color: rgba(0,0,0, 0.6);
     }
 }

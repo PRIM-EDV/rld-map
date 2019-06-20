@@ -15,10 +15,14 @@ export class HttpBackendService extends BackendService {
     }
 
     public setMapObject(id?: string) {
-
+        
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: "", coord: new Coordinate()}
+        return {id: "", coord: new Coordinate(), update: false}
+    }
+
+    public getMapObjects(): Array<MapObject> {
+        return this._mapObjects;
     }
 }
