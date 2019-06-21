@@ -4,6 +4,7 @@ import { Coordinate } from './utils/coordinate.util';
 
 export interface MapObject {
   id: string;
+  name: string;
   coord: Coordinate;
   update: boolean;
 }
