@@ -1,7 +1,8 @@
 import {Component, AfterContentInit, Input} from '@angular/core';
 import { PopupContext } from './contexts/popup-context';
-import { BackendService } from '../backend/backend.service';
+import { BackendService } from '../../backend/backend.service';
 import { ObjectPopupContext } from './contexts/object.popup-context';
+import { ContextMenuService } from '../context-menu.service';
 
 @Component({
     selector: 'popup-menu',
@@ -12,15 +13,12 @@ export class PopupMenuComponent implements AfterContentInit{
     @Input() _backend: BackendService;
 
     public activeContext: PopupContext;
-    public contexts = {
-        editObject: this.getEditObjectContext.bind(this),
-    }
 
     private _popupMenu: HTMLDivElement;
     private _position: {x: number, y: number};
 
-    constructor() {
-
+    constructor(private _menuService: ContextMenuService) {
+        this._menuService.popupMenu = this;
     }
 
     ngAfterContentInit() {
@@ -39,7 +37,12 @@ export class PopupMenuComponent implements AfterContentInit{
         this._popupMenu.hidden = false;
     }
 
-    private getEditObjectContext(id: string): ObjectPopupContext {
+    public editObject(id: string, position: {x: number, y: number}) {
+        const context = this.getEditObjectContext(id);
+        this.open(context, position);
+    }
+
+    public getEditObjectContext(id: string): ObjectPopupContext {
         return new ObjectPopupContext(this._backend, id)
     }
 }

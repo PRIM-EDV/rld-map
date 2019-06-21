@@ -1,5 +1,5 @@
 import { PopupContext } from './popup-context';
-import { MapObject, BackendService } from '../../backend/backend.service';
+import { MapObject, BackendService } from '../../../backend/backend.service';
 import { InputPopupElement } from '../elements/input.popup-element';
 
 export class ObjectPopupContext extends PopupContext {

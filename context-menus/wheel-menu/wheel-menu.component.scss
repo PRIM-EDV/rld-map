@@ -14,7 +14,7 @@ div#wheel-menu {
         width: 48px;
         height: 48px;
         // background-color: rgba(0,0,0, 0.6);
-        background-image: url('../../../assets/imgs/cross.png');
+        background-image: url('../../../../assets/imgs/cross.png');
         line-height: 49px;
         text-align: center;
         font-weight: bold;
@@ -29,7 +29,7 @@ div#wheel-menu {
         height: 48px;
         // border-right: 2px solid #007acc;
         background-color: rgba(0,0,0, 0.8);
-        background-image: url('../../../assets/imgs/corner_2.png');
+        background-image: url('../../../../assets/imgs/corner_2.png');
 
         div.label {
             text-align: center;
@@ -60,7 +60,7 @@ div#wheel-menu {
     }
 
     div.button.tl {
-        background-image: url('../../../assets/imgs/corner_1.png');
+        background-image: url('../../../../assets/imgs/corner_1.png');
         top: 0;
         left: 0;
 

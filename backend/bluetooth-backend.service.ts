@@ -17,7 +17,7 @@ export class BluetoothBackendService extends BackendService {
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: '', coord: new Coordinate(), update: false};
+        return {id: '', coord: new Coordinate(), update: false, name: ""};
     }
 
     public getMapObjects(): Array<MapObject> {

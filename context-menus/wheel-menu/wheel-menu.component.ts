@@ -1,7 +1,8 @@
 import {Component, AfterContentInit, Input} from '@angular/core';
-import { ObjectContext } from './contexts/objects.context';
-import { Context } from './contexts/context';
-import { BackendService } from '../backend/backend.service';
+import { ObjectContext } from './contexts/objects.wheel-menu-context';
+import { BackendService } from '../../backend/backend.service';
+import { ContextMenuService } from '../context-menu.service';
+import { WheelMenuContext } from './contexts/wheel-menu-context';
 
 @Component({
     selector: 'wheel-menu',
@@ -10,23 +11,23 @@ import { BackendService } from '../backend/backend.service';
 })
 export class WheelMenuComponent implements AfterContentInit {
     @Input() _backend: BackendService;
-    @Input() _test: string;
-    
-    public activeContext: Context;
-    public contexts = {
-        objects: new ObjectContext(this._backend),
-    }
+
+    public activeContext: WheelMenuContext;
 
     private _wheelMenu: HTMLDivElement;
     private _position: {x: number, y: number};
 
-    constructor() {
-        this.activeContext = this.contexts.objects;
+    constructor(private _menuService: ContextMenuService) {
+        this._menuService.wheelMenu = this;
+        this.activeContext = this.getObjectContext();     
     }
 
     ngAfterContentInit() {
-        console.log(this._backend);
         this._wheelMenu = document.getElementById('wheel-menu') as HTMLDivElement;
+    }
+
+    public getObjectContext() {
+        return new ObjectContext(this._menuService);
     }
 
     public close(): void {
@@ -47,5 +48,6 @@ export class WheelMenuComponent implements AfterContentInit {
     public changeContext() {
 
     }
+
 }
 

@@ -4,13 +4,14 @@ import { BackendService } from './backend/backend.service';
 // import { MapService } from "./map.service";
 import { Coordinate } from './backend/utils/coordinate.util';
 import { MapFile, MapData} from './utils/map.util';
-import { WheelMenuComponent } from './wheel-menu/wheel-menu.component';
+import { WheelMenuComponent } from './context-menus/wheel-menu/wheel-menu.component';
 
 // Test
 import { PrimMap } from './utils/prim.map';
 import { Layer } from './layers/layer';
 import { MapLayer } from './layers/map.layer';
 import { IconLayer } from './layers/icon.layer';
+import { ContextMenuService } from './context-menus/context-menu.service';
 
 @Component({
     selector: 'map',
@@ -29,21 +30,18 @@ export class MapComponent implements AfterViewInit {
     private _mapfile: MapFile = null;
     private _origin: Coordinate = new Coordinate();
 
-    @ViewChild(WheelMenuComponent)
-    private _wheelMenu: WheelMenuComponent;
-
     // // Quick and Dirty
     // dragX: number = 0;
     // dragY: number = 0;
     // dragItemX: number = 0;
     // dragItemY: number = 0;
 
-    constructor() {
-
+    constructor(private _menuService: ContextMenuService) {
         this._mapfile = new PrimMap();
     }
 
     ngAfterViewInit() {
+        this._menuService.backend = this._backend;
         this._canvas = document.getElementById('cMap') as HTMLCanvasElement;
         this._ctx = this._canvas.getContext('2d');
         this._mc = new Hammer(this._canvas);
@@ -158,13 +156,13 @@ export class MapComponent implements AfterViewInit {
     public startListenToClick() {
         this._canvas.addEventListener('click', (e: MouseEvent) => {
             if (e.button === 0) {
-                this._wheelMenu.close();
+                this._menuService.wheelMenu.close();
             }
         });
         this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
             const position = {x: e.x, y: e.y};
-            this._wheelMenu.open(position);
+            this._menuService.wheelMenu.open(position);
         });
     }
 
@@ -227,6 +225,7 @@ export class MapComponent implements AfterViewInit {
             for (const layer of this._layers) {
                 layer.onScroll(e);
             }
+            this.update();
         });
     }
 
