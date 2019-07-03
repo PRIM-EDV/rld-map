@@ -12,8 +12,20 @@ export class BluetoothBackendService extends BackendService {
         super();
     }
 
-    public setMapObject(id?: string) {
+    public deleteMapObject(id: string): Promise<any> {
+        return new Promise((resolve, reject) => {
         
+        });
+    }
+    public updateMapObject(id: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+        
+        });
+    }
+    public createMapObject(id?: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+        
+        });
     }
 
     public getMapObject(id: string): MapObject {

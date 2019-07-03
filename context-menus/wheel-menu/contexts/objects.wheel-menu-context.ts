@@ -23,9 +23,15 @@ export class ObjectContext extends WheelMenuContext{
         const popupMenu = this._contextMenuService.popupMenu;
         const wheelMenu = this._contextMenuService.wheelMenu;
 
-        backend.setMapObject();
-        popupMenu.editObject("", position);
-        wheelMenu.close();
+        backend.createMapObject().then(
+            (res) => {
+                popupMenu.editObject("", position);
+                wheelMenu.close();
+            },
+            (err) => {
+                wheelMenu.close();
+            }
+        );
     }
 
     public placeObject(position: {x: number, y: number}) {

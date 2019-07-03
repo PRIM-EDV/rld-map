@@ -14,8 +14,21 @@ export class HttpBackendService extends BackendService {
         super();
     }
 
-    public setMapObject(id?: string) {
+    public deleteMapObject(id: string): Promise<any> {
+        return new Promise((resolve, reject) => {
         
+        });
+    }
+    public updateMapObject(id: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            
+        });
+    }
+    public createMapObject(id?: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            // TEST
+            resolve()
+        });
     }
 
     public getMapObject(id: string): MapObject {

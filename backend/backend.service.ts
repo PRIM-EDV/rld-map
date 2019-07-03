@@ -14,8 +14,9 @@ export interface MapObject {
 export abstract class BackendService {
   protected _mapObjects: Array<MapObject> = []
 
-  public abstract setMapObject(id?: string): void;
+  public abstract deleteMapObject(id: string): Promise<any>;
+  public abstract updateMapObject(id: string): Promise<any>;
+  public abstract createMapObject(id?: string): Promise<any>;
   public abstract getMapObject(id: string): MapObject;
   public abstract getMapObjects(): Array<MapObject>;
-
 }
