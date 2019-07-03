@@ -1,8 +1,10 @@
 
+import { v4 as uuid } from 'uuid';
+
 import { Button } from '../elements/button.element';
-import { WheelMenuComponent } from '../wheel-menu.component';
 import { WheelMenuContext } from './wheel-menu-context';
 import { ContextMenuService } from '../../context-menu.service';
+
 
 export class ObjectContext extends WheelMenuContext{
     private _contextMenuService: ContextMenuService;
@@ -24,5 +26,11 @@ export class ObjectContext extends WheelMenuContext{
         backend.setMapObject();
         popupMenu.editObject("", position);
         wheelMenu.close();
+    }
+
+    public placeObject(position: {x: number, y: number}) {
+        const id = uuid().toUpperCase();
+
+        
     }
 }
