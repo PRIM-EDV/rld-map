@@ -1,7 +1,7 @@
 import {Component, AfterContentInit, Input} from '@angular/core';
 import { PopupContext } from './contexts/popup-context';
 import { BackendService } from '../../backend/backend.service';
-import { ObjectPopupContext } from './contexts/object.popup-context';
+import { ObjectContext } from './contexts/object-context';
 import { ContextMenuService } from '../context-menu.service';
 
 @Component({
@@ -42,8 +42,8 @@ export class PopupMenuComponent implements AfterContentInit{
         this.open(context, position);
     }
 
-    public getEditObjectContext(id: string): ObjectPopupContext {
-        return new ObjectPopupContext(this._backend, id)
+    public getEditObjectContext(id: string): ObjectContext {
+        return new ObjectContext(this._backend, id)
     }
 }
 
