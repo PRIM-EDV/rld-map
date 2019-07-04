@@ -1,4 +1,4 @@
-import { Layer } from './layer';
+import { Layer } from '../core/layer';
 import { MapObject, BackendService } from '../backend/backend.service';
 
 export class IconLayer extends Layer {

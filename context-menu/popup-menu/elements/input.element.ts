@@ -1,6 +1,6 @@
-import { PopupElement } from './popup-element';
+import { PopupElement } from '../core/popup-element';
 
-export class InputPopupElement extends PopupElement{
+export class InputElement extends PopupElement{
     public content: string;
 
     constructor(label: string, content?: string) {

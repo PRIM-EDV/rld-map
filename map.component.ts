@@ -4,14 +4,13 @@ import { BackendService } from './backend/backend.service';
 // import { MapService } from "./map.service";
 import { Coordinate } from './backend/utils/coordinate.util';
 import { MapFile, MapData} from './utils/map.util';
-import { WheelMenuComponent } from './context-menus/wheel-menu/wheel-menu.component';
 
 // Test
 import { PrimMap } from './utils/prim.map';
-import { Layer } from './layers/layer';
+import { Layer } from './core/layer';
 import { MapLayer } from './layers/map.layer';
 import { IconLayer } from './layers/icon.layer';
-import { ContextMenuService } from './context-menus/context-menu.service';
+import { ContextMenuService } from './context-menu/context-menu.service';
 
 @Component({
     selector: 'map',
@@ -162,7 +161,7 @@ export class MapComponent implements AfterViewInit {
         this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
             const position = {x: e.x, y: e.y};
-            this._menuService.wheelMenu.open(position);
+            this._menuService.wheelMenu.mapObjectContext.open(position);
         });
     }
 
