@@ -1,4 +1,4 @@
-import { PopupElement } from '../elements/popup-element';
+import { PopupElement } from './popup-element';
 
 export class PopupContext {
     public elements: Array<PopupElement> = [];

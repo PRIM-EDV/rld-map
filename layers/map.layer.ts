@@ -1,4 +1,4 @@
-import { Layer } from './layer';
+import { Layer } from '../core/layer';
 import { MapFile } from '../utils/map.util';
 import { Coordinate } from '../backend/utils/coordinate.util';
 import { Direction } from '../backend/utils/direction.util';

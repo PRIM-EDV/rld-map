@@ -25,7 +25,7 @@ export class ObjectContext extends WheelMenuContext{
 
         backend.createMapObject().then(
             (res) => {
-                popupMenu.editObject("", position);
+                // popupMenu.editObject("", position);
                 wheelMenu.close();
             },
             (err) => {
