@@ -29,6 +29,10 @@ export class PopupMenuComponent implements AfterContentInit{
         this._popupMenu = document.getElementById('popup-menu') as HTMLDivElement;
     }
 
+    private onContextOpen(ctx: PopupContext) {
+        console.log(ctx);
+    }
+
     // public close(): void {
     //     this._popupMenu.hidden = true;
     // }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { PopupContext } from '../../core/popup-context';
 import { BackendService } from 'src/app/map/backend/backend.service';
 import { PopupMenuComponent } from '../../popup-menu.component';
@@ -7,11 +7,11 @@ import { PopupMenuComponent } from '../../popup-menu.component';
 @Component({
     selector: 'object-context',
     // styleUrls: ['./popup-menu.component.scss'],
-    // templateUrl: 'popup-menu.component.html',
+    templateUrl: 'object-context.component.html',
 })
 export class ObjectContextComponent extends PopupContext {
     @Input() _backend: BackendService;
-    @Input() _popupMenu: PopupMenuComponent;
+    @Output() onOpen = new EventEmitter();
 
     private _mapObjectId: string;
 
@@ -20,6 +20,6 @@ export class ObjectContextComponent extends PopupContext {
     }
 
     public open(id: string) {
-        
+        this.onOpen.emit(this);
     }
 }
