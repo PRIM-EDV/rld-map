@@ -12,12 +12,10 @@ import { PopupContext } from './core/popup-context';
 export class PopupMenuComponent implements AfterContentInit{
     @Input() _backend: BackendService;
 
-    public activeContext: PopupContext;
-
     @ViewChild(ObjectContextComponent)
     public objectContext: ObjectContextComponent;
 
-
+    private _activeContext: PopupContext;
     private _popupMenu: HTMLDivElement;
     private _position: {x: number, y: number};
 
@@ -29,29 +27,23 @@ export class PopupMenuComponent implements AfterContentInit{
         this._popupMenu = document.getElementById('popup-menu') as HTMLDivElement;
     }
 
-    private onContextOpen(ctx: PopupContext) {
-        console.log(ctx);
+    public close() {
+        this._popupMenu.hidden = true;
     }
 
-    // public close(): void {
-    //     this._popupMenu.hidden = true;
-    // }
+    public open() {
+        this._popupMenu.hidden = false;
+    }
 
-    // public open(context: PopupContext, position: {x: number, y: number}): void {
-    //     this.activeContext = context;
-    //     this._position = position;
-    //     this._popupMenu.style.top = (position.y).toString() + 'px';
-    //     this._popupMenu.style.left = (position.x).toString() + 'px';
-    //     this._popupMenu.hidden = false;
-    // }
+    public setContext(ctx: PopupContext) {
+        this._activeContext = ctx;
+    }
 
-    // public editObject(id: string, position: {x: number, y: number}) {
-    //     const context = this.getEditObjectContext(id);
-    //     this.open(context, position);
-    // }
+    public setPosition(position: {x: number, y: number}){
+        this._position = position;
+        this._popupMenu.style.top = (position.y - 74).toString() + 'px';
+        this._popupMenu.style.left = (position.x - 74).toString() + 'px';
+    }
 
-    // public getEditObjectContext(id: string): ObjectContext {
-    //     return new ObjectContext(this._backend, id)
-    // }
 }
 
