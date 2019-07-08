@@ -3,13 +3,14 @@ import { MapComponent } from './map.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PopupMenuModule } from './context-menu/popup-menu/popup-menu.module';
-import { WheelMenuComponent } from './context-menu/wheel-menu/wheel-menu.component';
+import { WheelMenuModule } from './context-menu/wheel-menu/wheel-menu.module';
 
 
 @NgModule({
     imports: [
         CommonModule,
         PopupMenuModule,
+        WheelMenuModule,
         RouterModule.forChild([
             {
               path: '',
@@ -17,7 +18,7 @@ import { WheelMenuComponent } from './context-menu/wheel-menu/wheel-menu.compone
             }
           ])
     ],
-    declarations: [MapComponent, WheelMenuComponent],
-    exports: [MapComponent, WheelMenuComponent],
+    declarations: [MapComponent],
+    exports: [MapComponent],
 })
 export class MapModule {}

@@ -19,7 +19,7 @@ export class ObjectContextComponent extends PopupContext {
         super();
     }
 
-    public open(id: string) {
+    public open(pos: {x: number, y: number}, id: string) {
         this.onOpen.emit(this);
     }
 }

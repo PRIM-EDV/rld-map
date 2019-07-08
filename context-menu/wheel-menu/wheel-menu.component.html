@@ -1,20 +1,3 @@
 <div id="wheel-menu">
-    <div class="button" *ngFor="let button of activeContext.buttons" (click)="click(button.click)"
-        [class.tt]="button.position==0" 
-        [class.tr]="button.position==1" 
-        [class.rr]="button.position==2" 
-        [class.br]="button.position==3" 
-        [class.bb]="button.position==4" 
-        [class.bl]="button.position==5" 
-        [class.ll]="button.position==6" 
-        [class.tl]="button.position==7"
-    >
-        <img src="../../../assets/icons/{{button.icon}}" />
-        <div class="label">
-            {{button.label}}
-        </div>
-    </div>
-    <div class="center">
-        &nbsp;
-    </div>
+    <map-object-context (onOpen)='onContextOpen($event)'></map-object-context>
 </div>

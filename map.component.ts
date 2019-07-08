@@ -161,7 +161,7 @@ export class MapComponent implements AfterViewInit {
         this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
             const position = {x: e.x, y: e.y};
-            this._menuService.wheelMenu.open(position);
+            this._menuService.wheelMenu.mapObjectContext.open(position);
         });
     }
 

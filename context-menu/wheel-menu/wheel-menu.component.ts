@@ -1,8 +1,9 @@
 import {Component, AfterContentInit, Input, ViewChild} from '@angular/core';
-import { ObjectContext } from './contexts/objects.wheel-menu-context';
+
 import { BackendService } from '../../backend/backend.service';
 import { ContextMenuService } from '../context-menu.service';
-import { WheelMenuContext } from './contexts/wheel-menu-context';
+import { WheelMenuContext } from '../popup-menu/core/wheel-menu-context';
+import { MapObjectContextComponent } from './contexts/map-object-context/map-object-context.component';
 
 @Component({
     selector: 'wheel-menu',
@@ -14,7 +15,7 @@ export class WheelMenuComponent implements AfterContentInit {
 
     public activeContext: WheelMenuContext;
     
-    @ViewChild()
+    @ViewChild(MapObjectContextComponent)
     public mapObjectContext: MapObjectContextComponent; 
 
     private _wheelMenu: HTMLDivElement;
@@ -30,15 +31,25 @@ export class WheelMenuComponent implements AfterContentInit {
     }
 
 
-    // public close(): void {
-    //     this._wheelMenu.hidden = true;
-    // }
+    public close(): void {
+        this._wheelMenu.hidden = true;
+    }
+
+    public onContextOpen(ctx: WheelMenuContext){
+        this.activeContext = ctx;
+        this._setPosition(this.activeContext.position)
+        
+        this._wheelMenu.hidden = false;
+    }
+
+    private _setPosition(position: {x: number, y: number}){
+        this._position = position;
+        this._wheelMenu.style.top = (position.y - 74).toString() + 'px';
+        this._wheelMenu.style.left = (position.x - 74).toString() + 'px';
+    }
 
     // public open(position: {x: number, y: number}): void {
-    //     this._position = position;
-    //     this._wheelMenu.style.top = (position.y - 74).toString() + 'px';
-    //     this._wheelMenu.style.left = (position.x - 74).toString() + 'px';
-    //     this._wheelMenu.hidden = false;
+    //     
     // }
 
     // public click(callback) {
