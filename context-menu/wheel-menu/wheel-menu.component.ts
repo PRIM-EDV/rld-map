@@ -13,17 +13,15 @@ import { MapObjectContextComponent } from './contexts/map-object-context/map-obj
 export class WheelMenuComponent implements AfterContentInit {
     @Input() _backend: BackendService;
 
-    public activeContext: WheelMenuContext;
-    
     @ViewChild(MapObjectContextComponent)
     public mapObjectContext: MapObjectContextComponent; 
 
-    private _wheelMenu: HTMLDivElement;
+    private _activeContext: WheelMenuContext;
     private _position: {x: number, y: number};
+    private _wheelMenu: HTMLDivElement;
 
     constructor(private _menuService: ContextMenuService) {
-        this._menuService.wheelMenu = this;
-        //this.activeContext = this.getObjectContext();     
+        this._menuService.wheelMenu = this;    
     }
 
     ngAfterContentInit() {
@@ -35,30 +33,19 @@ export class WheelMenuComponent implements AfterContentInit {
         this._wheelMenu.hidden = true;
     }
 
-    public onContextOpen(ctx: WheelMenuContext){
-        this.activeContext = ctx;
-        this._setPosition(this.activeContext.position)
-        
+    public open(): void {
         this._wheelMenu.hidden = false;
     }
 
-    private _setPosition(position: {x: number, y: number}){
+    public setContext(ctx: WheelMenuContext) {
+        this._activeContext = ctx;
+    }
+
+    public setPosition(position: {x: number, y: number}){
         this._position = position;
         this._wheelMenu.style.top = (position.y - 74).toString() + 'px';
         this._wheelMenu.style.left = (position.x - 74).toString() + 'px';
     }
-
-    // public open(position: {x: number, y: number}): void {
-    //     
-    // }
-
-    // public click(callback) {
-    //     callback(this._position, this);
-    // }
-
-    // public changeContext() {
-
-    // }
 
 }
 

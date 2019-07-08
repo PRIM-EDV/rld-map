@@ -153,9 +153,10 @@ export class MapComponent implements AfterViewInit {
     // }
 
     public startListenToClick() {
-        this._canvas.addEventListener('click', (e: MouseEvent) => {
+        this._canvas.addEventListener('mousedown', (e: MouseEvent) => {
             if (e.button === 0) {
                 this._menuService.wheelMenu.close();
+                this._menuService.popupMenu.close();
             }
         });
         this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {

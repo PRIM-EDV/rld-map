@@ -1,25 +1,35 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { PopupContext } from '../../core/popup-context';
 import { BackendService } from 'src/app/map/backend/backend.service';
-import { PopupMenuComponent } from '../../popup-menu.component';
+import { ContextMenuService } from '../../../context-menu.service';
 
 
 @Component({
     selector: 'object-context',
-    // styleUrls: ['./popup-menu.component.scss'],
+    styleUrls: ['../popup-menu-context.scss'],
     templateUrl: 'object-context.component.html',
 })
 export class ObjectContextComponent extends PopupContext {
     @Input() _backend: BackendService;
-    @Output() onOpen = new EventEmitter();
 
     private _mapObjectId: string;
 
-    constructor() {
+    constructor(private _contextMenuService: ContextMenuService) {
         super();
     }
 
     public open(pos: {x: number, y: number}, id: string) {
-        this.onOpen.emit(this);
+        const popupMenu = this._contextMenuService.popupMenu;
+
+        this.position = pos;
+        this.title = `Edit Object (${id})`;
+
+        popupMenu.setPosition(pos);
+        popupMenu.setContext(this);
+        popupMenu.open();
+    }
+
+    public close() {
+        
     }
 }

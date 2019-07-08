@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { WheelMenuContext } from '../../../popup-menu/core/wheel-menu-context';
 import { BackendService } from 'src/app/map/backend/backend.service';
+import { ContextMenuService } from '../../../context-menu.service';
 
 @Component({
     selector: 'map-object-context',
@@ -9,26 +10,42 @@ import { BackendService } from 'src/app/map/backend/backend.service';
 })
 export class MapObjectContextComponent extends WheelMenuContext {
     @Input() _backend: BackendService;
-    @Output() onOpen = new EventEmitter();
 
-    private _mapObjectId: string;
-
-    constructor() {
+    constructor(private _contextMenuService: ContextMenuService) {
         super();
     }
 
     public open(pos: {x: number, y: number}) {
+        const wheelMenu = this._contextMenuService.wheelMenu;
+
         this.position = pos;
-        this.onOpen.emit(this);
+        wheelMenu.setPosition(pos);
+        wheelMenu.setContext(this);
+        wheelMenu.open();
     }
 
-    public placeEnemy(position: {x: number, y: number}) {
+    public placeEnemy() {
         const popupMenu = this._contextMenuService.popupMenu;
         const wheelMenu = this._contextMenuService.wheelMenu;
 
-        backend.createMapObject().then(
+        this._backend.createMapObject().then(
             (res) => {
-                popupMenu.objectContext.open('abc');
+                // popupMenu.objectContext.open('abc');
+                wheelMenu.close();
+            },
+            (err) => {
+                wheelMenu.close();
+            }
+        );
+    }
+
+    public placeObject() {
+        const popupMenu = this._contextMenuService.popupMenu;
+        const wheelMenu = this._contextMenuService.wheelMenu;
+
+        this._backend.createMapObject().then(
+            (res) => {
+                popupMenu.objectContext.open(this.position, 'abc');
                 wheelMenu.close();
             },
             (err) => {
