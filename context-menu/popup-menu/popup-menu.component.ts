@@ -18,6 +18,8 @@ export class PopupMenuComponent implements AfterContentInit{
     private _activeContext: PopupContext;
     private _popupMenu: HTMLDivElement;
     private _position: {x: number, y: number};
+    
+    private _title: string = "";
 
     constructor(private _menuService: ContextMenuService) {
         this._menuService.popupMenu = this;
@@ -25,24 +27,31 @@ export class PopupMenuComponent implements AfterContentInit{
 
     ngAfterContentInit() {
         this._popupMenu = document.getElementById('popup-menu') as HTMLDivElement;
+        this._popupMenu.style.display = 'none';
     }
 
     public close() {
-        this._popupMenu.hidden = true;
+        this._activeContext.close();
+        this._popupMenu.style.display = 'none';
     }
 
     public open() {
-        this._popupMenu.hidden = false;
+        this._popupMenu.style.display = 'block';
     }
 
     public setContext(ctx: PopupContext) {
         this._activeContext = ctx;
+        this._title = this._activeContext.title;
     }
 
     public setPosition(position: {x: number, y: number}){
         this._position = position;
         this._popupMenu.style.top = (position.y - 74).toString() + 'px';
         this._popupMenu.style.left = (position.x - 74).toString() + 'px';
+    }
+
+    public setTitle(title: string) {
+        this._title = title;
     }
 
 }
