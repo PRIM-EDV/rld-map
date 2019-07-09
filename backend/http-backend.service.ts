@@ -1,9 +1,9 @@
 import { BackendService, MapObject } from "./backend.service";
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Coordinate } from "./utils/coordinate.util";
 import { Injectable } from '@angular/core';
 
-let url = "http://192.168.2.57:3000/"
+let url = "http://localhost:3000/"
 
 @Injectable({
     providedIn: 'root',
@@ -24,15 +24,38 @@ export class HttpBackendService extends BackendService {
             
         });
     }
-    public createMapObject(id?: string): Promise<any> {
+    public createMapObject(obj: MapObject): Promise<any> {
+        const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/json'
+            })
+        };
+        const dst = url + 'map-object';
+
+        const dbMapObject = {
+            position: obj.coord.inMeter,
+            uid: obj.id,
+            name: obj.name,
+            type: obj.type
+        }
+
         return new Promise((resolve, reject) => {
-            // TEST
-            resolve()
+            this._http.post(dst, dbMapObject, httpOptions)
+                .toPromise()
+                .then(
+                    (res) => {
+                        resolve();
+                    },
+                    (err) => {
+                        reject(err);
+                    }
+                );
+            // resolve()
         });
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: "", coord: new Coordinate(), update: false, name: ""}
+        return {id: "", coord: new Coordinate(), update: false, name: "", type: ""}
     }
 
     public getMapObjects(): Array<MapObject> {

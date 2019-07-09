@@ -7,6 +7,7 @@ export interface MapObject {
   name: string;
   coord: Coordinate;
   update: boolean;
+  type: string;
 }
 
 
@@ -16,7 +17,7 @@ export abstract class BackendService {
 
   public abstract deleteMapObject(id: string): Promise<any>;
   public abstract updateMapObject(id: string): Promise<any>;
-  public abstract createMapObject(id?: string): Promise<any>;
+  public abstract createMapObject(obj: MapObject): Promise<any>;
   public abstract getMapObject(id: string): MapObject;
   public abstract getMapObjects(): Array<MapObject>;
 }

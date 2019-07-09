@@ -22,14 +22,14 @@ export class BluetoothBackendService extends BackendService {
         
         });
     }
-    public createMapObject(id?: string): Promise<any> {
+    public createMapObject(obj: MapObject): Promise<any> {
         return new Promise((resolve, reject) => {
         
         });
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: '', coord: new Coordinate(), update: false, name: ""};
+        return {id: '', coord: new Coordinate(), type: "", update: false, name: ""};
     }
 
     public getMapObjects(): Array<MapObject> {
