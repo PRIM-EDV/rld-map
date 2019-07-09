@@ -5,6 +5,12 @@ import { Injectable } from '@angular/core';
 
 let url = "http://localhost:3000/"
 
+const httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type':  'application/json'
+    })
+};
+
 @Injectable({
     providedIn: 'root',
 })
@@ -12,6 +18,19 @@ export class HttpBackendService extends BackendService {
 
     constructor(private _http: HttpClient){
         super();
+    }
+
+    public update() {
+        const dst = url + 'map-object';
+        
+        this._http.get(dst, httpOptions).toPromise().then(
+            (res) => {
+
+            },
+            (err) => {
+                
+            }
+        )
     }
 
     public deleteMapObject(id: string): Promise<any> {
@@ -25,11 +44,6 @@ export class HttpBackendService extends BackendService {
         });
     }
     public createMapObject(obj: MapObject): Promise<any> {
-        const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type':  'application/json'
-            })
-        };
         const dst = url + 'map-object';
 
         const dbMapObject = {
@@ -40,16 +54,14 @@ export class HttpBackendService extends BackendService {
         }
 
         return new Promise((resolve, reject) => {
-            this._http.post(dst, dbMapObject, httpOptions)
-                .toPromise()
-                .then(
-                    (res) => {
-                        resolve();
-                    },
-                    (err) => {
-                        reject(err);
-                    }
-                );
+            this._http.post(dst, dbMapObject, httpOptions).toPromise().then(
+                (res) => {
+                    resolve();
+                },
+                (err) => {
+                    reject(err);
+                }
+            );
             // resolve()
         });
     }
