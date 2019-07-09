@@ -1,4 +1,5 @@
 import { Coordinate } from '../backend/utils/coordinate.util';
+import { BehaviorSubject } from 'rxjs';
 
 export interface MapData {
     image: HTMLImageElement;
@@ -10,8 +11,11 @@ export interface MapData {
 }
 
 export class MapFile {
+    public resourceReadyState = new BehaviorSubject<boolean>(false);
     public layers: Array<MapData> = [];
     public name: String = '';
+
+    private _nbLayersReady = 0;
 
     constructor(layers?: Array<MapData>, name?: String) {
         this.name = name;
@@ -20,18 +24,13 @@ export class MapFile {
             layer.isReady = false;
 
             layer.image.src = layer.imageUrl;
-            layer.image.onload = () => { layer.isReady = true; console.log('Loaded.'); };
+            layer.image.onload = () => {  
+                this._nbLayersReady += 1;
+                if (this._nbLayersReady == this.layers.length) {
+                    this.resourceReadyState.next(true);
+                }
+            };
         }
-    }
-
-    public get isReady() {
-        for (const layer of this.layers) {
-            if (!layer.isReady) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
 

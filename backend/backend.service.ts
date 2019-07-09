@@ -7,6 +7,13 @@ export interface MapObject {
   name: string;
   coord: Coordinate;
   update: boolean;
+  type: string;
+
+  meta: {
+    description?: string;
+    size?: number;
+    wounded?: number;
+  }
 }
 
 
@@ -14,9 +21,10 @@ export interface MapObject {
 export abstract class BackendService {
   protected _mapObjects: Array<MapObject> = []
 
-  public abstract deleteMapObject(id: string): Promise<any>;
-  public abstract updateMapObject(id: string): Promise<any>;
-  public abstract createMapObject(id?: string): Promise<any>;
+  public async abstract deleteMapObject(id: string): Promise<any>;
+  public async abstract setMapObject(mapObject: MapObject): Promise<any>;
   public abstract getMapObject(id: string): MapObject;
   public abstract getMapObjects(): Array<MapObject>;
+
+  public onSynchronise(callback) {return};
 }

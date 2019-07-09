@@ -2,8 +2,9 @@ import {Component, AfterContentInit, Input, ViewChild} from '@angular/core';
 
 import { BackendService } from '../../backend/backend.service';
 import { ContextMenuService } from '../context-menu.service';
-import { WheelMenuContext } from '../popup-menu/core/wheel-menu-context';
+import { WheelMenuContext } from '../core/wheel-menu-context';
 import { MapObjectContextComponent } from './contexts/map-object-context/map-object-context.component';
+import { EditObjectContextComponent } from './contexts/edit-object-context/edit-object-context.component';
 
 @Component({
     selector: 'wheel-menu',
@@ -14,7 +15,10 @@ export class WheelMenuComponent implements AfterContentInit {
     @Input() _backend: BackendService;
 
     @ViewChild(MapObjectContextComponent)
-    public mapObjectContext: MapObjectContextComponent; 
+    public mapObjectContext: MapObjectContextComponent;
+
+    @ViewChild(EditObjectContextComponent)
+    public editObjectContext: EditObjectContextComponent; 
 
     private _activeContext: WheelMenuContext;
     private _position: {x: number, y: number};
@@ -30,11 +34,20 @@ export class WheelMenuComponent implements AfterContentInit {
 
 
     public close(): void {
-        this._wheelMenu.hidden = true;
+        if (this._activeContext != null) {
+            this._activeContext.close();
+            this._activeContext = null;
+        }
+
+        this._wheelMenu.style.visibility = "hidden";
+    }
+
+    public getContext(): WheelMenuContext {
+        return this._activeContext;
     }
 
     public open(): void {
-        this._wheelMenu.hidden = false;
+        this._wheelMenu.style.visibility = "initial";
     }
 
     public setContext(ctx: WheelMenuContext) {
@@ -46,6 +59,5 @@ export class WheelMenuComponent implements AfterContentInit {
         this._wheelMenu.style.top = (position.y - 74).toString() + 'px';
         this._wheelMenu.style.left = (position.x - 74).toString() + 'px';
     }
-
 }
 

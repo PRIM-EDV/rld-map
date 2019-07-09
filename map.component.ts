@@ -45,112 +45,35 @@ export class MapComponent implements AfterViewInit {
         this._ctx = this._canvas.getContext('2d');
         this._mc = new Hammer(this._canvas);
 
-        // Add map layers
-        this._layers.push(new MapLayer(this._canvas, this._ctx, this._mapfile));
-        this._layers.push(new IconLayer(this._canvas, this._ctx, this._backend));
+        // 
+        Coordinate.viewportOffset = {x: this._canvas.getBoundingClientRect().left, y: this._canvas.getBoundingClientRect().top};
 
-        // while (!this._mapfile.isReady) {}
-        // Add event listeners
+        // Add map layers
+        this._layers.push(new MapLayer(this._canvas, this._ctx, this._mapfile, this._menuService));
+        this._layers.push(new IconLayer(this._canvas, this._ctx, this._backend, this._menuService));
+
         this.startListenToResize();
         this.startListenToPan();
         this.startListenToPinch();
         this.startListenToScroll();
         this.startListenToClick();
-        // this._mapfile.layers[0].image.onload = () => {
-        //     this.update();
-        // };
+        this.startListenToMouseMove();
+
+        this.onResourcesReady(() => {
+            const width = this._canvas.clientWidth;
+            const height = this._canvas.clientHeight;
+
+            this._canvas.width = width * 2;
+            this._canvas.height = height * 2;
+            this._ctx.scale(2,2);
+
+            this.update.call(this);
+        })
+
+        this._backend.onSynchronise(() => {
+            this.update.call(this);
+        })
     }
-    // handleDelete(ev: KeyboardEvent){
-    //     if(this.mapService.selected && ev.key=="Delete"){
-    //         let token = this.mapService.selected;
-
-    //         if(token.type == "fr1" || token.type == "fr2" || token.type == "fr3"){
-    //             this.mapService.deleteUntrackedTroop(token);
-    //         }else if(token.type == "foe1" || token.type == "foe2" || token.type == "foe3")
-    //         {
-    //             this.mapService.deleteEnemy(token);
-    //         }else if(token.type == "unid"){
-    //             this.mapService.deleteUnid(token);
-    //         }else if(token.type == "green"){
-    //             this.mapService.deleteGreen(token);
-    //         }else if(token.type == "obj"){
-    //             this.mapService.deleteObject(token);
-    //         }
-    //     }
-    // }
-
-    // private handleDragDown(ev: MouseEvent){
-    //     const mx = 384;
-    //     const my = 336;
-
-    //     if(this.mapService.selected && this.mapService.selected.isTracked == false){
-    //         let ox = ((this.mapService.selected.px * this.mapfile.res) - this.sx + mx) * (1/this.zoom) + 24;
-    //         let oy = ((this.mapService.selected.py * this.mapfile.res) - this.sy + my) * (1/this.zoom) + 24;
-
-    //         if(ev.clientX > ox && ev.clientX < (ox + 48) && ev.clientY > oy && ev.clientY < (oy + 48)){
-    //             this.mapService.dragged = this.mapService.selected;
-    //             this.dragX = ev.clientX;
-    //             this.dragY = ev.clientY;
-    //             this.dragItemX = this.mapService.dragged.px;
-    //             this.dragItemY = this.mapService.dragged.py;
-    //         }
-    //     }
-    // }
-
-    // private handleDrag(ev: MouseEvent){
-
-    //     //let ox = ((m.px * this.mapfile.res) - this.sx + mx) * (1/this.zoom) - 24;
-    //     //let oy = ((m.py * this.mapfile.res) - this.sy + my) * (1/this.zoom) - 24;
-    //     //console.log("drag");
-    //     if(this.mapService.dragged){
-    //         let offsetX = this.dragX - ev.clientX;
-    //         let offsetY = this.dragY - ev.clientY;
-
-    //         let idx = this.mapService.tokens.findIndex((x: any) => {
-    //             return x == this.mapService.dragged;
-    //         })
-
-    //         this.mapService.tokens[idx].px = this.dragItemX -  offsetX  / this.mapfile.res * this.zoom;
-    //         this.mapService.tokens[idx].py = this.dragItemY - offsetY  / this.mapfile.res * this.zoom;
-
-    //         this.updateMap();
-    //     }
-    // }
-
-    // private handleDragUp(ev: MouseEvent){
-    //     if(this.mapService.dragged){
-    //         let idx = this.mapService.tokens.findIndex((x: any) => {
-    //             return x == this.mapService.dragged;
-    //         })
-    //         let token = this.mapService.tokens[idx];
-
-    //         if(token.type == "fr1" || token.type == "fr2" || token.type == "fr3"){
-    //             this.mapService.updateUntrackedToken(token);
-    //         }else if(token.type == "foe1" || token.type == "foe2" || token.type == "foe3")
-    //         {
-    //             this.mapService.updateUntrackedEnemy(token);
-    //         }else if(token.type =="green"){
-    //             this.mapService.updateGreen(token);
-    //         }else if(token.type =="obj"){
-    //             this.mapService.updateObjects(token);
-    //         }else if(token.type =="unid"){
-    //             this.mapService.updateUnid(token);
-    //         }
-    //         this.mapService.dragged = null;
-    //     }
-    // }
-
-    // getCenter(){
-    //     const mx = 384;
-    //     const my = 336;
-
-    //     let pos = {
-    //         px: ((this.canvas.width / 2) * this.zoom + this.sx - mx) / this.mapfile.res,
-    //         py: ((this.canvas.height / 2) * this.zoom + this.sy - my) / this.mapfile.res
-    //     }
-
-    //     return pos;
-    // }
 
     public startListenToClick() {
         this._canvas.addEventListener('mousedown', (e: MouseEvent) => {
@@ -161,18 +84,39 @@ export class MapComponent implements AfterViewInit {
         });
         this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
-            const position = {x: e.x, y: e.y};
-            this._menuService.wheelMenu.mapObjectContext.open(position);
+            // const position = {x: e.x, y: e.y};
+
+            for(let i=this._layers.length-1; i>=0; i--){
+                const layer = this._layers[i];
+                if(!layer.onContextMenu(e)) break;
+            }
+            // this._menuService.wheelMenu.mapObjectContext.open(position);
         });
     }
+
+    public startListenToMouseMove() {
+        this._canvas.addEventListener('mousemove', (e: MouseEvent) => {
+            for(let i=this._layers.length-1; i>=0; i--){
+                const layer = this._layers[i];
+                if(!layer.onMouseMove(e)){
+                    this.update();
+                    break;
+                };
+            }
+        })
+    };
 
     public startListenToResize() {
         window.addEventListener('resize', () => {
             const width = this._canvas.clientWidth;
             const height = this._canvas.clientHeight;
 
-            this._canvas.width = width;
-            this._canvas.height = height;
+            this._canvas.width = width * 2;
+            this._canvas.height = height * 2;
+            this._ctx.scale(2,2);
+            
+            //this._ctx.imageSmoothingEnabled = false;
+            //this._ctx.imageSmoothingEnabled = true;
 
             this.update.call(this);
         });
@@ -190,10 +134,16 @@ export class MapComponent implements AfterViewInit {
             }
         });
         this._mc.on('pan', (e: HammerInput) => {
-            for (const layer of this._layers) {
-                layer.onPan(e, offset);
+            for(let i=this._layers.length-1; i>=0; i--){
+                const layer = this._layers[i];
+                if(!layer.onPan(e, offset)) break;
             }
             this.update();
+        });
+        this._mc.on('panend', (e: HammerInput) => {
+            for (const layer of this._layers) {
+                layer.onPanEnd(e);
+            }
         });
     }
 
@@ -205,7 +155,7 @@ export class MapComponent implements AfterViewInit {
         this._mc.add ( new Hammer.Pinch());
         this._mc.on('pinchstart', (e: HammerInput) => {
             pinch = Coordinate.scale;
-            center = {x: e.center.x, y: e.center.y};
+            center = {x: e.center.x - e.target.getBoundingClientRect().left, y: e.center.y - e.target.getBoundingClientRect().top};
             offset = Coordinate.offset;
 
             for (const layer of this._layers) {
@@ -225,6 +175,7 @@ export class MapComponent implements AfterViewInit {
             for (const layer of this._layers) {
                 layer.onScroll(e);
             }
+            this._menuService.wheelMenu.close();
             this.update();
         });
     }
@@ -234,6 +185,22 @@ export class MapComponent implements AfterViewInit {
 
         for (const layer of this._layers) {
             layer.draw();
+        }
+    }
+
+    private onResourcesReady(callback) {
+        let readyLayers = 0;
+
+        for (let layer of this._layers) {
+            layer.resourceReadyState.subscribe((isReady: boolean) => {
+                if(isReady) {
+                    readyLayers += 1;
+
+                    if(readyLayers == this._layers.length){
+                        callback();
+                    }
+                }
+            })
         }
     }
 

@@ -1,15 +1,16 @@
-import { Component, Input, EventEmitter, Output, AfterViewInit } from '@angular/core';
-import { PopupContext } from '../../../core/popup-context';
-import { PopupMenuComponent } from '../../popup-menu.component';
-import { ContextMenuService } from '../../../context-menu.service';
+import { Component, Input, AfterViewInit } from '@angular/core';
 import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
+import { ContextMenuService } from '../../../context-menu.service';
+import { PopupMenuComponent } from '../../popup-menu.component';
+import { PopupContext } from '../../../core/popup-context';
+
 
 @Component({
-    selector: 'object-context',
+    selector: 'friend-context',
     styleUrls: ['../popup-menu-context.scss'],
-    templateUrl: 'object-context.component.html',
+    templateUrl: 'edit-friend-context.component.html',
 })
-export class ObjectContextComponent extends PopupContext implements AfterViewInit{
+export class EditFriendContextComponent extends PopupContext implements AfterViewInit{
     @Input() _backend: BackendService;
 
     private _inputName: HTMLInputElement;
@@ -30,7 +31,7 @@ export class ObjectContextComponent extends PopupContext implements AfterViewIni
         const popupPosition = {x: pos.x - 48, y: pos.y - 48};
 
         this.position = pos;
-        this.title = `Object (${mapObject.id.toUpperCase().substr(0, 8)})`;
+        this.title = `Friendly unit (${mapObject.id.toUpperCase().substr(0, 8)})`;
 
         this._mapObject = mapObject;
         this._popupMenu.setPosition(popupPosition);
@@ -48,7 +49,7 @@ export class ObjectContextComponent extends PopupContext implements AfterViewIni
 
     private _onConfirm() {
         this._backend.setMapObject(this._mapObject);
-        
+        //this._backend.updateMapObject();
         this._popupMenu.close();
     };
 }

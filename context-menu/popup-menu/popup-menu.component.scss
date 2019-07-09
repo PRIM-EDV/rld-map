@@ -1,5 +1,5 @@
 div#popup-menu {
-    position: absolute;
+    position: fixed;
     display: flex;
     flex-direction: column;
 
@@ -18,5 +18,13 @@ div#popup-menu {
         background-color: #2d2d2d;
         padding: 3px 8px 3px 8px;
         text-align: center;
+    }
+
+    .active {
+        display: block;
+    }
+
+    .in-active {
+        display: none;
     }
 }
