@@ -1,5 +1,6 @@
 import { Layer } from '../core/layer';
 import { MapObject, BackendService } from '../backend/backend.service';
+import { Coordinate } from '../backend/utils/coordinate.util';
 
 export class IconLayer extends Layer {
     private _canvas: HTMLCanvasElement;
@@ -7,7 +8,7 @@ export class IconLayer extends Layer {
     private _backend: BackendService;
     private _icons: Array<HTMLImageElement> = [];
     private _iconUrls: Array<string> = [
-        '/'
+        'assets/icons/marker_object'
     ];
 
     constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, backend: BackendService) {
@@ -37,6 +38,6 @@ export class IconLayer extends Layer {
     }
 
     private _drawObject(obj: MapObject) {
-        // this._ctx.drawImage(icon, ox, oy);
+        this._ctx.drawImage(this._icons[0], obj.coord.inCanvas.x, obj.coord.inCanvas.y);
     }
 }

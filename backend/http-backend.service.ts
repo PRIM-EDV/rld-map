@@ -20,15 +20,15 @@ export class HttpBackendService extends BackendService {
         super();
     }
 
-    public update() {
+    public synchronise() {
         const dst = url + 'map-object';
         
         this._http.get(dst, httpOptions).toPromise().then(
-            (res) => {
-
+            (res: Array<any>) => {
+                
             },
             (err) => {
-                
+
             }
         )
     }
@@ -56,6 +56,7 @@ export class HttpBackendService extends BackendService {
         return new Promise((resolve, reject) => {
             this._http.post(dst, dbMapObject, httpOptions).toPromise().then(
                 (res) => {
+                    
                     resolve();
                 },
                 (err) => {
@@ -72,5 +73,46 @@ export class HttpBackendService extends BackendService {
 
     public getMapObjects(): Array<MapObject> {
         return this._mapObjects;
+    }
+
+    private _createMapObjectFromBackend() {
+
+    }
+
+    private _getDeletedMapObjects(objects: Array<any>): Array<MapObject> {
+        return this._mapObjects.filter((mapObject) => {
+            if (objects.find((object) => {object.uid == mapObject.id})) {
+                return false;
+            } 
+            else {
+                return true;
+            }
+        })        
+    }
+
+    private _getCreatedMapObjects(objects: Array<any>): Array<MapObject> {
+        const createdMapObjects = [];
+        const createdObjects = objects.filter((object) => {
+            if (this._mapObjects.filter((mapObject) => {object.uid == mapObject.id})) {
+                return false;
+            } 
+            else {
+                return true;
+            }
+        })
+
+        createdObjects.forEach((object) => {
+            const mapObject: MapObject = {
+                id: object.uid,
+                name: object.name,
+                coord: new Coordinate(),
+                type: object.type,
+                update: true,
+            }
+            mapObject.coord.inMeter = object.position;
+            createdMapObjects.push(mapObject);
+        })
+
+        return createdMapObjects;
     }
 }
