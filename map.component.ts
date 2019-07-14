@@ -173,6 +173,9 @@ export class MapComponent implements AfterViewInit {
 
             this._canvas.width = width;
             this._canvas.height = height;
+            
+            // this._ctx.imageSmoothingEnabled = false;
+            this._ctx.imageSmoothingEnabled = false;
 
             this.update.call(this);
         });

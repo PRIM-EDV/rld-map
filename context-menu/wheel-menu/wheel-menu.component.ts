@@ -46,6 +46,5 @@ export class WheelMenuComponent implements AfterContentInit {
         this._wheelMenu.style.top = (position.y - 74).toString() + 'px';
         this._wheelMenu.style.left = (position.x - 74).toString() + 'px';
     }
-
 }
 
