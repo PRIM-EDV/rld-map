@@ -46,8 +46,8 @@ export class MapComponent implements AfterViewInit {
         this._mc = new Hammer(this._canvas);
 
         // Add map layers
-        this._layers.push(new MapLayer(this._canvas, this._ctx, this._mapfile));
-        this._layers.push(new IconLayer(this._canvas, this._ctx, this._backend));
+        this._layers.push(new MapLayer(this._canvas, this._ctx, this._mapfile, this._menuService));
+        this._layers.push(new IconLayer(this._canvas, this._ctx, this._backend, this._menuService));
 
         // while (!this._mapfile.isReady) {}
         // Add event listeners
@@ -161,8 +161,13 @@ export class MapComponent implements AfterViewInit {
         });
         this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
-            const position = {x: e.x, y: e.y};
-            this._menuService.wheelMenu.mapObjectContext.open(position);
+            // const position = {x: e.x, y: e.y};
+
+            for(let i=this._layers.length-1; i>=0; i--){
+                const layer = this._layers[i];
+                if(!layer.onContextMenu(e)) break;
+            }
+            // this._menuService.wheelMenu.mapObjectContext.open(position);
         });
     }
 
@@ -193,8 +198,9 @@ export class MapComponent implements AfterViewInit {
             }
         });
         this._mc.on('pan', (e: HammerInput) => {
-            for (const layer of this._layers) {
-                layer.onPan(e, offset);
+            for(let i=this._layers.length-1; i>=0; i--){
+                const layer = this._layers[i];
+                if(!layer.onPan(e, offset)) break;
             }
             this.update();
         });
@@ -208,7 +214,7 @@ export class MapComponent implements AfterViewInit {
         this._mc.add ( new Hammer.Pinch());
         this._mc.on('pinchstart', (e: HammerInput) => {
             pinch = Coordinate.scale;
-            center = {x: e.center.x, y: e.center.y};
+            center = {x: e.center.x - e.target.getBoundingClientRect().left, y: e.center.y - e.target.getBoundingClientRect().top};
             offset = Coordinate.offset;
 
             for (const layer of this._layers) {

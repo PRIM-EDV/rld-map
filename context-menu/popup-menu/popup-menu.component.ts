@@ -15,7 +15,7 @@ export class PopupMenuComponent implements AfterContentInit{
     @ViewChild(ObjectContextComponent)
     public objectContext: ObjectContextComponent;
 
-    private _activeContext: PopupContext;
+    private _activeContext: PopupContext = null;
     private _popupMenu: HTMLDivElement;
     private _position: {x: number, y: number};
     
@@ -31,7 +31,9 @@ export class PopupMenuComponent implements AfterContentInit{
     }
 
     public close() {
-        this._activeContext.close();
+        if (this._activeContext != null) {
+            this._activeContext.close();
+        }
         this._popupMenu.style.display = 'none';
     }
 
