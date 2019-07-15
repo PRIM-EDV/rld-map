@@ -4,6 +4,7 @@ import { BackendService } from '../../backend/backend.service';
 import { ContextMenuService } from '../context-menu.service';
 import { WheelMenuContext } from '../popup-menu/core/wheel-menu-context';
 import { MapObjectContextComponent } from './contexts/map-object-context/map-object-context.component';
+import { EditObjectContextComponent } from './contexts/edit-object-context/edit-object-context.component';
 
 @Component({
     selector: 'wheel-menu',
@@ -14,7 +15,10 @@ export class WheelMenuComponent implements AfterContentInit {
     @Input() _backend: BackendService;
 
     @ViewChild(MapObjectContextComponent)
-    public mapObjectContext: MapObjectContextComponent; 
+    public mapObjectContext: MapObjectContextComponent;
+
+    @ViewChild(EditObjectContextComponent)
+    public editObjectContext: EditObjectContextComponent; 
 
     private _activeContext: WheelMenuContext;
     private _position: {x: number, y: number};
@@ -31,6 +35,7 @@ export class WheelMenuComponent implements AfterContentInit {
 
     public close(): void {
         this._wheelMenu.hidden = true;
+        this._activeContext = null;
     }
 
     public open(): void {

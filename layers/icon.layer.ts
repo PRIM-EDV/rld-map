@@ -44,14 +44,16 @@ export class IconLayer extends Layer {
     public onContextMenu(e: MouseEvent): boolean {
         const mapObjects = this._backend.getMapObjects();
         const offset = this._canvas.getBoundingClientRect();
+
         for (let object of mapObjects) {
             if (this._isInBoundingBox(object, {x: e.x - offset.left, y: e.y - offset.top})) {
-                
+                const position = {x: object.coord.inCanvas.x + offset.left, y: object.coord.inCanvas.y + offset.top}
+                this._contextMenuService.wheelMenu.editObjectContext.open(position);
                 return false;
-            } else {
-                return true;
-            }
+            } 
         }
+
+        return true;
     }
 
     public onPanStart(e: HammerInput) {

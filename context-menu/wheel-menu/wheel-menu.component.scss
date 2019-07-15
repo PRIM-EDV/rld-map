@@ -5,5 +5,7 @@ div#wheel-menu {
     width: 148px;
     height: 148px;
 
-    
+    .in-active {
+        display: none;
+    }
 }
