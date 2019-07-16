@@ -5,7 +5,11 @@ div#wheel-menu {
     width: 148px;
     height: 148px;
 
+    .active {
+        visibility: initial;
+    }
+
     .in-active {
-        display: none;
+        visibility: hidden;
     }
 }

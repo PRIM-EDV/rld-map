@@ -34,12 +34,20 @@ export class WheelMenuComponent implements AfterContentInit {
 
 
     public close(): void {
-        this._wheelMenu.hidden = true;
-        this._activeContext = null;
+        if (this._activeContext != null) {
+            this._activeContext.close();
+            this._activeContext = null;
+        }
+
+        this._wheelMenu.style.visibility = "hidden";
+    }
+
+    public getContext(): WheelMenuContext {
+        return this._activeContext;
     }
 
     public open(): void {
-        this._wheelMenu.hidden = false;
+        this._wheelMenu.style.visibility = "initial";
     }
 
     public setContext(ctx: WheelMenuContext) {

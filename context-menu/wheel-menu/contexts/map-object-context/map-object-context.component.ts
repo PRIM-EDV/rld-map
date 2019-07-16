@@ -17,6 +17,8 @@ import { WheelMenuComponent } from '../../wheel-menu.component';
 export class MapObjectContextComponent extends WheelMenuContext {
     @Input() _backend: BackendService;
 
+    public isActive: boolean = false;
+
     private _popupMenu: PopupMenuComponent;
     private _wheelMenu: WheelMenuComponent;
 
@@ -34,6 +36,12 @@ export class MapObjectContextComponent extends WheelMenuContext {
         wheelMenu.setPosition(pos);
         wheelMenu.setContext(this);
         wheelMenu.open();
+        this.isActive = true;
+    }
+
+    public close() {
+        this.isActive = false;
+        console.log("Context-Closed");
     }
 
     public placeEnemy() {
