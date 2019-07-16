@@ -11,7 +11,7 @@ export class IconLayer extends Layer {
     private _draggedMapObject: MapObject = null;
     private _icons: Array<HTMLImageElement> = [];
     private _iconUrls: Array<string> = [
-        'assets/icons/marker_object.png'
+        'assets/icons/foe.svg'
     ];
     private _position = {x: 0, y:0};
 
@@ -70,6 +70,10 @@ export class IconLayer extends Layer {
         });
     }
 
+    public onPanEnd(e: HammerInput) {
+        this._draggedMapObject = null;
+    }
+
     public onPan(e: HammerInput, offset: {x: number, y: number}): boolean {
         if (this._draggedMapObject != null) {
             this._draggedMapObject.coord.inCanvas = {x: this._position.x + e.deltaX, y: this._position.y + e.deltaY};
@@ -84,12 +88,8 @@ export class IconLayer extends Layer {
     }
 
     private _drawObject(obj: MapObject) {
-        this._icons[0].style.width = "48px";
-        this._icons[0].style.height = "48px";
-        this._icons[0].width = 48;
-        this._icons[0].height = 48;
-        this._ctx.drawImage(this._icons[0],0, 0, 48, 48, obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48);
-        this._ctx.fillRect(obj.coord.inCanvas.x - 24,obj.coord.inCanvas.y - 24,48,48);
+        this._ctx.drawImage(this._icons[0],obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48);
+        // this._ctx.fillRect(obj.coord.inCanvas.x - 24,obj.coord.inCanvas.y - 24,48,48);
     }
 
     private _isInBoundingBox(mapObject: MapObject, pos: {x: number, y: number}): boolean {

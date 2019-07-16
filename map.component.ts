@@ -176,11 +176,12 @@ export class MapComponent implements AfterViewInit {
             const width = this._canvas.clientWidth;
             const height = this._canvas.clientHeight;
 
-            this._canvas.width = width;
-            this._canvas.height = height;
+            this._canvas.width = width * 2;
+            this._canvas.height = height * 2;
+            this._ctx.scale(2,2);
             
-            // this._ctx.imageSmoothingEnabled = false;
-            this._ctx.imageSmoothingEnabled = false;
+            //this._ctx.imageSmoothingEnabled = false;
+            //this._ctx.imageSmoothingEnabled = true;
 
             this.update.call(this);
         });
@@ -203,6 +204,11 @@ export class MapComponent implements AfterViewInit {
                 if(!layer.onPan(e, offset)) break;
             }
             this.update();
+        });
+        this._mc.on('panend', (e: HammerInput) => {
+            for (const layer of this._layers) {
+                layer.onPanEnd(e);
+            }
         });
     }
 
