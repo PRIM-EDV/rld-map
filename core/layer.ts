@@ -1,9 +1,12 @@
 import * as Hammer from 'hammerjs';
+import { BehaviorSubject } from 'rxjs';
 
 export abstract class Layer {
     public abstract draw();
+    public resourceReadyState = new BehaviorSubject<boolean>(false);
 
     public onContextMenu(e: MouseEvent): boolean {return true};
+    public onMouseMove(e: MouseEvent): boolean {return true};
     public onPanStart(e: HammerInput) {}
     public onPan(e: HammerInput, offset: {x: number, y: number}): boolean {return true}
     public onPanEnd(e: HammerInput) {};

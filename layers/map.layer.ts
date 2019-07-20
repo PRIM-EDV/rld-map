@@ -3,6 +3,7 @@ import { MapFile } from '../utils/map.util';
 import { Coordinate } from '../backend/utils/coordinate.util';
 import { Direction } from '../backend/utils/direction.util';
 import { ContextMenuService } from '../context-menu/context-menu.service';
+import { BehaviorSubject } from 'rxjs';
 
 export class MapLayer extends Layer {
     private _canvas: HTMLCanvasElement;
@@ -19,6 +20,13 @@ export class MapLayer extends Layer {
         this._ctx = ctx;
         this._contextMenuService = contextMenuService;
         this._mapfile = mapfile;
+
+        this._mapfile.resourceReadyState.subscribe((isReady: boolean) => {
+            if(isReady) {
+                this.resourceReadyState.next(true);
+                console.log("MapLayer - ready");
+            };
+        })
     }
 
     public draw() {

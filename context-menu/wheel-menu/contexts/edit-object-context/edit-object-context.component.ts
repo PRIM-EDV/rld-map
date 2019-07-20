@@ -19,6 +19,7 @@ export class EditObjectContextComponent extends WheelMenuContext {
 
     private _popupMenu: PopupMenuComponent;
     private _wheelMenu: WheelMenuComponent;
+    private _object: MapObject;
 
     constructor(private _contextMenuService: ContextMenuService) {
         super();
@@ -27,11 +28,17 @@ export class EditObjectContextComponent extends WheelMenuContext {
         this._wheelMenu = this._contextMenuService.wheelMenu;
     }
 
-    public open(pos: {x: number, y: number}) {
+    public open(pos: {x: number, y: number}, object: MapObject) {
 
         this.position = pos;
+        this._object = object;
+
         this._wheelMenu.setPosition(pos);
         this._wheelMenu.setContext(this);
         this._wheelMenu.open();
+    }
+
+    private _deleteMapObject() {
+        this._backend.deleteMapObject(this._object.id);
     }
 }

@@ -49,16 +49,24 @@ export class MapComponent implements AfterViewInit {
         this._layers.push(new MapLayer(this._canvas, this._ctx, this._mapfile, this._menuService));
         this._layers.push(new IconLayer(this._canvas, this._ctx, this._backend, this._menuService));
 
-        // while (!this._mapfile.isReady) {}
-        // Add event listeners
         this.startListenToResize();
         this.startListenToPan();
         this.startListenToPinch();
         this.startListenToScroll();
         this.startListenToClick();
-        // this._mapfile.layers[0].image.onload = () => {
-        //     this.update();
-        // };
+        this.startListenToMouseMove();
+
+        this.onResourcesReady(() => {
+            const width = this._canvas.clientWidth;
+            const height = this._canvas.clientHeight;
+
+            this._canvas.width = width * 2;
+            this._canvas.height = height * 2;
+            this._ctx.scale(2,2);
+
+            console.log("update");
+            this.update.call(this);
+        })
     }
     // handleDelete(ev: KeyboardEvent){
     //     if(this.mapService.selected && ev.key=="Delete"){
@@ -171,6 +179,18 @@ export class MapComponent implements AfterViewInit {
         });
     }
 
+    public startListenToMouseMove() {
+        this._canvas.addEventListener('mousemove', (e: MouseEvent) => {
+            for(let i=this._layers.length-1; i>=0; i--){
+                const layer = this._layers[i];
+                if(!layer.onMouseMove(e)){
+                    this.update();
+                    break;
+                };
+            }
+        })
+    };
+
     public startListenToResize() {
         window.addEventListener('resize', () => {
             const width = this._canvas.clientWidth;
@@ -240,6 +260,7 @@ export class MapComponent implements AfterViewInit {
             for (const layer of this._layers) {
                 layer.onScroll(e);
             }
+            this._menuService.wheelMenu.close();
             this.update();
         });
     }
@@ -249,6 +270,22 @@ export class MapComponent implements AfterViewInit {
 
         for (const layer of this._layers) {
             layer.draw();
+        }
+    }
+
+    private onResourcesReady(callback) {
+        let readyLayers = 0;
+
+        for (let layer of this._layers) {
+            layer.resourceReadyState.subscribe((isReady: boolean) => {
+                if(isReady) {
+                    readyLayers += 1;
+
+                    if(readyLayers == this._layers.length){
+                        callback();
+                    }
+                }
+            })
         }
     }
 

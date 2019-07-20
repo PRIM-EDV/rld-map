@@ -9,6 +9,7 @@ export class IconLayer extends Layer {
     private _contextMenuService: ContextMenuService;
     private _backend: BackendService;
     private _draggedMapObject: MapObject = null;
+    private _hoveredMapObject: MapObject = null;
     private _icons: Array<HTMLImageElement> = [];
     private _iconUrls: Array<string> = [
         'assets/icons/foe.svg'
@@ -27,11 +28,16 @@ export class IconLayer extends Layer {
             this._icons.push(new Image());
             this._icons[this._icons.length - 1].src = url;
         }
+
+        this.resourceReadyState.next(true);
     }
 
     public draw() {
         const mapObjects = this._backend.getMapObjects();
         for(let mapObject of mapObjects) {
+            if(mapObject == this._hoveredMapObject) {
+                this._ctx.fillRect(mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
+            }
             switch(mapObject.type) {
                 case "object": {
                     this._drawObject(mapObject)    
@@ -48,13 +54,40 @@ export class IconLayer extends Layer {
         for (let object of mapObjects) {
             if (this._isInBoundingBox(object, {x: e.x - offset.left, y: e.y - offset.top})) {
                 const position = {x: object.coord.inCanvas.x + offset.left, y: object.coord.inCanvas.y + offset.top}
-                this._contextMenuService.wheelMenu.editObjectContext.open(position);
+                this._contextMenuService.wheelMenu.editObjectContext.open(position, object);
                 return false;
             } 
         }
 
         return true;
     }
+
+    public onMouseMove(e: MouseEvent): boolean {
+        const mapObjects = this._backend.getMapObjects();
+        const offset = this._canvas.getBoundingClientRect();
+
+        for (let object of mapObjects) {
+            if (this._isInBoundingBox(object, {x: e.x - offset.left, y: e.y - offset.top})) {
+                if(this._hoveredMapObject != object) {
+                    this._hoveredMapObject = object;
+                    return false;
+                } else {
+                    return true;
+                }
+            } 
+        }
+
+        if(this._hoveredMapObject != null) {
+            this._hoveredMapObject = null;
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // public onScroll(e: WheelEvent) {
+    //     this._contextMenuService.wheelMenu.close();
+    // }
 
     public onPanStart(e: HammerInput) {
         const mapObjects = this._backend.getMapObjects();

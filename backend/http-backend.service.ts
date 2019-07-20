@@ -1,5 +1,5 @@
 import { BackendService, MapObject } from "./backend.service";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Coordinate } from "./utils/coordinate.util";
 import { Injectable } from '@angular/core';
 
@@ -10,6 +10,10 @@ const httpOptions = {
       'Content-Type':  'application/json'
     })
 };
+
+const headers = new HttpHeaders({
+    'Content-Type':  'application/json'
+});
 
 @Injectable({
     providedIn: 'root',
@@ -39,11 +43,18 @@ export class HttpBackendService extends BackendService {
         })
     }
 
-    public deleteMapObject(id: string): Promise<any> {
-        return new Promise((resolve, reject) => {
+    public async deleteMapObject(id: string): Promise<any> {
+        const dst = url + 'map-object';
+        console.log(`${dst}/${id}`)
+        try {
+            await this._http.delete(`${dst}/${id}`, {headers: headers}).toPromise();
+        }catch(e) {
+
+        }
         
-        });
+        return
     }
+
     public updateMapObject(id: string): Promise<any> {
         return new Promise((resolve, reject) => {
             
