@@ -2,6 +2,7 @@ import { BackendService, MapObject } from "./backend.service";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Coordinate } from "./utils/coordinate.util";
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 let url = "http://localhost:3000/"
 
@@ -20,6 +21,8 @@ const headers = new HttpHeaders({
 })
 export class HttpBackendService extends BackendService {
 
+    private _synchEvent = new Subject<void>();
+
     constructor(private _http: HttpClient){
         super();
         this.synchronise()
@@ -34,6 +37,7 @@ export class HttpBackendService extends BackendService {
                     this._getCreatedMapObjects(res).forEach(this._createInternalMapObject.bind(this));
                     this._getDeletedMapObjects(res).forEach(this._deleteInternalMapObject.bind(this));
 
+                    this._synchEvent.next();
                     resolve();
                 },
                 (err) => {
@@ -45,9 +49,9 @@ export class HttpBackendService extends BackendService {
 
     public async deleteMapObject(id: string): Promise<any> {
         const dst = url + 'map-object';
-        console.log(`${dst}/${id}`)
         try {
             await this._http.delete(`${dst}/${id}`, {headers: headers}).toPromise();
+            await this.synchronise();
         }catch(e) {
 
         }
@@ -60,6 +64,7 @@ export class HttpBackendService extends BackendService {
             
         });
     }
+
     public async createMapObject(obj: MapObject): Promise<any> {
         const dst = url + 'map-object';
 
@@ -88,12 +93,16 @@ export class HttpBackendService extends BackendService {
         return this._mapObjects;
     }
 
+    public onSynchronise(callback){
+        this._synchEvent.subscribe(callback);
+    }
+
     private _createInternalMapObject(mapObject: MapObject) {
         this._mapObjects.push(mapObject)
     }
 
     private _deleteInternalMapObject(mapObject: MapObject) {
-        // this._mapObjects.
+        this._mapObjects.splice(this._mapObjects.findIndex((x) => x.id == mapObject.id), 1);
     }
 
     private _updateInternalMapObject(mapObject: MapObject, dbObject: any) {
@@ -108,7 +117,7 @@ export class HttpBackendService extends BackendService {
             else {
                 return true;
             }
-        })        
+        })           
     }
 
     private _getCreatedMapObjects(objects: Array<any>): Array<MapObject> {
@@ -120,7 +129,6 @@ export class HttpBackendService extends BackendService {
             else {
                 return true;
             }
-            return true;
         })
 
         createdObjects.forEach((object) => {

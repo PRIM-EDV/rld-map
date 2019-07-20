@@ -39,6 +39,13 @@ export class EditObjectContextComponent extends WheelMenuContext {
     }
 
     private _deleteMapObject() {
-        this._backend.deleteMapObject(this._object.id);
+        this._backend.deleteMapObject(this._object.id).then(
+            (res) => {
+                this._wheelMenu.close();
+            },
+            (err) => {
+                this._wheelMenu.close();
+            }
+        );
     }
 }

@@ -20,4 +20,6 @@ export abstract class BackendService {
   public async abstract createMapObject(obj: MapObject): Promise<any>;
   public abstract getMapObject(id: string): MapObject;
   public abstract getMapObjects(): Array<MapObject>;
+
+  public onSynchronise(callback) {return};
 }

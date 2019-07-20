@@ -67,6 +67,10 @@ export class MapComponent implements AfterViewInit {
             console.log("update");
             this.update.call(this);
         })
+
+        this._backend.onSynchronise(() => {
+            this.update.call(this);
+        })
     }
     // handleDelete(ev: KeyboardEvent){
     //     if(this.mapService.selected && ev.key=="Delete"){
