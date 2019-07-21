@@ -1,6 +1,7 @@
 
 
 export class Coordinate {
+    protected static _viewportOffset = {x: 0, y: 0};
     protected static _offset = {x: 0, y: 0};
     protected static _origin = {x: 0, y: 0};
     protected static _scale = 1.0;
@@ -26,8 +27,16 @@ export class Coordinate {
         return this._offset;
     }
 
+    public static get viewportOffset(): {x: number, y: number} {
+        return this._viewportOffset
+    }
+
     public static set offset(coord: {x: number, y: number}) {
         this._offset = coord;
+    }
+
+    public static set viewportOffset(coord: {x: number, y: number}) {
+        this._viewportOffset = coord;
     }
 
     public get inPixel(): {x: number, y: number} {
@@ -49,11 +58,23 @@ export class Coordinate {
     }
 
     public get inCanvas(): {x: number, y: number} {
-        return {x: (this._x - Coordinate._offset.x) / Coordinate.scale, y: (this._y - Coordinate._offset.y) / Coordinate._scale};
+        return {x: (this._x - Coordinate._offset.x) / Coordinate._scale, y: (this._y - Coordinate._offset.y) / Coordinate._scale};
     }
 
     public set inCanvas(coord: {x: number, y: number}) {
         this._x = Coordinate._offset.x + (coord.x * Coordinate._scale);
         this._y = Coordinate._offset.y + (coord.y * Coordinate._scale);
+    }
+
+    public get inWindow() : {x: number, y: number} {
+        return {
+            x: ((this._x - Coordinate._offset.x) / Coordinate._scale) + Coordinate._viewportOffset.x, 
+            y: ((this._y - Coordinate._offset.y) / Coordinate._scale) + Coordinate._viewportOffset.y
+        };
+    }
+
+    public set inWindow(coord: {x: number, y: number}) {
+        this._x = Coordinate._offset.x + ((coord.x - Coordinate._viewportOffset.x) * Coordinate._scale);
+        this._y = Coordinate._offset.y + ((coord.y - Coordinate._viewportOffset.y) * Coordinate._scale);
     }
 }

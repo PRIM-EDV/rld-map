@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { PopupContext } from '../../core/popup-context';
-import { BackendService } from 'src/app/map/backend/backend.service';
+import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
 import { ContextMenuService } from '../../../context-menu.service';
 import { PopupMenuComponent } from '../../popup-menu.component';
 
@@ -14,7 +14,7 @@ export class ObjectContextComponent extends PopupContext implements AfterViewIni
     @Input() _backend: BackendService;
 
     private _inputName: HTMLInputElement;
-    private _mapObjectId: string;
+    private _mapObject: MapObject;
     private _popupMenu: PopupMenuComponent;
 
     constructor(private _contextMenuService: ContextMenuService) {
@@ -27,12 +27,14 @@ export class ObjectContextComponent extends PopupContext implements AfterViewIni
         this._inputName = document.getElementById('input-name') as HTMLInputElement;
     }
 
-    public open(pos: {x: number, y: number}, id: string) {
-        this.position = pos;
-        this.title = `Edit Object (${id.toUpperCase().substr(0, 8)})`;
+    public open(pos: {x: number, y: number}, mapObject: MapObject) {
+        const popupPosition = {x: pos.x - 48, y: pos.y - 48};
 
-        this._mapObjectId = id;
-        this._popupMenu.setPosition(pos);
+        this.position = pos;
+        this.title = `Object (${mapObject.id.toUpperCase().substr(0, 8)})`;
+
+        this._mapObject = mapObject;
+        this._popupMenu.setPosition(popupPosition);
         this._popupMenu.setContext(this);
         this._popupMenu.open();
     }
@@ -46,6 +48,7 @@ export class ObjectContextComponent extends PopupContext implements AfterViewIni
     }
 
     private _onConfirm() {
+        this._backend.setMapObject(this._mapObject);
         //this._backend.updateMapObject();
         this._popupMenu.close();
     };

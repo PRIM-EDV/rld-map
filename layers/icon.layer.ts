@@ -12,6 +12,8 @@ export class IconLayer extends Layer {
     private _hoveredMapObject: MapObject = null;
     private _icons: Array<HTMLImageElement> = [];
     private _iconUrls: Array<string> = [
+        'assets/icons/object.svg',
+        'assets/icons/friend.svg',
         'assets/icons/foe.svg'
     ];
     private _position = {x: 0, y:0};

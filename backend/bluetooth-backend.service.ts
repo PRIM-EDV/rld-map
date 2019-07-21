@@ -12,6 +12,10 @@ export class BluetoothBackendService extends BackendService {
         super();
     }
 
+    public async setMapObject(mapObject: MapObject): Promise<any> {
+        
+    }
+
     public deleteMapObject(id: string): Promise<any> {
         return new Promise((resolve, reject) => {
         

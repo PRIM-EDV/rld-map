@@ -41,41 +41,22 @@ export class MapObjectContextComponent extends WheelMenuContext {
 
     public close() {
         this.isActive = false;
-        console.log("Context-Closed");
     }
 
     public placeEnemy() {
-        const popupMenu = this._contextMenuService.popupMenu;
-        const wheelMenu = this._contextMenuService.wheelMenu;
 
-        // this._backend.createMapObject().then(
-        //     (res) => {
-        //         // popupMenu.objectContext.open('abc');
-        //         wheelMenu.close();
-        //     },
-        //     (err) => {
-        //         wheelMenu.close();
-        //     }
-        // );
     }
 
     public placeObject() {
         const mapObject = this._newObject();
 
-        this._backend.createMapObject(mapObject).then(
-            (res) => {
-                this._popupMenu.objectContext.open(this.position, mapObject.id);
-                this._wheelMenu.close();
-            },
-            (err) => {
-                this._wheelMenu.close();
-            }
-        );
+        this._popupMenu.objectContext.open(this.position, mapObject);
+        this._wheelMenu.close();
     }
 
     private _newObject(): MapObject {
         const coord = new Coordinate();
-        coord.inCanvas = this.position;
+        coord.inWindow = {x: this.position.x, y: this.position.y};
 
         return {
             id: uuid(),

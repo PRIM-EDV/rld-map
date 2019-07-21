@@ -97,6 +97,14 @@ export class HttpBackendService extends BackendService {
         this._synchEvent.subscribe(callback);
     }
 
+    public async setMapObject(mapObject: MapObject): Promise<any> {
+        if (this._mapObjects.find(x => x.id == mapObject.id)) {
+            this.updateMapObject('');
+        } else {
+            this.createMapObject(mapObject);
+        }
+    }
+
     private _createInternalMapObject(mapObject: MapObject) {
         this._mapObjects.push(mapObject)
     }

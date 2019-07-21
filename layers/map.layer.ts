@@ -24,7 +24,6 @@ export class MapLayer extends Layer {
         this._mapfile.resourceReadyState.subscribe((isReady: boolean) => {
             if(isReady) {
                 this.resourceReadyState.next(true);
-                console.log("MapLayer - ready");
             };
         })
     }

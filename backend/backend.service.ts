@@ -16,8 +16,7 @@ export abstract class BackendService {
   protected _mapObjects: Array<MapObject> = []
 
   public async abstract deleteMapObject(id: string): Promise<any>;
-  public abstract updateMapObject(id: string): Promise<any>;
-  public async abstract createMapObject(obj: MapObject): Promise<any>;
+  public async abstract setMapObject(mapObject: MapObject): Promise<any>;
   public abstract getMapObject(id: string): MapObject;
   public abstract getMapObjects(): Array<MapObject>;
 
