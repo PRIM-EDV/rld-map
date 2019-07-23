@@ -42,7 +42,7 @@ export class MapLayer extends Layer {
         return true;
     }
 
-    public onPan(e: HammerInput, offset: {x: number, y: number}): boolean {
+    public onPan(e: any, offset: {x: number, y: number}): boolean {
         if (e.maxPointers === 1) {
             Coordinate.offset = {
                 x: offset.x - e.deltaX * Coordinate.scale, // Math.max(Math.min(0, this.mx), Math.min(Math.max(0, this.mx), offset.x - e.deltaX * Coordinate.scale)),
