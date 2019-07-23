@@ -4,7 +4,7 @@ import { Coordinate } from "./utils/coordinate.util";
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-let url = "http://localhost:3000/"
+let url = "http://yavin-iv.ddnss.de:3000/"
 
 const httpOptions = {
     headers: new HttpHeaders({
