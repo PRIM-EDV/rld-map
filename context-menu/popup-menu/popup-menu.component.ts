@@ -3,6 +3,7 @@ import { BackendService } from '../../backend/backend.service';
 import { ContextMenuService } from '../context-menu.service';
 import { ObjectContextComponent } from './contexts/object-context/object-context.component';
 import { PopupContext } from './core/popup-context';
+import { EditFriendContextComponent } from './contexts/edit-friend-context/edit-friend-context.component';
 
 @Component({
     selector: 'popup-menu',
@@ -17,6 +18,9 @@ export class PopupMenuComponent implements AfterContentInit{
 
     @ViewChild(ObjectContextComponent)
     public objectContext: ObjectContextComponent;
+
+    @ViewChild(EditFriendContextComponent)
+    public editFriendContext: EditFriendContextComponent;
 
     private _activeContext: PopupContext = null;
     private _popupMenu: HTMLDivElement;

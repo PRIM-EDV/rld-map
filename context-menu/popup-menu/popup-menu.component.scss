@@ -19,4 +19,12 @@ div#popup-menu {
         padding: 3px 8px 3px 8px;
         text-align: center;
     }
+
+    .active {
+        display: block;
+    }
+
+    .in-active {
+        display: none;
+    }
 }
