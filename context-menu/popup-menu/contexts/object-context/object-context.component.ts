@@ -1,9 +1,8 @@
 import { Component, Input, EventEmitter, Output, AfterViewInit } from '@angular/core';
-import { PopupContext } from '../../core/popup-context';
-import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
-import { ContextMenuService } from '../../../context-menu.service';
+import { PopupContext } from '../../../core/popup-context';
 import { PopupMenuComponent } from '../../popup-menu.component';
-
+import { ContextMenuService } from '../../../context-menu.service';
+import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
 
 @Component({
     selector: 'object-context',
@@ -49,7 +48,7 @@ export class ObjectContextComponent extends PopupContext implements AfterViewIni
 
     private _onConfirm() {
         this._backend.setMapObject(this._mapObject);
-        //this._backend.updateMapObject();
+        
         this._popupMenu.close();
     };
 }

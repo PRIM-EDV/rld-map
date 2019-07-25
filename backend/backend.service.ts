@@ -8,6 +8,12 @@ export interface MapObject {
   coord: Coordinate;
   update: boolean;
   type: string;
+
+  meta: {
+    description?: string;
+    size?: number;
+    wounded?: number;
+  }
 }
 
 

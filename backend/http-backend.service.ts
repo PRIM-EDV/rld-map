@@ -86,7 +86,7 @@ export class HttpBackendService extends BackendService {
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: "", coord: new Coordinate(), update: false, name: "", type: ""}
+        return {id: "", coord: new Coordinate(), update: false, name: "", type: "", meta: {}}
     }
 
     public getMapObjects(): Array<MapObject> {
@@ -146,6 +146,7 @@ export class HttpBackendService extends BackendService {
                 coord: new Coordinate(),
                 type: object.type,
                 update: true,
+                meta: {}
             }
             mapObject.coord.inMeter = object.position;
             createdMapObjects.push(mapObject);

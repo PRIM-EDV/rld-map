@@ -1,8 +1,9 @@
 import {Component, AfterContentInit, Input, ViewChild, ElementRef} from '@angular/core';
 import { BackendService } from '../../backend/backend.service';
 import { ContextMenuService } from '../context-menu.service';
+
+import { PopupContext } from '../core/popup-context';
 import { ObjectContextComponent } from './contexts/object-context/object-context.component';
-import { PopupContext } from './core/popup-context';
 import { EditFriendContextComponent } from './contexts/edit-friend-context/edit-friend-context.component';
 
 @Component({
@@ -20,7 +21,7 @@ export class PopupMenuComponent implements AfterContentInit{
     public objectContext: ObjectContextComponent;
 
     @ViewChild(EditFriendContextComponent)
-    public editFriendContext: EditFriendContextComponent;
+    public friendContext: EditFriendContextComponent;
 
     private _activeContext: PopupContext = null;
     private _popupMenu: HTMLDivElement;
@@ -48,6 +49,7 @@ export class PopupMenuComponent implements AfterContentInit{
     }
 
     public open() {
+        console.log(this._activeContext)
         this._popupMenu.style.display = 'block';
     }
 

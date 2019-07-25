@@ -1,12 +1,12 @@
 import { Component, Input, AfterViewInit } from '@angular/core';
-import { PopupContext } from '../../core/popup-context';
 import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
 import { ContextMenuService } from '../../../context-menu.service';
 import { PopupMenuComponent } from '../../popup-menu.component';
+import { PopupContext } from '../../../core/popup-context';
 
 
 @Component({
-    selector: 'edit-friend-context',
+    selector: 'friend-context',
     styleUrls: ['../popup-menu-context.scss'],
     templateUrl: 'edit-friend-context.component.html',
 })

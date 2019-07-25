@@ -2,12 +2,13 @@
 import { v4 as uuid } from 'uuid';
 
 import { Component, Input } from '@angular/core';
-import { WheelMenuContext } from '../../../popup-menu/core/wheel-menu-context';
+import { WheelMenuContext } from '../../../core/wheel-menu-context';
 import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
 import { ContextMenuService } from '../../../context-menu.service';
 import { Coordinate } from 'src/app/map/backend/utils/coordinate.util';
 import { PopupMenuComponent } from '../../../popup-menu/popup-menu.component';
 import { WheelMenuComponent } from '../../wheel-menu.component';
+
 
 @Component({
     selector: 'map-object-context',
@@ -54,6 +55,27 @@ export class MapObjectContextComponent extends WheelMenuContext {
         this._wheelMenu.close();
     }
 
+    public placeFriend() {
+        const mapObject = this._newFriend();
+
+        this._popupMenu.friendContext.open(this.position, mapObject);
+        this._wheelMenu.close();
+    }
+
+    private _newFriend(): MapObject {
+        const coord = new Coordinate();
+        coord.inWindow = {x: this.position.x, y: this.position.y};
+
+        return {
+            id: uuid(),
+            name: '',
+            coord: coord,
+            update: true,
+            type: 'friend',
+            meta: {}
+        }
+    }
+
     private _newObject(): MapObject {
         const coord = new Coordinate();
         coord.inWindow = {x: this.position.x, y: this.position.y};
@@ -63,7 +85,8 @@ export class MapObjectContextComponent extends WheelMenuContext {
             name: '',
             coord: coord,
             update: true,
-            type: 'object'
+            type: 'object',
+            meta: {}
         }
     }
 }

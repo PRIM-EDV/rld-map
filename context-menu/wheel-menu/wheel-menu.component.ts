@@ -2,7 +2,7 @@ import {Component, AfterContentInit, Input, ViewChild} from '@angular/core';
 
 import { BackendService } from '../../backend/backend.service';
 import { ContextMenuService } from '../context-menu.service';
-import { WheelMenuContext } from '../popup-menu/core/wheel-menu-context';
+import { WheelMenuContext } from '../core/wheel-menu-context';
 import { MapObjectContextComponent } from './contexts/map-object-context/map-object-context.component';
 import { EditObjectContextComponent } from './contexts/edit-object-context/edit-object-context.component';
 

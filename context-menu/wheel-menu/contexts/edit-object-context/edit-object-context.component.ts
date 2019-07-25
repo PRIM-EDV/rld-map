@@ -2,12 +2,12 @@
 import { v4 as uuid } from 'uuid';
 
 import { Component, Input } from '@angular/core';
-import { WheelMenuContext } from '../../../popup-menu/core/wheel-menu-context';
+import { WheelMenuContext } from '../../../core/wheel-menu-context';
 import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
 import { ContextMenuService } from '../../../context-menu.service';
-import { Coordinate } from 'src/app/map/backend/utils/coordinate.util';
 import { PopupMenuComponent } from '../../../popup-menu/popup-menu.component';
 import { WheelMenuComponent } from '../../wheel-menu.component';
+
 
 @Component({
     selector: 'edit-object-context',

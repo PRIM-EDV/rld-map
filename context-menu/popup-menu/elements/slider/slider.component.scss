@@ -1,0 +1,11 @@
+div.slider {
+    position: relative;
+}
+
+div.handle {
+    position: absolute;
+    background: #f00;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
