@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, AfterContentInit, Output, EventEmitter  } from '@angular/core';
 
 
 @Component({
@@ -31,6 +31,9 @@ export class SliderComponent implements AfterContentInit {
     @Input()
     public value: number;
 
+    @Output()
+    public valueChange: EventEmitter<number> = new EventEmitter();
+
     public index: number = 0;
 
     constructor() {
@@ -48,6 +51,7 @@ export class SliderComponent implements AfterContentInit {
             
             this.index = Math.min(Math.max(0, Math.round(relMouseX / stepSize)), this.steps - 1);
             this.value = this.getValueByIndex(this.index);
+            this.valueChange.emit(this.value);
             this.update.call(this);
 
             isDragged = true;
@@ -60,6 +64,7 @@ export class SliderComponent implements AfterContentInit {
             if(isDragged) {
                 this.index = Math.min(Math.max(0, Math.round(relMouseX / stepSize)), this.steps - 1); 
                 this.value = this.getValueByIndex(this.index);
+                this.valueChange.emit(this.value);
                 this.update.call(this);
             }
         })

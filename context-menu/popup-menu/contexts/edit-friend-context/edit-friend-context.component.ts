@@ -18,6 +18,9 @@ export class EditFriendContextComponent extends PopupContext implements AfterVie
     private _mapObject: MapObject;
     private _popupMenu: PopupMenuComponent;
 
+    private _nbCombatants: number = 0;
+    private _tickValues: Array<number> = [0, 0];
+
     constructor(private _contextMenuService: ContextMenuService) {
         super();
 
@@ -42,6 +45,14 @@ export class EditFriendContextComponent extends PopupContext implements AfterVie
 
     public close() {
 
+    }
+
+    public onCombatantsChange(e: number) {
+        this._nbCombatants = e;
+    }
+
+    private _getTickLabels() {
+        
     }
 
     private _onCancel() {
