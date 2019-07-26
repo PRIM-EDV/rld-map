@@ -6,6 +6,7 @@ import { PopupContext } from '../../../core/popup-context';
 
 
 @Component({
+    
     selector: 'friend-context',
     styleUrls: ['../popup-menu-context.scss'],
     templateUrl: 'edit-friend-context.component.html',
