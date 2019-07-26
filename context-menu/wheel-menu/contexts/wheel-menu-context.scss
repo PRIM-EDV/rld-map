@@ -22,9 +22,8 @@ div.content {
         width: 48px;
         height: 48px;
         // border-right: 2px solid #007acc;
-        background-color: rgba(0,0,0, 0.8);
-        background-image: url('../../../../../assets/imgs/corner_2.png');
-         
+        background-color: #151515;
+        // box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);         
     
         div.label {
             text-align: center;
@@ -36,7 +35,7 @@ div.content {
             font-family: 'roboto';
             font-size: 14px;
             color: #a0a0a0;
-            background-color: rgba(0,0,0, 0.8);
+            background-color: #151515;
     //            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
         }
     
@@ -55,7 +54,6 @@ div.content {
     }
     
     div.button.tl {
-        background-image: url('../../../../../assets/imgs/corner_1.png');
         top: 0;
         left: 0;
     
@@ -119,7 +117,7 @@ div.content {
         transition: all 0.1s ease 0s;
     }
     
-    div.button:hover {
-        background-color: rgba(0,0,0, 0.6);
-    }
+    // div.button:hover {
+    //     // background-color: rgba(0,0,0, 0.6);
+    // }
 }
