@@ -128,8 +128,6 @@ export class IconLayer extends Layer {
     }
 
     private _isInBoundingBox(mapObject: MapObject, pos: {x: number, y: number}): boolean {
-        // console.log(Math.abs(pos.x - mapObject.coord.inCanvas.x))
-        // console.log(Math.abs(pos.y - mapObject.coord.inCanvas.y))
         if (Math.abs(pos.x - mapObject.coord.inCanvas.x) > 24) return false;
         if (Math.abs(pos.y - mapObject.coord.inCanvas.y) > 24) return false;
 
