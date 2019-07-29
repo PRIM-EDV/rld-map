@@ -1,21 +1,18 @@
 import { Layer } from '../core/layer';
 import { MapObject, BackendService } from '../backend/backend.service';
 import { Coordinate } from '../backend/utils/coordinate.util';
-import { ContextMenuService } from '../context-menu/context-menu.service';
+import { ContextMenuService } from '../shared/context-menu.service';
+import { PrimIconset } from '../utils/prim.iconset';
 
 export class IconLayer extends Layer {
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
+    private _iconset: PrimIconset = new PrimIconset();
     private _contextMenuService: ContextMenuService;
     private _backend: BackendService;
     private _draggedMapObject: MapObject = null;
     private _hoveredMapObject: MapObject = null;
-    private _icons: Array<HTMLImageElement> = [];
-    private _iconUrls: Array<string> = [
-        'assets/icons/object.svg',
-        'assets/icons/friend.svg',
-        'assets/icons/foe.svg'
-    ];
+
     private _position = {x: 0, y:0};
 
     constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, backend: BackendService, contextMenuService: ContextMenuService) {
@@ -26,27 +23,38 @@ export class IconLayer extends Layer {
         this._ctx = ctx;
         this._backend = backend;
 
-        for (const url of this._iconUrls) {
-            this._icons.push(new Image());
-            this._icons[this._icons.length - 1].src = url;
-        }
-
-        this.resourceReadyState.next(true);
+        this._iconset.resourceReadyState.subscribe((isReady: boolean) => {
+            if(isReady) {
+                this.resourceReadyState.next(true);
+            };
+        })
     }
 
     public draw() {
         const mapObjects = this._backend.getMapObjects();
         for(let mapObject of mapObjects) {
             if(mapObject == this._hoveredMapObject) {
-                this._ctx.fillRect(mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
+                this._ctx.drawImage(this._iconset.select,mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48)
             }
             switch(mapObject.type) {
                 case "object": {
-                    this._drawObject(mapObject)    
+                    this._drawObject(mapObject);   
+                    break;
+                }
+                case "friend": {
+                    this._drawFriend(mapObject);
+                    break;
+                }
+                case "foe": {
+                    this._drawFoe(mapObject);
                     break;
                 }
             }    
         }
+    }
+
+    public onClick(pos: {x: number, y: number}) {
+        
     }
 
     public onContextMenu(e: MouseEvent): boolean {
@@ -67,46 +75,56 @@ export class IconLayer extends Layer {
     public onMouseMove(e: MouseEvent): boolean {
         const mapObjects = this._backend.getMapObjects();
         const offset = this._canvas.getBoundingClientRect();
+        let nearMapObjects = [];
 
-        for (let object of mapObjects) {
+        mapObjects.forEach(object => {
             if (this._isInBoundingBox(object, {x: e.x - offset.left, y: e.y - offset.top})) {
-                if(this._hoveredMapObject != object) {
-                    this._hoveredMapObject = object;
-                    return false;
-                } else {
-                    return true;
-                }
+                nearMapObjects.push(object);
+            } 
+        });
+
+        if(nearMapObjects.length > 0){
+            let object = this._getMapObjectNearestToCursor(nearMapObjects, {x: e.x - offset.left, y: e.y - offset.top});
+            
+            if(this._hoveredMapObject != object) {
+                this._hoveredMapObject = object;
+                return false;
+            } 
+        } else {
+            if(this._hoveredMapObject != null) {
+                this._hoveredMapObject = null;
+                return false;
             } 
         }
 
-        if(this._hoveredMapObject != null) {
-            this._hoveredMapObject = null;
-            return false;
-        } else {
-            return true;
-        }
+        return true;
     }
-
-    // public onScroll(e: WheelEvent) {
-    //     this._contextMenuService.wheelMenu.close();
-    // }
 
     public onPanStart(e: HammerInput) {
         const mapObjects = this._backend.getMapObjects();
+        let nearMapObjects = [];
         
         this._position = { x: e.center.x - e.target.getBoundingClientRect().left, y: e.center.y - e.target.getBoundingClientRect().top}
         mapObjects.forEach(object => {
             if (this._isInBoundingBox(object, this._position)) {
-                this._draggedMapObject = object;
-                return false;
-            } else {
-                return true;
-            }
+                nearMapObjects.push(object);
+            } 
         });
+
+        if(nearMapObjects.length > 0){
+            this._draggedMapObject = this._getMapObjectNearestToCursor(nearMapObjects, this._position);
+            this._draggedMapObject.update = false;
+        } else {
+            return true;
+        }   
     }
 
     public onPanEnd(e: HammerInput) {
-        this._draggedMapObject = null;
+        if(this._draggedMapObject != null) {
+            this._backend.setMapObject(this._draggedMapObject).then();
+            this._draggedMapObject.update = true;
+            this._draggedMapObject = null;
+        }
     }
 
     public onPan(e: HammerInput, offset: {x: number, y: number}): boolean {
@@ -118,13 +136,87 @@ export class IconLayer extends Layer {
         }
     }
 
-    public onClick(pos: {x: number, y: number}) {
+    private _drawFoe(obj: MapObject) {
+        this._ctx.drawImage(this._iconset.foe,obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48)
+    }
+
+    private _drawFriend(obj: MapObject) {
+        this._ctx.drawImage(this._iconset.friend,obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48)
+
+        if (obj.meta.size - obj.meta.wounded > 0) {
+            this._ctx.drawImage(this._iconset.unitSizeFriend[obj.meta.size - 1 - obj.meta.wounded], obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48)
+        }
+
+        if (obj.meta.wounded > 0) {
+            this._ctx.drawImage(this._iconset.woundedFriend[obj.meta.wounded - 1], obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48)
+        }
         
+        // if(Number.isNaN(obj.meta.size) || obj.meta.size == 0 || obj.meta.size == undefined) {
+        //     // this._ctx.drawImage(this._iconset.unitSizeFriend[14],obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48)
+        // } else {
+            // this._ctx.drawImage(this._iconset.unitSizeFriend[obj.meta.size - 1 - obj.meta.wounded], obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48)
+        // }
+
+        // if(Number.isNaN(obj.meta.wounded) || obj.meta.wounded == 0 || obj.meta.wounded == undefined) {
+        //     // this._ctx.drawImage(this._iconset.woundedFriend[14], obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48)
+        // } else {
+            // this._ctx.drawImage(this._iconset.woundedFriend[obj.meta.wounded - 1], obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48)
+        // }
+
+        if(obj == this._hoveredMapObject && obj != this._draggedMapObject) {
+            this._drawLine(obj.name, {x: obj.coord.inCanvas.x + 26, y: obj.coord.inCanvas.y})
+
+            if(obj.meta.description) {
+                this._drawMultiLine(obj.meta.description, {x: obj.coord.inCanvas.x + 26, y: obj.coord.inCanvas.y + 24}, 200);
+            }
+        }
+
+        this._drawLine(obj.meta.callsign, {x: obj.coord.inCanvas.x + 26, y: obj.coord.inCanvas.y - 24})
     }
 
     private _drawObject(obj: MapObject) {
-        this._ctx.drawImage(this._icons[0],obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48);
+        this._ctx.drawImage(this._iconset.object,obj.coord.inCanvas.x - 24, obj.coord.inCanvas.y - 24, 48, 48);
+        this._drawLine(obj.name, {x: obj.coord.inCanvas.x + 26, y: obj.coord.inCanvas.y - 24})
         // this._ctx.fillRect(obj.coord.inCanvas.x - 24,obj.coord.inCanvas.y - 24,48,48);
+    }
+
+    private _drawLine(name: string, pos: {x: number, y: number}) {
+        const textWidth = this._ctx.measureText(name).width;
+
+        if(textWidth > 0) {
+            this._ctx.fillStyle = "#151515";
+            this._ctx.fillRect(pos.x, pos.y, textWidth + 12, 22);
+            this._ctx.fillStyle = "#a0a0a0";
+            this._ctx.font = "14px roboto";
+            this._ctx.fillText(name , pos.x + 6, pos.y + 16);
+        }
+    }
+
+    private _drawMultiLine(text: string, pos: {x: number, y: number}, width: number) {
+        const words = text.split(' ');
+        let lines = [];
+        let line = '';
+
+        words.forEach((word, index) => {
+            if(this._ctx.measureText(line + ' ' + word).width > (width - 12)) {
+                lines.push(line);
+                line = word;
+            } else {
+                line += ' ' + word;
+            }
+
+            if(index == words.length - 1) {
+                lines.push(line);
+            }
+        });
+
+        lines.forEach((line, index) => {
+            this._ctx.fillStyle = "#151515";
+            this._ctx.fillRect(pos.x, pos.y + index * 24, width, 24);
+            this._ctx.fillStyle = "#a0a0a0";
+            this._ctx.font = "14px roboto";
+            this._ctx.fillText(line , pos.x + 6, pos.y + index * 24 + 17);
+        });       
     }
 
     private _isInBoundingBox(mapObject: MapObject, pos: {x: number, y: number}): boolean {
@@ -132,5 +224,21 @@ export class IconLayer extends Layer {
         if (Math.abs(pos.y - mapObject.coord.inCanvas.y) > 24) return false;
 
         return true;
+    }
+
+    private _getMapObjectNearestToCursor(mapObjects: Array<MapObject>, cursorPos: {x: number, y: number}) {
+        let dist = Infinity;
+        let ret = null;
+
+        mapObjects.forEach((mapObject) => {
+            let objectDist = Math.pow(mapObject.coord.inCanvas.x - cursorPos.x, 2) + Math.pow(mapObject.coord.inCanvas.y - cursorPos.y, 2);
+
+            if(objectDist < dist) {
+                dist = objectDist;
+                ret = mapObject;
+            }
+        })
+
+        return ret;
     }
 }

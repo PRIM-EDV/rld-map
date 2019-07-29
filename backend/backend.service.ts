@@ -13,18 +13,26 @@ export interface MapObject {
     description?: string;
     size?: number;
     wounded?: number;
+    callsign?: string;
   }
+}
+
+export interface Squad {
+  name: string;
+  callsign: string;
 }
 
 
 @Injectable()
 export abstract class BackendService {
-  protected _mapObjects: Array<MapObject> = []
+  protected _mapObjects: Array<MapObject> = [];
+  protected _squads: Array<Squad> = [];
 
   public async abstract deleteMapObject(id: string): Promise<any>;
   public async abstract setMapObject(mapObject: MapObject): Promise<any>;
   public abstract getMapObject(id: string): MapObject;
   public abstract getMapObjects(): Array<MapObject>;
 
+  public getSquads(): Array<Squad> {return []};
   public onSynchronise(callback) {return};
 }

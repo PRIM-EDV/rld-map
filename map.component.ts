@@ -1,16 +1,17 @@
 import {Component, ViewChild, Injector, Input, AfterViewInit} from '@angular/core';
 import * as Hammer from 'hammerjs';
-import { BackendService } from './backend/backend.service';
-// import { MapService } from "./map.service";
+import { BackendService, MapObject } from './backend/backend.service';
 import { Coordinate } from './backend/utils/coordinate.util';
 import { MapFile, MapData} from './utils/map.util';
+import { ContextMenuService } from './shared/context-menu.service';
+import { MapService } from './map.service';
 
 // Test
 import { PrimMap } from './utils/prim.map';
 import { Layer } from './core/layer';
 import { MapLayer } from './layers/map.layer';
 import { IconLayer } from './layers/icon.layer';
-import { ContextMenuService } from './context-menu/context-menu.service';
+
 
 @Component({
     selector: 'map',
@@ -29,14 +30,10 @@ export class MapComponent implements AfterViewInit {
     private _mapfile: MapFile = null;
     private _origin: Coordinate = new Coordinate();
 
-    // // Quick and Dirty
-    // dragX: number = 0;
-    // dragY: number = 0;
-    // dragItemX: number = 0;
-    // dragItemY: number = 0;
 
-    constructor(private _menuService: ContextMenuService) {
+    constructor(private _menuService: ContextMenuService, private _mapService: MapService) {
         this._mapfile = new PrimMap();
+        this._mapService.map = this;
     }
 
     ngAfterViewInit() {
@@ -75,6 +72,25 @@ export class MapComponent implements AfterViewInit {
         })
     }
 
+    public centerToMapObject(mapObject: MapObject) {
+        const width = this._canvas.clientWidth;
+        const height = this._canvas.clientHeight;
+        const coords = mapObject.coord.inCanvas;
+
+        Coordinate.offset.x -= (width / 2 - coords.x) * Coordinate.scale;
+        Coordinate.offset.y -= (height / 2 - coords.y) * Coordinate.scale;
+
+        this.update();
+    }
+
+    public getCenter() {
+        const width = this._canvas.clientWidth;
+        const height = this._canvas.clientHeight;
+
+
+        return {x: width / 2, y: height / 2};
+    }
+
     public startListenToClick() {
         this._canvas.addEventListener('mousedown', (e: MouseEvent) => {
             if (e.button === 0) {
@@ -84,13 +100,11 @@ export class MapComponent implements AfterViewInit {
         });
         this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
-            // const position = {x: e.x, y: e.y};
 
             for(let i=this._layers.length-1; i>=0; i--){
                 const layer = this._layers[i];
                 if(!layer.onContextMenu(e)) break;
             }
-            // this._menuService.wheelMenu.mapObjectContext.open(position);
         });
     }
 
@@ -114,9 +128,6 @@ export class MapComponent implements AfterViewInit {
             this._canvas.width = width * 2;
             this._canvas.height = height * 2;
             this._ctx.scale(2,2);
-            
-            //this._ctx.imageSmoothingEnabled = false;
-            //this._ctx.imageSmoothingEnabled = true;
 
             this.update.call(this);
         });

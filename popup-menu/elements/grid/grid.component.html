@@ -1,0 +1,3 @@
+<div class="grid">
+    <div class="item" (click)="this._activeEntry=entry;" [ngClass]="this._activeEntry==entry ? 'active' : 'in-active'" *ngFor="let entry of entries">{{entry.name}}</div>
+</div>

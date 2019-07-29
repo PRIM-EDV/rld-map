@@ -2,7 +2,7 @@ import { Layer } from '../core/layer';
 import { MapFile } from '../utils/map.util';
 import { Coordinate } from '../backend/utils/coordinate.util';
 import { Direction } from '../backend/utils/direction.util';
-import { ContextMenuService } from '../context-menu/context-menu.service';
+import { ContextMenuService } from '../shared/context-menu.service';
 import { BehaviorSubject } from 'rxjs';
 
 export class MapLayer extends Layer {
