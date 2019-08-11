@@ -15,16 +15,16 @@ import { FoeContextComponent } from './contexts/foe-context/foe-context.componen
 export class PopupMenuComponent implements AfterContentInit{
     @Input() _backend: BackendService;
 
-    @ViewChild('popupMenuTitleBar')
+    @ViewChild('popupMenuTitleBar', {static: true})
     public titleBar: ElementRef;
 
-    @ViewChild(ObjectContextComponent)
+    @ViewChild(ObjectContextComponent, {static: true})
     public objectContext: ObjectContextComponent;
 
-    @ViewChild(FriendContextComponent)
+    @ViewChild(FriendContextComponent, {static: true})
     public friendContext: FriendContextComponent;
 
-    @ViewChild(FoeContextComponent)
+    @ViewChild(FoeContextComponent, {static: true})
     public foeContext: FoeContextComponent;
 
     private _activeContext: PopupContext = null;

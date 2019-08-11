@@ -1,4 +1,4 @@
-import {Component, ViewChild, Injector, Input, AfterViewInit} from '@angular/core';
+import {Component, ViewChild, Injector, Input, AfterViewInit, AfterContentInit} from '@angular/core';
 import * as Hammer from 'hammerjs';
 import { BackendService, MapObject } from './backend/backend.service';
 import { Coordinate } from './backend/utils/coordinate.util';
@@ -19,9 +19,10 @@ import { IconLayer } from './layers/icon.layer';
     templateUrl: 'map.component.html',
 
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterContentInit {
     @Input() _backend: BackendService;
-    
+    @Input() _imageQuality = 1;
+
     private _canvas: HTMLCanvasElement;
     private _ctx: CanvasRenderingContext2D;
     private _mc: HammerManager;
@@ -36,13 +37,13 @@ export class MapComponent implements AfterViewInit {
         this._mapService.map = this;
     }
 
-    ngAfterViewInit() {
+    ngAfterContentInit() {
         this._menuService.backend = this._backend;
         this._canvas = document.getElementById('cMap') as HTMLCanvasElement;
         this._ctx = this._canvas.getContext('2d');
         this._mc = new Hammer(this._canvas);
 
-        // 
+        //
         Coordinate.viewportOffset = {x: this._canvas.getBoundingClientRect().left, y: this._canvas.getBoundingClientRect().top};
 
         // Add map layers
@@ -52,24 +53,22 @@ export class MapComponent implements AfterViewInit {
         this.startListenToResize();
         this.startListenToPan();
         this.startListenToPinch();
-        this.startListenToScroll();
-        this.startListenToClick();
-        this.startListenToMouseMove();
 
-        this.onResourcesReady(() => {
-            const width = this._canvas.clientWidth;
-            const height = this._canvas.clientHeight;
+        // Set map-tool options
+        if (this._backend.type == 'http') {
+            this.startListenToScroll();
+            this.startListenToClick();
+            this.startListenToMouseMove();
+        }
 
-            this._canvas.width = width * 2;
-            this._canvas.height = height * 2;
-            this._ctx.scale(2,2);
-
+        this._onResourcesReady(() => {
+            this._resize.call(this);
             this.update.call(this);
-        })
+        });
 
         this._backend.onSynchronise(() => {
             this.update.call(this);
-        })
+        });
     }
 
     public centerToMapObject(mapObject: MapObject) {
@@ -91,6 +90,17 @@ export class MapComponent implements AfterViewInit {
         return {x: width / 2, y: height / 2};
     }
 
+    private _resize() {
+        const width = this._canvas.clientWidth;
+        const height = this._canvas.clientHeight;
+
+        this._canvas.width = width * this._imageQuality;
+        this._canvas.height = height * this._imageQuality;
+        this._ctx.scale(this._imageQuality, this._imageQuality);
+
+        this.update.call(this);
+    }
+
     public startListenToClick() {
         this._canvas.addEventListener('mousedown', (e: MouseEvent) => {
             if (e.button === 0) {
@@ -101,53 +111,56 @@ export class MapComponent implements AfterViewInit {
         this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
 
-            for(let i=this._layers.length-1; i>=0; i--){
+            for (let i = this._layers.length - 1; i >= 0; i--) {
                 const layer = this._layers[i];
-                if(!layer.onContextMenu(e)) break;
+                if (!layer.onContextMenu(e)) { break; }
             }
         });
     }
 
     public startListenToMouseMove() {
         this._canvas.addEventListener('mousemove', (e: MouseEvent) => {
-            for(let i=this._layers.length-1; i>=0; i--){
+            for (let i = this._layers.length - 1; i >= 0; i--) {
                 const layer = this._layers[i];
-                if(!layer.onMouseMove(e)){
+                if (!layer.onMouseMove(e)) {
                     this.update();
                     break;
-                };
+                }
             }
-        })
-    };
+        });
+    }
 
     public startListenToResize() {
         window.addEventListener('resize', () => {
-            const width = this._canvas.clientWidth;
-            const height = this._canvas.clientHeight;
+            this._resize.call(this);
+            this.update.call(this);
+        });
 
-            this._canvas.width = width * 2;
-            this._canvas.height = height * 2;
-            this._ctx.scale(2,2);
-
+        window.addEventListener('orientationchange', () => {
+            this._resize.call(this);
             this.update.call(this);
         });
     }
 
     private startListenToPan() {
         let offset = {x: 0, y: 0};
+        let startPos = {x: 0, y: 0};
 
         this._mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
         this._mc.on('panstart', (e: HammerInput) => {
             offset = Coordinate.offset;
+            startPos = {x: e.center.x, y: e.center.y};
 
             for (const layer of this._layers) {
                 layer.onPanStart(e);
             }
         });
         this._mc.on('pan', (e: HammerInput) => {
-            for(let i=this._layers.length-1; i>=0; i--){
+            if (startPos.x < 50) { return; }
+
+            for (let i = this._layers.length - 1; i >= 0; i--) {
                 const layer = this._layers[i];
-                if(!layer.onPan(e, offset)) break;
+                if (!layer.onPan(e, offset)) { break; }
             }
             this.update();
         });
@@ -199,19 +212,19 @@ export class MapComponent implements AfterViewInit {
         }
     }
 
-    private onResourcesReady(callback) {
+    private _onResourcesReady(callback) {
         let readyLayers = 0;
 
-        for (let layer of this._layers) {
+        for (const layer of this._layers) {
             layer.resourceReadyState.subscribe((isReady: boolean) => {
-                if(isReady) {
+                if (isReady) {
                     readyLayers += 1;
 
-                    if(readyLayers == this._layers.length){
+                    if (readyLayers == this._layers.length) {
                         callback();
                     }
                 }
-            })
+            });
         }
     }
 

@@ -10,42 +10,46 @@ export class BluetoothBackendService extends BackendService {
 
     constructor(private _bluetooth: Bluetooth) {
         super();
+
+        this.type = 'bluetooth';
     }
 
-    public async setMapObject(mapObject: MapObject): Promise<any> {
-        
+    public createMapObject(obj: MapObject): Promise<any> {
+        return new Promise((resolve, reject) => {
+
+        });
     }
 
     public deleteMapObject(id: string): Promise<any> {
         return new Promise((resolve, reject) => {
-        
+
         });
     }
+
+    public async setMapObject(mapObject: MapObject): Promise<any> {
+
+    }
+
     public updateMapObject(id: string): Promise<any> {
         return new Promise((resolve, reject) => {
-        
-        });
-    }
-    public createMapObject(obj: MapObject): Promise<any> {
-        return new Promise((resolve, reject) => {
-        
+
         });
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: '', coord: new Coordinate(), type: "", update: false, name: "", meta: {}};
+        return {id: '', coord: new Coordinate(), type: '', update: false, name: '', meta: {}};
     }
 
     public getMapObjects(): Array<MapObject> {
         return this._mapObjects;
     }
 
-    public connectToDevice(address: string) {
-        this._bluetooth.connect(address, this.handleBluetooth); // maybe bindcall
+    public async connectToDevice(address: string) {
+        return this._bluetooth.connect(address, this.handleBluetooth); // maybe bindcall
     }
 
-    public getBondedDevices(callback: (data: any) => void) {
-        this._bluetooth.getBondedDevices(callback);
+    public async getBondedDevices() {
+        return this._bluetooth.getBondedDevices();
     }
 
     private handleBluetooth(data: BluetoothData) {

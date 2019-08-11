@@ -12,7 +12,7 @@ import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
 export class ObjectContextComponent extends PopupContext {
     @Input() _backend: BackendService;
 
-    @ViewChild('name') public inputName: ElementRef<HTMLInputElement>;
+    @ViewChild('name', {static: true}) public inputName: ElementRef<HTMLInputElement>;
 
     private _mapObject: MapObject;
     public objectTypes: Array<{icon: string, type: string}> = [];

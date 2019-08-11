@@ -11,12 +11,12 @@ import { WheelMenuModule } from './wheel-menu/wheel-menu.module';
         CommonModule,
         PopupMenuModule,
         WheelMenuModule,
-        RouterModule.forChild([
-            {
-              path: '',
-              component: MapComponent
-            }
-          ])
+        // RouterModule.forChild([
+        //     {
+        //       path: '',
+        //       component: MapComponent
+        //     }
+        //   ])
     ],
     declarations: [MapComponent],
     exports: [MapComponent],

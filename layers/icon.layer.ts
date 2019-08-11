@@ -13,7 +13,7 @@ export class IconLayer extends Layer {
     private _draggedMapObject: MapObject = null;
     private _hoveredMapObject: MapObject = null;
 
-    private _position = {x: 0, y:0};
+    private _position = {x: 0, y: 0};
 
     constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, backend: BackendService, contextMenuService: ContextMenuService) {
         super();

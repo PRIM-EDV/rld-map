@@ -14,7 +14,7 @@ import { PopupContext } from '../popup-context';
 export class FriendContextComponent extends PopupContext implements AfterViewInit{
     @Input() _backend: BackendService;
 
-    @ViewChild('description')
+    @ViewChild('description', {static: true})
     private _description: ElementRef<HTMLTextAreaElement>;
 
     private _inputName: HTMLInputElement;
