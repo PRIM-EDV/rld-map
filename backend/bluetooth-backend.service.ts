@@ -33,7 +33,7 @@ export class BluetoothBackendService extends BackendService {
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: '', coord: new Coordinate(), type: "", update: false, name: "", meta: {}};
+        return {id: '', coord: new Coordinate(), type: "", pinned: false, update: false, name: "", meta: {}};
     }
 
     public getMapObjects(): Array<MapObject> {

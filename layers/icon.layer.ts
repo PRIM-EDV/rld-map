@@ -32,9 +32,14 @@ export class IconLayer extends Layer {
 
     public draw() {
         const mapObjects = this._backend.getMapObjects();
+        // Draw Icons
         for(let mapObject of mapObjects) {
             if(mapObject == this._hoveredMapObject) {
-                this._ctx.drawImage(this._iconset.select,mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48)
+                this._ctx.drawImage(this._iconset.select,mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
+
+                if(mapObject.pinned) {
+                    this._ctx.drawImage(this._iconset.pinned, mapObject.coord.inCanvas.x + 26, mapObject.coord.inCanvas.y - 38, 12, 12)
+                }
             }
             switch(mapObject.type) {
                 case "object": {
@@ -129,7 +134,9 @@ export class IconLayer extends Layer {
 
     public onPan(e: HammerInput, offset: {x: number, y: number}): boolean {
         if (this._draggedMapObject != null) {
-            this._draggedMapObject.coord.inCanvas = {x: this._position.x + e.deltaX, y: this._position.y + e.deltaY};
+            if(!this._draggedMapObject.pinned) {
+                this._draggedMapObject.coord.inCanvas = {x: this._position.x + e.deltaX, y: this._position.y + e.deltaY};
+            }
             return false;
         } else {
             return true;

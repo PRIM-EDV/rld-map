@@ -66,4 +66,16 @@ export class EditObjectContextComponent extends WheelMenuContext {
             }
         );
     }
+
+    private _togglePinned() {
+        this._object.pinned = !this._object.pinned;
+        this._backend.setMapObject(this._object).then(
+            (res) => {
+                this._wheelMenu.close();
+            },
+            (err) => {
+                this._wheelMenu.close();
+            }
+        )
+    }
 }

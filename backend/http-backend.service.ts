@@ -119,7 +119,7 @@ export class HttpBackendService extends BackendService {
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: "", coord: new Coordinate(), update: false, name: "", type: "", meta: {}}
+        return {id: "", coord: new Coordinate(), pinned:false, update: false, name: "", type: "", meta: {}}
     }
 
     public getMapObjects(): Array<MapObject> {
@@ -205,6 +205,7 @@ export class HttpBackendService extends BackendService {
                 name: object.name,
                 coord: new Coordinate(),
                 type: object.type,
+                pinned: false,
                 update: true,
                 meta: {}
             }

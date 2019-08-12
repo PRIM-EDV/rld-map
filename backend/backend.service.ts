@@ -6,6 +6,7 @@ export interface MapObject {
   id: string;
   name: string;
   coord: Coordinate;
+  pinned: boolean;
   update: boolean;
   type: string;
 

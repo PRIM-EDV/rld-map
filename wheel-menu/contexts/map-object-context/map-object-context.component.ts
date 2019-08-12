@@ -80,6 +80,7 @@ export class MapObjectContextComponent extends WheelMenuContext {
             id: uuid(),
             name: squad.name,
             coord: coord,
+            pinned: false,
             update: true,
             type: 'friend',
             meta: {
@@ -98,6 +99,7 @@ export class MapObjectContextComponent extends WheelMenuContext {
             id: uuid(),
             name: '',
             coord: coord,
+            pinned: false,
             update: true,
             type: 'object',
             meta: {}
@@ -112,6 +114,7 @@ export class MapObjectContextComponent extends WheelMenuContext {
             id: uuid(),
             name: '',
             coord: coord,
+            pinned: false,
             update: true,
             type: 'foe',
             meta: {

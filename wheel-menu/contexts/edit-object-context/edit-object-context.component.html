@@ -7,6 +7,10 @@
         <img src="assets/icons/btn_delete_object.png" />
         <div class="label">Delete</div>
     </div>
+    <div class="button bl" (click)="_togglePinned()">
+        <img src="{{(_object && _object.pinned) ? 'assets/icons/btn_unpin.png' : 'assets/icons/btn_pin.png'}}" />
+        <div class="label">{{(_object && _object.pinned) ? "Unpin" : "Pin"}}</div>
+    </div>
     <div class="center">
         &nbsp;
     </div>
