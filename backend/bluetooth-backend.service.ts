@@ -1,4 +1,3 @@
-import { v5 as uuid } from 'uuid';
 import { Injectable } from '@angular/core';
 import { BackendService, MapObject } from './backend.service';
 import { Bluetooth, BluetoothData } from './utils/bluetooth.util';
