@@ -25,7 +25,7 @@ export class WheelMenuComponent implements AfterContentInit {
     private _wheelMenu: HTMLDivElement;
 
     constructor(private _menuService: ContextMenuService) {
-        this._menuService.wheelMenu = this;    
+        this._menuService.wheelMenu = this;
     }
 
     ngAfterContentInit() {

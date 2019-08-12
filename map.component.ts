@@ -1,4 +1,4 @@
-import {Component, ViewChild, Injector, Input, AfterViewInit, AfterContentInit} from '@angular/core';
+import {Component, ViewChild, Injector, Input, AfterViewInit, AfterContentInit, ElementRef} from '@angular/core';
 import * as Hammer from 'hammerjs';
 import { BackendService, MapObject } from './backend/backend.service';
 import { Coordinate } from './backend/utils/coordinate.util';
@@ -23,7 +23,7 @@ export class MapComponent implements AfterContentInit {
     @Input() _backend: BackendService;
     @Input() _imageQuality = 1;
 
-    private _canvas: HTMLCanvasElement;
+    @ViewChild('map', {static: true}) private _canvas: ElementRef<HTMLCanvasElement>;
     private _ctx: CanvasRenderingContext2D;
     private _mc: HammerManager;
 
@@ -39,16 +39,15 @@ export class MapComponent implements AfterContentInit {
 
     ngAfterContentInit() {
         this._menuService.backend = this._backend;
-        this._canvas = document.getElementById('cMap') as HTMLCanvasElement;
-        this._ctx = this._canvas.getContext('2d');
-        this._mc = new Hammer(this._canvas);
+        this._ctx = this._canvas.nativeElement.getContext('2d');
+        this._mc = new Hammer(this._canvas.nativeElement);
 
         //
-        Coordinate.viewportOffset = {x: this._canvas.getBoundingClientRect().left, y: this._canvas.getBoundingClientRect().top};
+        Coordinate.viewportOffset = {x: this._canvas.nativeElement.getBoundingClientRect().left, y: this._canvas.nativeElement.getBoundingClientRect().top};
 
         // Add map layers
-        this._layers.push(new MapLayer(this._canvas, this._ctx, this._mapfile, this._menuService));
-        this._layers.push(new IconLayer(this._canvas, this._ctx, this._backend, this._menuService));
+        this._layers.push(new MapLayer(this._canvas.nativeElement, this._ctx, this._mapfile, this._menuService));
+        this._layers.push(new IconLayer(this._canvas.nativeElement, this._ctx, this._backend, this._menuService));
 
         this.startListenToResize();
         this.startListenToPan();
@@ -62,6 +61,7 @@ export class MapComponent implements AfterContentInit {
         }
 
         this._onResourcesReady(() => {
+            console.log('Ressources ready');
             this._resize.call(this);
             this.update.call(this);
         });
@@ -72,8 +72,8 @@ export class MapComponent implements AfterContentInit {
     }
 
     public centerToMapObject(mapObject: MapObject) {
-        const width = this._canvas.clientWidth;
-        const height = this._canvas.clientHeight;
+        const width = this._canvas.nativeElement.clientWidth;
+        const height = this._canvas.nativeElement.clientHeight;
         const coords = mapObject.coord.inCanvas;
 
         Coordinate.offset.x -= (width / 2 - coords.x) * Coordinate.scale;
@@ -83,32 +83,32 @@ export class MapComponent implements AfterContentInit {
     }
 
     public getCenter() {
-        const width = this._canvas.clientWidth;
-        const height = this._canvas.clientHeight;
+        const width = this._canvas.nativeElement.clientWidth;
+        const height = this._canvas.nativeElement.clientHeight;
 
 
         return {x: width / 2, y: height / 2};
     }
 
     private _resize() {
-        const width = this._canvas.clientWidth;
-        const height = this._canvas.clientHeight;
+        const width = this._canvas.nativeElement.clientWidth;
+        const height = this._canvas.nativeElement.clientHeight;
 
-        this._canvas.width = width * this._imageQuality;
-        this._canvas.height = height * this._imageQuality;
+        this._canvas.nativeElement.width = width * this._imageQuality;
+        this._canvas.nativeElement.height = height * this._imageQuality;
         this._ctx.scale(this._imageQuality, this._imageQuality);
 
         this.update.call(this);
     }
 
     public startListenToClick() {
-        this._canvas.addEventListener('mousedown', (e: MouseEvent) => {
+        this._canvas.nativeElement.addEventListener('mousedown', (e: MouseEvent) => {
             if (e.button === 0) {
                 this._menuService.wheelMenu.close();
                 this._menuService.popupMenu.close();
             }
         });
-        this._canvas.addEventListener('contextmenu', (e: MouseEvent) => {
+        this._canvas.nativeElement.addEventListener('contextmenu', (e: MouseEvent) => {
             e.preventDefault();
 
             for (let i = this._layers.length - 1; i >= 0; i--) {
@@ -119,7 +119,7 @@ export class MapComponent implements AfterContentInit {
     }
 
     public startListenToMouseMove() {
-        this._canvas.addEventListener('mousemove', (e: MouseEvent) => {
+        this._canvas.nativeElement.addEventListener('mousemove', (e: MouseEvent) => {
             for (let i = this._layers.length - 1; i >= 0; i--) {
                 const layer = this._layers[i];
                 if (!layer.onMouseMove(e)) {
@@ -205,7 +205,7 @@ export class MapComponent implements AfterContentInit {
     }
 
     public update() {
-        this._ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        this._ctx.clearRect(0, 0, this._canvas.nativeElement.width, this._canvas.nativeElement.height);
 
         for (const layer of this._layers) {
             layer.draw();
