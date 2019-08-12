@@ -7,13 +7,13 @@ import { Component, Input, ViewChild, ElementRef, AfterContentInit, Output, Even
     templateUrl: './slider.component.html'
 })
 export class SliderComponent implements AfterContentInit {
-    @ViewChild('handle')
+    @ViewChild('handle', {static: true})
     public handle: ElementRef<HTMLElement>;
 
-    @ViewChild('slider')
+    @ViewChild('slider', {static: true})
     public slider: ElementRef<HTMLElement>;
 
-    @ViewChild('bar')
+    @ViewChild('bar', {static: true})
     public bar: ElementRef<HTMLDivElement>;
 
     @Input()

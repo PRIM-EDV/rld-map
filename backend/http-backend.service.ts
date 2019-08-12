@@ -1,10 +1,10 @@
-import { BackendService, MapObject, Squad } from "./backend.service";
+import { BackendService, MapObject, Squad } from './backend.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Coordinate } from "./utils/coordinate.util";
+import { Coordinate } from './utils/coordinate.util';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-let url = "http://yavin-iv.ddnss.de:3000/"
+const url = 'http://yavin-iv.ddnss.de:3000/';
 // let url = "http://localhost:3000/"
 
 const httpOptions = {
@@ -25,11 +25,13 @@ export class HttpBackendService extends BackendService {
     private _synchEvent = new Subject<void>();
     private _interval: number;
 
-    constructor(private _http: HttpClient){
+    constructor(private _http: HttpClient) {
         super();
 
-        this.synchronise()
-        this.syncSquads()
+        this.type = 'http';
+
+        this.synchronise();
+        this.syncSquads();
 
         this._interval = window.setInterval(this.synchronise.bind(this), 10000);
     }
@@ -37,7 +39,7 @@ export class HttpBackendService extends BackendService {
     public async syncSquads() {
         try {
             const remoteSquads = await this._http.get(url + 'squad', httpOptions).toPromise() as any[];
-            
+
             remoteSquads.forEach(this.createInternalSquad.bind(this));
         } catch {
 
@@ -47,13 +49,13 @@ export class HttpBackendService extends BackendService {
     public async synchronise(): Promise<void> {
         try {
             const remoteMapObjects = await this._http.get(url + 'map-object', httpOptions).toPromise();
-            
+
             this._updateExistingMapObjects(remoteMapObjects as any[]);
             this._getCreatedMapObjects(remoteMapObjects as any[]).forEach(this._createInternalMapObject.bind(this));
             this._getDeletedMapObjects(remoteMapObjects as any[]).forEach(this._deleteInternalMapObject.bind(this));
         } catch {
-            
-        } 
+
+        }
 
         this._synchEvent.next();
     }
@@ -63,11 +65,11 @@ export class HttpBackendService extends BackendService {
         try {
             await this._http.delete(`${dst}/${id}`, {headers: headers}).toPromise();
             await this.synchronise();
-        }catch(e) {
+        } catch (e) {
 
         }
-        
-        return
+
+        return;
     }
 
     public async updateMapObject(mapObject: MapObject): Promise<any> {
@@ -79,9 +81,9 @@ export class HttpBackendService extends BackendService {
             name: mapObject.name,
             type: mapObject.type,
             meta: {}
-        }
+        };
 
-        for(let key in mapObject.meta) {
+        for (const key in mapObject.meta) {
             dbMapObject.meta[key] = mapObject.meta[key];
         }
 
@@ -89,7 +91,7 @@ export class HttpBackendService extends BackendService {
             await this._http.put(dst, dbMapObject, httpOptions).toPromise();
             await this.synchronise();
         } catch (e) {
-            
+
         }
     }
 
@@ -102,9 +104,9 @@ export class HttpBackendService extends BackendService {
             name: obj.name,
             type: obj.type,
             meta: {}
-        }
+        };
 
-        for(let key in obj.meta) {
+        for (const key in obj.meta) {
             dbMapObject.meta[key] = obj.meta[key];
         }
 
@@ -112,10 +114,10 @@ export class HttpBackendService extends BackendService {
             await this._http.post(dst, dbMapObject, httpOptions).toPromise();
             await this.synchronise();
         } catch (e) {
-            
+
         }
-        
-        return
+
+        return;
     }
 
     public getMapObject(id: string): MapObject {
@@ -130,13 +132,13 @@ export class HttpBackendService extends BackendService {
         return this._squads;
     }
 
-    public onSynchronise(callback){
+    public onSynchronise(callback) {
         this._synchEvent.subscribe(callback);
     }
 
     public async setMapObject(mapObject: MapObject): Promise<any> {
-        if(mapObject.type == 'friend') {
-            const existingMapObject = this._mapObjects.find(x => x.type == 'friend' && x.meta.callsign == mapObject.meta.callsign)
+        if (mapObject.type == 'friend') {
+            const existingMapObject = this._mapObjects.find(x => x.type == 'friend' && x.meta.callsign == mapObject.meta.callsign);
             if (existingMapObject) {
                 mapObject.id = existingMapObject.id;
                 this.updateMapObject(mapObject);
@@ -165,39 +167,37 @@ export class HttpBackendService extends BackendService {
     }
 
     private _updateInternalMapObject(object: any) {
-        const mapObject = this._mapObjects.find((obj) => {return obj.id == object.uid});
+        const mapObject = this._mapObjects.find((obj) => obj.id == object.uid);
 
-        mapObject.name = object.name;     
-        if(mapObject.update) {
+        mapObject.name = object.name;
+        if (mapObject.update) {
             mapObject.coord.inMeter = object.position;
         }
 
-        for(let key in object.meta) {
+        for (const key in object.meta) {
             mapObject.meta[key] = object.meta[key];
         }
     }
 
     private _getDeletedMapObjects(objects: Array<any>): Array<MapObject> {
         return this._mapObjects.filter((mapObject) => {
-            if (objects.find((object) => {return object.uid == mapObject.id})) {
+            if (objects.find((object) => object.uid == mapObject.id)) {
                 return false;
-            } 
-            else {
+            } else {
                 return true;
             }
-        })           
+        });
     }
 
     private _getCreatedMapObjects(objects: Array<any>): Array<MapObject> {
         const createdMapObjects = [];
         const createdObjects = objects.filter((object) => {
-            if (this._mapObjects.find((mapObject) => {return object.uid == mapObject.id})) {
+            if (this._mapObjects.find((mapObject) => object.uid == mapObject.id)) {
                 return false;
-            } 
-            else {
+            } else {
                 return true;
             }
-        })
+        });
 
         createdObjects.forEach((object) => {
             const mapObject: MapObject = {
@@ -208,42 +208,26 @@ export class HttpBackendService extends BackendService {
                 pinned: false,
                 update: true,
                 meta: {}
-            }
+            };
 
-            for(let key in object.meta) {
+            for (const key in object.meta) {
                 mapObject.meta[key] = object.meta[key];
             }
 
             mapObject.coord.inMeter = object.position;
             createdMapObjects.push(mapObject);
-        })
+        });
 
         return createdMapObjects;
     }
 
     private _updateExistingMapObjects(objects: Array<any>) {
         this._mapObjects.forEach((mapObject: MapObject) => {
-            const object = objects.find((object) => {return object.uid == mapObject.id});
+            const object = objects.find((object) => object.uid == mapObject.id);
 
-            if(object) {
+            if (object) {
                 this._updateInternalMapObject(object);
             }
-        })
+        });
     }
-
-    // private _getUpdatedMapObjects(objects: Array<any>) {
-
-    //     const updatedMapObjects = this._mapObjects.filter((mapObject) => {
-    //         if (objects.find((object) => {return object.uid == mapObject.id})) {
-    //             return true;
-    //         } 
-    //         else {
-    //             return false;
-    //         }
-    //     })
-
-    //     console.log(updatedMapObjects)
-
-    //     return updatedMapObjects;
-    // }
 }

@@ -14,18 +14,18 @@ import { EditObjectContextComponent } from './contexts/edit-object-context/edit-
 export class WheelMenuComponent implements AfterContentInit {
     @Input() _backend: BackendService;
 
-    @ViewChild(MapObjectContextComponent)
+    @ViewChild(MapObjectContextComponent, {static: true})
     public mapObjectContext: MapObjectContextComponent;
 
-    @ViewChild(EditObjectContextComponent)
-    public editObjectContext: EditObjectContextComponent; 
+    @ViewChild(EditObjectContextComponent, {static: true})
+    public editObjectContext: EditObjectContextComponent;
 
     private _activeContext: WheelMenuContext;
     private _position: {x: number, y: number};
     private _wheelMenu: HTMLDivElement;
 
     constructor(private _menuService: ContextMenuService) {
-        this._menuService.wheelMenu = this;    
+        this._menuService.wheelMenu = this;
     }
 
     ngAfterContentInit() {

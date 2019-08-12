@@ -15,31 +15,33 @@ import { FoeContextComponent } from './contexts/foe-context/foe-context.componen
 export class PopupMenuComponent implements AfterContentInit{
     @Input() _backend: BackendService;
 
-    @ViewChild('popupMenuTitleBar')
+    @ViewChild('popupMenuTitleBar', {static: true})
     public titleBar: ElementRef;
 
-    @ViewChild(ObjectContextComponent)
+    @ViewChild(ObjectContextComponent, {static: true})
     public objectContext: ObjectContextComponent;
 
-    @ViewChild(FriendContextComponent)
+    @ViewChild(FriendContextComponent, {static: true})
     public friendContext: FriendContextComponent;
 
-    @ViewChild(FoeContextComponent)
+    @ViewChild(FoeContextComponent, {static: true})
     public foeContext: FoeContextComponent;
+
+    @ViewChild('menu', {static: true}) private _popupMenuRef: ElementRef<HTMLDivElement>;
 
     private _activeContext: PopupContext = null;
     private _popupMenu: HTMLDivElement;
     private _position: {x: number, y: number};
     private _isDragged = false;
-    
-    private _title: string = "";
+
+    private _title = '';
 
     constructor(private _menuService: ContextMenuService) {
         this._menuService.popupMenu = this;
     }
 
     ngAfterContentInit() {
-        this._popupMenu = document.getElementById('popup-menu') as HTMLDivElement;
+        this._popupMenu = this._popupMenuRef.nativeElement;
         this._popupMenu.style.display = 'none';
         this._popupMenu.addEventListener('wheel', (e: Event) => {
             e.stopPropagation();
@@ -56,7 +58,7 @@ export class PopupMenuComponent implements AfterContentInit{
     }
 
     public open() {
-        console.log(this._activeContext)
+        console.log(this._activeContext);
         this._popupMenu.style.display = 'block';
     }
 

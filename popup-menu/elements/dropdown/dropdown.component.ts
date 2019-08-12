@@ -10,10 +10,10 @@ export class DropdownComponent implements AfterContentInit {
     @Input()
     public entries: Array<string> = [];
 
-    @ViewChild('ddlist')
+    @ViewChild('ddlist', {static: true})
     public ddlist: ElementRef<HTMLDivElement>;
 
-    @ViewChild('ddbox')
+    @ViewChild('ddbox', {static: true})
     public ddbox: ElementRef<HTMLDivElement>;
 
     @Input()
