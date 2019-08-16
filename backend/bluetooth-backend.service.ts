@@ -19,7 +19,7 @@ export class BluetoothBackendService extends BackendService {
         super();
 
         this.type = 'bluetooth';
-        this._mapObjects.push({name: '', id: String(0), coord: new Coordinate(), update: true, type: 'self', meta: {}});
+        this._mapObjects.push({name: '', id: String(0), coord: new Coordinate(), pinned: true, update: true, type: 'self', meta: {}});
 
         this._platform.ready().then(() => {
             window.setInterval(() => {
@@ -43,7 +43,10 @@ export class BluetoothBackendService extends BackendService {
     }
 
     public async setMapObject(mapObject: MapObject): Promise<any> {
+        const internalObject = this._mapObjects.find((x) => mapObject.id == x.id);
+        internalObject.coord = mapObject.coord;
 
+        console.log(internalObject.coord.inPixel);
     }
 
     public updateMapObject(id: string): Promise<any> {
@@ -53,11 +56,7 @@ export class BluetoothBackendService extends BackendService {
     }
 
     public getMapObject(id: string): MapObject {
-<<<<<<< HEAD
-        return {id: '', coord: new Coordinate(), type: "", pinned: false, update: false, name: "", meta: {}};
-=======
-        return {id: '', coord: new Coordinate(), type: '', update: false, name: '', meta: {}};
->>>>>>> mobile
+        return this._mapObjects.find((mapObject) => id == mapObject.id);
     }
 
     public getMapObjects(): Array<MapObject> {

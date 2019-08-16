@@ -6,7 +6,6 @@ import { PopupContext } from '../popup-context';
 
 
 @Component({
-    
     selector: 'foe-context',
     styleUrls: ['../popup-menu-context.scss'],
     templateUrl: 'foe-context.component.html',
@@ -24,7 +23,7 @@ export class FoeContextComponent extends PopupContext implements AfterViewInit{
     }
 
     ngAfterViewInit() {
-        
+
     }
 
     public open(pos: {x: number, y: number}, mapObject: MapObject) {
@@ -33,7 +32,7 @@ export class FoeContextComponent extends PopupContext implements AfterViewInit{
         this.position = pos;
         this._mapObject = mapObject;
         this.title = `Enemy unit (${mapObject.id.toUpperCase().substr(0, 8)})`;
-        
+
         this._popupMenu.setPosition(popupPosition);
         this._popupMenu.setContext(this);
         this._popupMenu.open();
@@ -52,5 +51,5 @@ export class FoeContextComponent extends PopupContext implements AfterViewInit{
 
         this._backend.setMapObject(this._mapObject);
         this._popupMenu.close();
-    };
+    }
 }

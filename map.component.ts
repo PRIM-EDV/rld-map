@@ -19,8 +19,9 @@ import { IconLayer } from './layers/icon.layer';
     templateUrl: 'map.component.html',
 
 })
-export class MapComponent implements AfterContentInit {
+export class MapComponent implements AfterViewInit {
     @Input() _backend: BackendService;
+    @Input() _movable = true;
     @Input() _imageQuality = 1;
 
     @ViewChild('map', {static: true}) private _canvas: ElementRef<HTMLCanvasElement>;
@@ -37,7 +38,7 @@ export class MapComponent implements AfterContentInit {
         this._mapService.map = this;
     }
 
-    ngAfterContentInit() {
+    ngAfterViewInit() {
         this._menuService.backend = this._backend;
         this._ctx = this._canvas.nativeElement.getContext('2d');
         this._mc = new Hammer(this._canvas.nativeElement);
@@ -50,8 +51,11 @@ export class MapComponent implements AfterContentInit {
         this._layers.push(new IconLayer(this._canvas.nativeElement, this._ctx, this._backend, this._menuService));
 
         this.startListenToResize();
-        this.startListenToPan();
-        this.startListenToPinch();
+
+        if (this._movable) {
+            this.startListenToPan();
+            this.startListenToPinch();
+        }
 
         // Set map-tool options
         if (this._backend.type == 'http') {
@@ -61,8 +65,7 @@ export class MapComponent implements AfterContentInit {
         }
 
         this._onResourcesReady(() => {
-            console.log('Ressources ready');
-            this._resize.call(this);
+            this.resize.call(this);
             this.update.call(this);
         });
 
@@ -90,9 +93,11 @@ export class MapComponent implements AfterContentInit {
         return {x: width / 2, y: height / 2};
     }
 
-    private _resize() {
+    public resize() {
         const width = this._canvas.nativeElement.clientWidth;
         const height = this._canvas.nativeElement.clientHeight;
+
+        console.log(`${width}:${height}`);
 
         this._canvas.nativeElement.width = width * this._imageQuality;
         this._canvas.nativeElement.height = height * this._imageQuality;
@@ -132,12 +137,12 @@ export class MapComponent implements AfterContentInit {
 
     public startListenToResize() {
         window.addEventListener('resize', () => {
-            this._resize.call(this);
+            this.resize.call(this);
             this.update.call(this);
         });
 
         window.addEventListener('orientationchange', () => {
-            this._resize.call(this);
+            this.resize.call(this);
             this.update.call(this);
         });
     }
