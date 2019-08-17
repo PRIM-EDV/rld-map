@@ -13,9 +13,10 @@ export interface MapObject {
   meta: {
     description?: string;
     size?: number;
-    subtype?: string;
+    subtype?: number;
     wounded?: number;
     callsign?: string;
+    tracked?: boolean;
   };
 }
 

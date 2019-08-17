@@ -11,8 +11,10 @@ export class PrimIconset extends Iconset {
     public select: HTMLImageElement = new Image();
     public self: HTMLImageElement = new Image();
 
+    public objectSubtype: Array<HTMLImageElement> = [];
     public unitSizeFriend: Array<HTMLImageElement> = [];
     public woundedFriend: Array<HTMLImageElement> = [];
+
 
     private _nbIconsReady = 0;
 
@@ -37,6 +39,12 @@ export class PrimIconset extends Iconset {
         this.pinned.onload = this._onIconLoad.bind(this);
         this.pinned.src = 'assets/icons/btn_pin.png';
 
+        for (let i = 0; i < 6; i++) {
+            this.objectSubtype.push(new Image());
+            this.objectSubtype[this.objectSubtype.length - 1].onload = this._onIconLoad.bind(this);
+            this.objectSubtype[this.objectSubtype.length - 1].src = `assets/icons/object_subtype/st${i}.png`;
+        }
+
         for (let i = 0; i < 30; i++) {
             this.unitSizeFriend.push(new Image());
             this.unitSizeFriend[this.unitSizeFriend.length - 1].onload = this._onIconLoad.bind(this);
@@ -53,7 +61,7 @@ export class PrimIconset extends Iconset {
     private _onIconLoad() {
         this._nbIconsReady += 1;
 
-        if (this._nbIconsReady >= 66) {
+        if (this._nbIconsReady >= 72) {
             this.resourceReadyState.next(true);
         }
     }

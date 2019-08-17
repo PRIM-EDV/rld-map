@@ -70,15 +70,22 @@ div.icon-list {
     display: flex;
 
     div.item {
-        width: 48px;
-        height: 48px;
+        margin: 8px 8px 4px 8px;
+        width: 32px;
+        height: 36px;
         color:  #a0a0a0;
         font-size: 12px;
         text-align: center;
-
+        
         img {
+            margin: -8px 0 0 -8px;
             width: 48px;
+            background-size: contain;
         }
+    }
+
+    div.item.active {
+        border-bottom: #dddddd solid 2px;
     }
 }
 

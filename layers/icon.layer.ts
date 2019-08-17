@@ -39,9 +39,9 @@ export class IconLayer extends Layer {
 
         mapObjects.forEach((mapObject) => {
             if (mapObject.type == 'friend') {
-                this._drawLine(mapObject.meta.callsign, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y});
+                this._drawLine(mapObject.meta.callsign, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y - 24});
             } else {
-                this._drawLine(mapObject.name, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y});
+                this._drawLine(mapObject.name, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y - 24});
             }
         });
 
@@ -54,12 +54,18 @@ export class IconLayer extends Layer {
                 }
 
                 if (mapObject.type == 'friend') {
-                    this._drawLine(mapObject.meta.callsign, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y});
+                    this._drawLine(mapObject.meta.callsign, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y - 24});
                     this._drawLine(mapObject.name, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y});
-                    this._drawMultiLine(mapObject.meta.description, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y + 24}, 200);
+                    
+                    if (mapObject.meta.description) {
+                        this._drawMultiLine(mapObject.meta.description, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y + 24}, 200);
+                    }
                 } else {
                     this._drawLine(mapObject.name, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y});
-                    this._drawMultiLine(mapObject.meta.description, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y}, 200);
+                    
+                    if (mapObject.meta.description) {
+                        this._drawMultiLine(mapObject.meta.description, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y + 24}, 200);
+                    }
                 }
             }
         });
@@ -176,6 +182,10 @@ export class IconLayer extends Layer {
             }
             case 'object': {
                 this._ctx.drawImage(this._iconset.object, mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
+
+                if(mapObject.meta.subtype) {
+                    this._ctx.drawImage(this._iconset.objectSubtype[mapObject.meta.subtype], mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
+                }
             }
         }
     }
@@ -193,30 +203,32 @@ export class IconLayer extends Layer {
     }
 
     private _drawMultiLine(text: string, pos: {x: number, y: number}, width: number) {
-        const words = text.split(' ');
-        const lines = [];
-        let line = '';
-
-        words.forEach((word, index) => {
-            if (this._ctx.measureText(line + ' ' + word).width > (width - 12)) {
-                lines.push(line);
-                line = word;
-            } else {
-                line += ' ' + word;
-            }
-
-            if (index == words.length - 1) {
-                lines.push(line);
-            }
-        });
-
-        lines.forEach((line, index) => {
-            this._ctx.fillStyle = '#151515';
-            this._ctx.fillRect(pos.x, pos.y + index * 24, width, 24);
-            this._ctx.fillStyle = '#a0a0a0';
-            this._ctx.font = '14px roboto';
-            this._ctx.fillText(line , pos.x + 6, pos.y + index * 24 + 17);
-        });
+        if (text.length > 0) {
+            const words = text.split(' ');
+            const lines = [];
+            let line = '';
+    
+            words.forEach((word, index) => {
+                if (this._ctx.measureText(line + ' ' + word).width > (width - 12)) {
+                    lines.push(line);
+                    line = word;
+                } else {
+                    line += ' ' + word;
+                }
+    
+                if (index == words.length - 1) {
+                    lines.push(line);
+                }
+            });
+    
+            lines.forEach((line, index) => {
+                this._ctx.fillStyle = '#151515';
+                this._ctx.fillRect(pos.x, pos.y + index * 24, width, 24);
+                this._ctx.fillStyle = '#a0a0a0';
+                this._ctx.font = '14px roboto';
+                this._ctx.fillText(line , pos.x + 6, pos.y + index * 24 + 17);
+            });
+        }   
     }
 
     private _isInBoundingBox(mapObject: MapObject, pos: {x: number, y: number}): boolean {

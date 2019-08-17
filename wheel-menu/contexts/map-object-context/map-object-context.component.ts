@@ -86,7 +86,8 @@ export class MapObjectContextComponent extends WheelMenuContext {
             meta: {
                 size: 5,
                 wounded: 0,
-                callsign: squad.callsign
+                callsign: squad.callsign,
+                description: ''
             }
         }
     }
@@ -102,7 +103,9 @@ export class MapObjectContextComponent extends WheelMenuContext {
             pinned: false,
             update: true,
             type: 'object',
-            meta: {}
+            meta: {
+                description: ''
+            }
         }
     }
 

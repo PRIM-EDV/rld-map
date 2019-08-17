@@ -19,7 +19,7 @@ export class BluetoothBackendService extends BackendService {
         super();
 
         this.type = 'bluetooth';
-        this._mapObjects.push({name: '', id: String(0), coord: new Coordinate(), update: true, type: 'self', meta: {}});
+        this._mapObjects.push({name: '', id: String(0), coord: new Coordinate(), pinned: false, update: true, type: 'self', meta: {}});
 
         this._platform.ready().then(() => {
             window.setInterval(() => {
@@ -53,11 +53,7 @@ export class BluetoothBackendService extends BackendService {
     }
 
     public getMapObject(id: string): MapObject {
-<<<<<<< HEAD
         return {id: '', coord: new Coordinate(), type: "", pinned: false, update: false, name: "", meta: {}};
-=======
-        return {id: '', coord: new Coordinate(), type: '', update: false, name: '', meta: {}};
->>>>>>> mobile
     }
 
     public getMapObjects(): Array<MapObject> {
