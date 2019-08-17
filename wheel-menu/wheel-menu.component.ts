@@ -1,4 +1,4 @@
-import {Component, AfterContentInit, Input, ViewChild} from '@angular/core';
+import {Component, AfterContentInit, Input, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 
 import { BackendService } from '../backend/backend.service';
 import { ContextMenuService } from '../shared/context-menu.service';
@@ -11,8 +11,11 @@ import { EditObjectContextComponent } from './contexts/edit-object-context/edit-
     styleUrls: ['./wheel-menu.component.scss'],
     templateUrl: 'wheel-menu.component.html',
 })
-export class WheelMenuComponent implements AfterContentInit {
+export class WheelMenuComponent implements AfterViewInit{
     @Input() _backend: BackendService;
+
+    @ViewChild('wheelMenu', {static: true})
+    public wheelMenu: ElementRef<HTMLDivElement>;
 
     @ViewChild(MapObjectContextComponent, {static: true})
     public mapObjectContext: MapObjectContextComponent;
@@ -22,16 +25,14 @@ export class WheelMenuComponent implements AfterContentInit {
 
     private _activeContext: WheelMenuContext;
     private _position: {x: number, y: number};
-    private _wheelMenu: HTMLDivElement;
 
     constructor(private _menuService: ContextMenuService) {
         this._menuService.wheelMenu = this;
     }
 
-    ngAfterContentInit() {
-        this._wheelMenu = document.getElementById('wheel-menu') as HTMLDivElement;
+    ngAfterViewInit() {
+        // this.close();
     }
-
 
     public close(): void {
         if (this._activeContext != null) {
@@ -39,7 +40,9 @@ export class WheelMenuComponent implements AfterContentInit {
             this._activeContext = null;
         }
 
-        this._wheelMenu.style.visibility = "hidden";
+        if(this.wheelMenu) {
+            this.wheelMenu.nativeElement.style.display = 'none';
+        }
     }
 
     public getContext(): WheelMenuContext {
@@ -47,17 +50,17 @@ export class WheelMenuComponent implements AfterContentInit {
     }
 
     public open(): void {
-        this._wheelMenu.style.visibility = "initial";
+        this.wheelMenu.nativeElement.style.display = 'block';
     }
 
     public setContext(ctx: WheelMenuContext) {
         this._activeContext = ctx;
     }
 
-    public setPosition(position: {x: number, y: number}){
+    public setPosition(position: {x: number, y: number}) {
         this._position = position;
-        this._wheelMenu.style.top = (position.y - 74).toString() + 'px';
-        this._wheelMenu.style.left = (position.x - 74).toString() + 'px';
+        this.wheelMenu.nativeElement.style.top = (position.y - 74).toString() + 'px';
+        this.wheelMenu.nativeElement.style.left = (position.x - 74).toString() + 'px';
     }
 }
 

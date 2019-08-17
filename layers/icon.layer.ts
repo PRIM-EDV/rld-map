@@ -38,6 +38,12 @@ export class IconLayer extends Layer {
         });
 
         mapObjects.forEach((mapObject) => {
+            if(mapObject.meta.tracked) {
+                this._ctx.drawImage(this._iconset.tracked, mapObject.coord.inCanvas.x + 26, mapObject.coord.inCanvas.y - 38, 12, 12)
+            }
+        });
+
+        mapObjects.forEach((mapObject) => {
             if (mapObject.type == 'friend') {
                 this._drawLine(mapObject.meta.callsign, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y - 24});
             } else {
@@ -49,7 +55,7 @@ export class IconLayer extends Layer {
             if (mapObject == this._hoveredMapObject) {
                 this._drawIcon(mapObject);
 
-                if(mapObject.pinned) {
+                if(mapObject.pinned && !mapObject.meta.tracked) {
                     this._ctx.drawImage(this._iconset.pinned, mapObject.coord.inCanvas.x + 26, mapObject.coord.inCanvas.y - 38, 12, 12)
                 }
 
@@ -149,7 +155,7 @@ export class IconLayer extends Layer {
 
     public onPan(e: HammerInput, offset: {x: number, y: number}): boolean {
         if (this._draggedMapObject != null) {
-            if(!this._draggedMapObject.pinned) {
+            if(!this._draggedMapObject.pinned && !this._draggedMapObject.meta.tracked) {
                 this._draggedMapObject.coord.inCanvas = {x: this._position.x + e.deltaX, y: this._position.y + e.deltaY};
             }
             return false;
@@ -165,7 +171,25 @@ export class IconLayer extends Layer {
                 break;
             }
             case 'friend': {
+                let idx = 0;
+                let smallSize = 8;
+
                 this._ctx.drawImage(this._iconset.friend, mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
+                
+                for(let i = 0; i < mapObject.meta.medics; i++) {
+                    this._ctx.drawImage(this._iconset.medic, mapObject.coord.inCanvas.x + 14 - smallSize * idx, mapObject.coord.inCanvas.y + 24, smallSize, smallSize);
+                    idx++;
+                }
+
+                for(let i = 0; i < mapObject.meta.technitians; i++) {
+                    this._ctx.drawImage(this._iconset.tech, mapObject.coord.inCanvas.x + 14 - smallSize * idx, mapObject.coord.inCanvas.y + 24, smallSize, smallSize);
+                    idx++;
+                }
+
+                for(let i = 0; i < mapObject.meta.scientists; i++) {
+                    this._ctx.drawImage(this._iconset.science, mapObject.coord.inCanvas.x + 14 - smallSize * idx, mapObject.coord.inCanvas.y + 24, smallSize, smallSize);
+                    idx++;
+                }
 
                 if (mapObject.meta.size - mapObject.meta.wounded > 0) {
                     this._ctx.drawImage(this._iconset.unitSizeFriend[mapObject.meta.size - 1 - mapObject.meta.wounded], mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);

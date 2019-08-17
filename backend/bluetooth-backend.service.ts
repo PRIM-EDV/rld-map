@@ -43,7 +43,10 @@ export class BluetoothBackendService extends BackendService {
     }
 
     public async setMapObject(mapObject: MapObject): Promise<any> {
+        const internalObject = this._mapObjects.find((x) => mapObject.id == x.id);
+        internalObject.coord = mapObject.coord;
 
+        console.log(internalObject.coord.inPixel);
     }
 
     public updateMapObject(id: string): Promise<any> {
@@ -53,7 +56,7 @@ export class BluetoothBackendService extends BackendService {
     }
 
     public getMapObject(id: string): MapObject {
-        return {id: '', coord: new Coordinate(), type: "", pinned: false, update: false, name: "", meta: {}};
+        return this._mapObjects.find((mapObject) => id == mapObject.id);
     }
 
     public getMapObjects(): Array<MapObject> {

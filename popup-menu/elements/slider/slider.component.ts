@@ -17,7 +17,7 @@ export class SliderComponent implements AfterContentInit {
     public bar: ElementRef<HTMLDivElement>;
 
     @Input()
-    public max: number = 1.0;
+    public max: number = 0.0;
 
     @Input()
     public min: number = 0.0;
@@ -90,7 +90,7 @@ export class SliderComponent implements AfterContentInit {
     }
 
     public getIndexByValue(value: number) {
-
+        return Math.round((value - this.min) / ((this.max - this.min) / (this.steps - 1)));
     }
 
     @Input()
@@ -111,7 +111,7 @@ export class SliderComponent implements AfterContentInit {
     @Input()
     public set value(v: number) {
         this._value = v;
-        this.index = v;
+        this.index = this.getIndexByValue(v);
         this.update();
     };
 

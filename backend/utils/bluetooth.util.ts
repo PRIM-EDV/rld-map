@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BLE } from '@ionic-native/ble/ngx';
-import { File } from '@ionic-native/file/ngx';
 import { Platform } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { connect } from 'tls';
+import { DeviceConfigService } from './device-config.service';
 
 export interface BluetoothData {
     id: number;
@@ -17,23 +17,12 @@ export interface BluetoothData {
 })
 export class Bluetooth {
     public connectedDevice: any = null;
-    private _config: any = null;
 
     private _disconnectEvent = new Subject<void>();
     private _connectEvent = new Subject<any>();
 
-    constructor(private platform: Platform, private ble: BLE, private _file: File) {
-        this.platform.ready().then(() => {
-            this._file.readAsBinaryString(this._file.dataDirectory, 'bluetooth.json').then(
-                (data) => {
-                    this._config = JSON.parse(data);
-                },
-                (err) => {
-                    this._config = {device: null};
-                    this._file.writeFile(this._file.dataDirectory, 'bluetooth.json', JSON.stringify(this._config));
-                }
-            );
-        });
+    constructor(private platform: Platform, private ble: BLE, private deviceConfig: DeviceConfigService) {
+
     }
 
     public async getBondedDevices(): Promise<any> {
@@ -46,10 +35,11 @@ export class Bluetooth {
             console.log(address);
             this.ble.connect(address).subscribe(
                 (d) => {
-                    this._config.device = d;
+                    this.connectedDevice = d;
                     this._connectEvent.next(d);
-                    this._file.writeFile(this._file.dataDirectory, 'bluetooth.json', JSON.stringify(this._config), {replace: true});
+                    this.deviceConfig.updateConfig({device: d});
                     resolve(d);
+
                     this.ble.startNotification(address, 'ffe0', 'ffe1').subscribe(
                         (data: ArrayBuffer) => {
                             const s = String.fromCharCode.apply(null, new Uint8Array(data));
@@ -71,11 +61,11 @@ export class Bluetooth {
     }
 
     public connectDefault(callback: (data: BluetoothData) => void) {
-        // console.log(this._config);
-        if (this._config && this._config.device != null) {
+        const device =  this.deviceConfig.getConfig().device;
+        if (device != null) {
             // console.log(this._config);
-            this.connect(this._config.device.id, callback).then(
-                (device) => {
+            this.connect(device.id, callback).then(
+                (d) => {
                     // resolve(device);
                 },
                 (err) => {

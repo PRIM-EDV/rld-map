@@ -8,7 +8,7 @@
 }
 
 div.content {
-    max-height: 214px;
+    max-height: 300px;
     overflow-y: scroll;
 
     div {
@@ -18,6 +18,11 @@ div.content {
     div.split {
         display: grid;
         grid-template-columns: repeat(2, 50%);
+    }
+
+    div.split.third {
+        display: grid;
+        grid-template-columns: 33% 33% 34%;
     }
 
     div.input {

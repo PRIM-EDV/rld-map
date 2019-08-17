@@ -17,6 +17,20 @@
         <div class="caption">Number of casualties</div>
         <slider (valueChange)="onWoundedChange($event)" [value]="_nbWounded" [max]="_nbCombatants" [tickValues]="_tickValues" [steps]="_nbCombatants + 1"></slider>
     </div>
+    <div class="split third">
+        <div class="input">
+            <div class="caption">Medics</div>
+            <slider [value]="_medics" [max]="2" [tickValues]="[0, 2]" [steps]="3" (valueChange)="_medics = $event"></slider>
+        </div>
+        <div class="input">
+            <div class="caption">Technicians</div>
+            <slider [value]="_technitians" [max]="2" [tickValues]="[0, 2]" [steps]="3" (valueChange)="_technitians = $event"></slider>
+        </div>
+        <div class="input">
+            <div class="caption">Scientists</div>
+            <slider [value]="_scientists" [max]="2" [tickValues]="[0, 2]" [steps]="3" (valueChange)="_scientists = $event"></slider>
+        </div>
+    </div>
     <div class="input">
         <div class="caption">Description</div>
         <textarea #description></textarea>

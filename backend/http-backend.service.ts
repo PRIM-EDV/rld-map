@@ -32,15 +32,21 @@ export class HttpBackendService extends BackendService {
 
         this.synchronise();
         this.syncSquads();
+        this.syncOperators();
 
         this._interval = window.setInterval(this.synchronise.bind(this), 10000);
     }
 
+    public async syncOperators() {
+        try {
+            this._operators = await this._http.get(url + 'operator', httpOptions).toPromise() as any[];
+        } catch {
+        }
+    }
+
     public async syncSquads() {
         try {
-            const remoteSquads = await this._http.get(url + 'squad', httpOptions).toPromise() as any[];
-
-            remoteSquads.forEach(this.createInternalSquad.bind(this));
+            this._squads = await this._http.get(url + 'squad', httpOptions).toPromise() as any[];
         } catch {
 
         }
@@ -128,10 +134,6 @@ export class HttpBackendService extends BackendService {
         return this._mapObjects;
     }
 
-    public getSquads(): Array<Squad> {
-        return this._squads;
-    }
-
     public onSynchronise(callback) {
         this._synchEvent.subscribe(callback);
     }
@@ -155,7 +157,7 @@ export class HttpBackendService extends BackendService {
     }
 
     private createInternalSquad(remoteSquad: any) {
-        this._squads.push({name: remoteSquad.name, callsign: remoteSquad.callsign});
+        this._squads.push({name: remoteSquad.name});
     }
 
     private _createInternalMapObject(mapObject: MapObject) {

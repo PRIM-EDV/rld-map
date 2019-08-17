@@ -31,7 +31,7 @@ export class DropdownComponent implements AfterContentInit {
     }
 
     public open() {
-        this.ddlist.nativeElement.style.height = "100px";
+        this.ddlist.nativeElement.style.height = "auto";
     }
 
     public close() {

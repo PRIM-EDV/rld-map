@@ -45,6 +45,7 @@ export class EditObjectContextComponent extends WheelMenuContext {
                 break;
             }
             case 'foe': {
+                this._popupMenu.foeContext.open(this.position, this._object);
                 break;
             }
             case 'object': {

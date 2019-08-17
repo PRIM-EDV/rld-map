@@ -60,19 +60,20 @@ export class MapObjectContextComponent extends WheelMenuContext {
     }
 
     public placeFriend() {
-        const squad = this._backend.getSquads().find((squad) => {
-            return (this._backend.getMapObjects().find((mapObject) => {return mapObject.type == 'friend' && mapObject.name == squad.name}) ? false : true);
+        const operator = this._backend.getOperators().find((operator) => {
+            return (this._backend.getMapObjects().find((mapObject) => {return mapObject.type == 'friend' && mapObject.meta.callsign == operator.callsign}) ? false : true);
         })
 
-        if(squad) {
-            const mapObject = this._newFriend(squad);
+        if(operator) {
+            const mapObject = this._newFriend(operator.callsign);
             this._popupMenu.friendContext.open(this.position, mapObject);
         }
 
         this._wheelMenu.close();
     }
 
-    private _newFriend(squad: Squad): MapObject {
+    private _newFriend(callsign: string): MapObject {
+        const squad = this._backend.getSquads()[0];
         const coord = new Coordinate();
         coord.inWindow = {x: this.position.x, y: this.position.y};
 
@@ -86,7 +87,7 @@ export class MapObjectContextComponent extends WheelMenuContext {
             meta: {
                 size: 5,
                 wounded: 0,
-                callsign: squad.callsign,
+                callsign: callsign,
                 description: ''
             }
         }

@@ -10,6 +10,10 @@ export class PrimIconset extends Iconset {
     public pinned: HTMLImageElement = new Image();
     public select: HTMLImageElement = new Image();
     public self: HTMLImageElement = new Image();
+    public tracked: HTMLImageElement = new Image();
+    public tech: HTMLImageElement = new Image();
+    public medic: HTMLImageElement = new Image();
+    public science: HTMLImageElement = new Image();
 
     public objectSubtype: Array<HTMLImageElement> = [];
     public unitSizeFriend: Array<HTMLImageElement> = [];
@@ -36,6 +40,18 @@ export class PrimIconset extends Iconset {
         this.self.onload = this._onIconLoad.bind(this);
         this.self.src = 'assets/icons/self.svg';
 
+        this.tech.onload = this._onIconLoad.bind(this);
+        this.tech.src = 'assets/icons/tech.png';
+
+        this.medic.onload = this._onIconLoad.bind(this);
+        this.medic.src = 'assets/icons/medic.png';
+
+        this.science.onload = this._onIconLoad.bind(this);
+        this.science.src = 'assets/icons/science.png';
+        
+        this.tracked.onload = this._onIconLoad.bind(this);
+        this.tracked.src = 'assets/icons/tracked.png';
+
         this.pinned.onload = this._onIconLoad.bind(this);
         this.pinned.src = 'assets/icons/btn_pin.png';
 
@@ -61,7 +77,7 @@ export class PrimIconset extends Iconset {
     private _onIconLoad() {
         this._nbIconsReady += 1;
 
-        if (this._nbIconsReady >= 72) {
+        if (this._nbIconsReady >= 76) {
             this.resourceReadyState.next(true);
         }
     }

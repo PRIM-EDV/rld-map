@@ -1,5 +1,5 @@
 import { Component, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { BackendService, MapObject, Squad } from 'src/app/map/backend/backend.service';
+import { BackendService, MapObject, Squad, Operator } from 'src/app/map/backend/backend.service';
 import { ContextMenuService } from '../../../shared/context-menu.service';
 import { PopupMenuComponent } from '../../popup-menu.component';
 import { PopupContext } from '../popup-context';
@@ -27,6 +27,9 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
 
     private _squadnames: Array<string> = [];
     private _callsigns: Array<string> = [];
+    private _medics: number = 0;
+    private _technitians: number = 0;
+    private _scientists: number = 0;
 
     private _squadname = "Paul"
     private _callsign = "1234"
@@ -47,7 +50,7 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
         this.position = pos;
         this.title = `Friendly unit (${mapObject.id.toUpperCase().substr(0, 8)})`;
 
-        this._callsigns = this._getCallsigns(this._backend.getSquads());
+        this._callsigns = this._getCallsigns(this._backend.getOperators());
         this._squadnames = this._getSquadnames(this._backend.getSquads());
         this._mapObject = mapObject;
         this._squadname = mapObject.name;
@@ -55,6 +58,10 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
         this._nbCombatants = mapObject.meta.size;
         this._nbWounded = mapObject.meta.wounded;
         this._tickValues = [0, this._nbCombatants];
+
+        this._medics = (mapObject.meta.medics) ? mapObject.meta.medics : 0;
+        this._technitians = (mapObject.meta.technitians) ? mapObject.meta.technitians : 0;
+        this._scientists = (mapObject.meta.scientists) ? mapObject.meta.scientists : 0; 
 
         if(mapObject.meta.description) {
             this._description.nativeElement.value = mapObject.meta.description;
@@ -78,11 +85,11 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
         this._nbWounded = e;
     }
 
-    private _getCallsigns(squads: Array<Squad>) {
+    private _getCallsigns(operators: Array<Operator>) {
         let callsigns = [];
 
-        squads.forEach((squad: Squad) => {
-            callsigns.push(squad.callsign)
+        operators.forEach((operator: Operator) => {
+            callsigns.push(operator.callsign)
         });
 
         callsigns = callsigns.filter((callsign) => {
@@ -100,40 +107,10 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
         let squadnames = [];
 
         squads.forEach((squad: Squad) => {
-            squadnames.push(squad.name);
-        })
-
-        squadnames = squadnames.filter((name) => {
-            let existingMapObject = this._backend.getMapObjects().find((mapObject) => {
-                return mapObject.type == 'friend' && mapObject.name == name 
-            });
-            
-            return (existingMapObject ? false : true);
+            squadnames.push(squad.name)
         });
-
+        console.log(squads);
         return squadnames;
-    }
-
-    private _onSquadnameChange(value: string) {
-        const squads = this._backend.getSquads();
-
-        squads.forEach((x) => {
-            if(x.name == value) {
-                this._callsign = x.callsign;
-            }
-        });
-        this._squadname = value;
-    }
-
-    private _onCallsignChange(value: string) {
-        const squads = this._backend.getSquads();
-
-        squads.forEach((x) => {
-            if(x.callsign == value) {
-                this._squadname = x.name;
-            }
-        });
-        this._callsign = value;
     }
 
     private _onCancel() {
@@ -142,6 +119,9 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
 
     private _onConfirm() {
         this._mapObject.name = this._squadname
+        this._mapObject.meta.medics = this._medics;
+        this._mapObject.meta.technitians = this._technitians;
+        this._mapObject.meta.scientists = this._scientists;
         this._mapObject.meta.callsign = this._callsign;
         this._mapObject.meta.size = this._nbCombatants;
         this._mapObject.meta.wounded = this._nbWounded;
@@ -150,4 +130,12 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
         this._backend.setMapObject(this._mapObject);
         this._popupMenu.close();
     };
+
+    private _onCallsignChange(callsign: string) {
+        this._callsign = callsign;
+    }
+
+    private _onSquadnameChange(name: string) {
+        this._squadname = name;
+    }
 }
