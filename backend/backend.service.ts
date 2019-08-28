@@ -17,6 +17,7 @@ export interface MapObject {
     wounded?: number;
     callsign?: string;
     tracked?: boolean;
+    timestamp?: number;
     medics?: number;
     technitians?: number;
     scientists?: number;
@@ -46,7 +47,7 @@ export abstract class BackendService {
   public abstract getMapObject(id: string): MapObject;
   public abstract getMapObjects(): Array<MapObject>;
 
-  public getSquads(): Array<Squad> { return this._squads }
-  public getOperators(): Array<Operator> {return this._operators }
+  public getSquads(): Array<Squad> { return this._squads; }
+  public getOperators(): Array<Operator> {return this._operators; }
   public onSynchronise(callback) {return; }
 }

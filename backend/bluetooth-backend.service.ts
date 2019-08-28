@@ -84,10 +84,27 @@ export class BluetoothBackendService extends BackendService {
     }
 
     private _handleBluetooth(data: BluetoothData) {
-        const mapObject = this._mapObjects.find((x) => x.id == String(0));
+        const mapObject = this._mapObjects.find((x) => x.id == String(data.id));
 
         if (mapObject) {
             mapObject.coord.inMeter = {x: data.px, y: data.py};
+        } else {
+            const coord = new Coordinate();
+            coord.inMeter = {x: data.px, y: data.py};
+
+            this._mapObjects.push({name: '', id: String(data.id), coord: coord, pinned: false, update: true, type: 'friend', meta: {
+                timestamp: Date.now()
+            }});
         }
+
+        this._cleanup();
+    }
+
+    private _cleanup() {
+        this._mapObjects.forEach((mapObject, index) => {
+            if (mapObject.meta.timestamp && (Date.now() - mapObject.meta.timestamp) > 30000) {
+                this._mapObjects.splice(index, 1);
+            }
+        });
     }
 }

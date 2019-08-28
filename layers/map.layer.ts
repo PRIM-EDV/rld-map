@@ -11,7 +11,6 @@ export class MapLayer extends Layer {
     private _contextMenuService: ContextMenuService;
     private _mapfile: MapFile = null;
     private _viewport: Direction = new Direction();
-    
 
     constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, mapfile: MapFile, contextMenuService: ContextMenuService) {
         super();
@@ -22,10 +21,10 @@ export class MapLayer extends Layer {
         this._mapfile = mapfile;
 
         this._mapfile.resourceReadyState.subscribe((isReady: boolean) => {
-            if(isReady) {
+            if (isReady) {
                 this.resourceReadyState.next(true);
-            };
-        })
+            }
+        });
     }
 
     public draw() {
@@ -68,5 +67,23 @@ export class MapLayer extends Layer {
             x: Coordinate.offset.x - (e.x * (Coordinate.scale - scale)),
             y: Coordinate.offset.y - (e.y * (Coordinate.scale - scale))
         };
+    }
+
+    private _drawGrid() {
+        const gridOrigin = new Coordinate();
+        const cornerTL = new Coordinate();
+        const cornerBR = new Coordinate();
+
+        gridOrigin.inPixel = {x: 860, y: 1600};
+        cornerTL.inCanvas = {x: 0, y: 0};
+        cornerBR.inCanvas = {x: this._canvas.width, y: this._canvas.height};
+
+        const sx = (cornerTL.inMeter.x - gridOrigin.inMeter.x) % 30;
+
+    //                     this.ctx.beginPath();
+    //                     this.ctx.moveTo(sw + 0.5,  Math.max(32, (-this.sy + my) * (1/this.zoom)));
+    //                     this.ctx.lineTo(sw + 0.5, Math.min(oy + wy - 16 ,(-this.sy + my + ey) * (1/this.zoom)));
+    //                     this.ctx.stroke();
+    //                     this.ctx.closePath();
     }
 }
