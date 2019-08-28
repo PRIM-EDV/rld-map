@@ -100,6 +100,8 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
             return (existingMapObject ? false : true);
         });
 
+        callsigns.sort();
+
         return callsigns;
     }
 
@@ -109,7 +111,8 @@ export class FriendContextComponent extends PopupContext implements AfterViewIni
         squads.forEach((squad: Squad) => {
             squadnames.push(squad.name)
         });
-        console.log(squads);
+        squadnames.sort();
+
         return squadnames;
     }
 

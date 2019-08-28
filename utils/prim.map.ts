@@ -3,7 +3,7 @@ import { Coordinate } from '../backend/utils/coordinate.util';
 
 const layers = [{
     image: new Image (),
-    imageUrl: 'assets/maps/mw.jpg',
+    imageUrl: 'assets/maps/map.svg',
     origin: new Coordinate (),
     resolution: [2.6, 2.6],
     active: true
