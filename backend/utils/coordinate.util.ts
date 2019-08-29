@@ -6,7 +6,7 @@ export class Coordinate {
     protected static _viewportOffset = {x: 0, y: 0};
     protected static _offset = {x: 0, y: 0};
     protected static _scale = 1.0;
-    protected static _pixelPerMeter = 1;
+    protected static _pixelPerMeter = 1.3;
 
     protected _x: number;
     protected _y: number;

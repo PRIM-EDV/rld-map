@@ -34,6 +34,8 @@ export class MapLayer extends Layer {
                 this._ctx.drawImage(map.image, Coordinate.offset.x, Coordinate.offset.y, this._viewport.inCanvas.x, this._viewport.inCanvas.y, 0, 0, this._canvas.width, this._canvas.height);
             }
         }
+
+        this._drawGrid();
     }
 
     public onContextMenu(e: MouseEvent): boolean {
@@ -71,19 +73,54 @@ export class MapLayer extends Layer {
 
     private _drawGrid() {
         const gridOrigin = new Coordinate();
-        const cornerTL = new Coordinate();
-        const cornerBR = new Coordinate();
+        let coord = new Coordinate();
+        // const cornerTL = new Coordinate();
+        // const cornerBR = new Coordinate();
 
-        gridOrigin.inPixel = {x: 860, y: 1600};
-        cornerTL.inCanvas = {x: 0, y: 0};
-        cornerBR.inCanvas = {x: this._canvas.width, y: this._canvas.height};
+        gridOrigin.inPixel = {x: 240, y: 2710};
+        
+        
+        this._ctx.strokeStyle= '#000000';
+        this._ctx.lineWidth = 1;
 
-        const sx = (cornerTL.inMeter.x - gridOrigin.inMeter.x) % 30;
+        coord.inPixel = gridOrigin.inPixel;
+        for (let i = 0; i < 30; i++) {
+            
+            this._ctx.beginPath();
+            this._ctx.moveTo(coord.inCanvas.x + 0.5, 0);
+            this._ctx.lineTo(coord.inCanvas.x + 0.5, this._canvas.height / 2 - 100);
+            this._ctx.stroke();
+            this._ctx.closePath();
 
-    //                     this.ctx.beginPath();
-    //                     this.ctx.moveTo(sw + 0.5,  Math.max(32, (-this.sy + my) * (1/this.zoom)));
-    //                     this.ctx.lineTo(sw + 0.5, Math.min(oy + wy - 16 ,(-this.sy + my + ey) * (1/this.zoom)));
-    //                     this.ctx.stroke();
-    //                     this.ctx.closePath();
+            this._ctx.font = '14px roboto';
+            this._ctx.fillText("X " + String(i) , coord.inCanvas.x + 6, this._canvas.height / 2);
+
+            coord.inMeter = {x: coord.inMeter.x + 30, y: coord.inMeter.y};
+        }
+
+        // cornerTL.inCanvas = {x: 0, y: 0};
+        // cornerBR.inCanvas = {x: this._canvas.width, y: this._canvas.height};
+
+        // const sx = cornerTL.inMeter.x + ( cornerTL.inMeter.x - gridOrigin.inMeter.x % 30 );
+        // const sy = cornerTL.inMeter.y + ( cornerTL.inMeter.y - gridOrigin.inMeter.y % 30 );
+
+       
+        
+        // let coord = new Coordinate();
+        // coord.inMeter = {x: sx, y: sy};
+
+        // console.log(Math.floor(Math.abs(cornerBR.inMeter.x - sx) / 30));
+
+        // for (let i = 0; i < Math.floor(Math.abs(cornerBR.inMeter.x - sx) / 30); i++) {
+
+        //     this._ctx.beginPath();
+        //     this._ctx.moveTo(coord.inCanvas.x + 0.5, 0);
+        //     this._ctx.lineTo(coord.inCanvas.x + 0.5, this._canvas.height);
+        //     this._ctx.stroke();
+        //     this._ctx.closePath();
+
+        //     coord.inMeter = {x: coord.inMeter.x + 30, y: coord.inMeter.y};
+        // }
+
     }
 }
