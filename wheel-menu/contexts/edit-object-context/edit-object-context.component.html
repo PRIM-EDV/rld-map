@@ -1,0 +1,18 @@
+<div class="content">
+    <div class="button ll" (click)="_editMapObject()">
+        <img src="assets/icons/edit_object.png" />
+        <div class="label">Edit</div>
+    </div>
+    <div class="button bl" (click)="_deleteMapObject()">
+        <img src="assets/icons/btn_delete_object.png" />
+        <div class="label">Delete</div>
+    </div>
+    <div class="button tl" (click)="_togglePinned()">
+        <img src="{{(_object && _object.pinned) ? 'assets/icons/btn_unpin.png' : 'assets/icons/btn_pin.png'}}" />
+        <div class="label">{{(_object && _object.pinned) ? "Unpin" : "Pin"}}</div>
+    </div>
+    <div class="center">
+        &nbsp;
+    </div>
+</div>
+

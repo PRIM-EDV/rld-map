@@ -1,0 +1,16 @@
+div#wheel-menu {
+    display: none;
+    position: fixed;
+    top: 0px;
+
+    width: 148px;
+    height: 148px;
+
+    .active {
+        visibility: initial;
+    }
+
+    .in-active {
+        visibility: hidden;
+    }
+}

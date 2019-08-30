@@ -1,0 +1,57 @@
+::-webkit-scrollbar {     
+    background-color: #1e1e1e;
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #424242;
+}
+
+div.dd-box {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 6px 0 0px 0;
+    width: 100%;
+    border-bottom: 1px solid #2d2d2d;
+
+    div.dd-value {
+        flex-grow: 0;
+        font-size: 14px;
+        color: #dddddd;
+        height: 20px;
+        padding: 3px 0 3px 0;
+        z-index: -1;
+    }
+
+    div.dd-arrow {
+        width: 20px;
+        
+        background-image: url('../../../../../assets/icons/dd_arrow_down.png');
+        background-size: contain;
+        z-index: -1;
+    }
+
+    div.dd-list {
+        width: 100%;
+        height: 0px;
+        max-height: 100px;
+        position: absolute;
+        top: 24px;
+        background-color: #252525;
+        z-index: 999;
+        overflow-y: scroll;
+
+        div.dd-item {
+            color: #a0a0a0;
+            height: 20px;
+            font-size: 14px;
+            padding: 3px 3px 3px 3px;
+        }
+
+        div.dd-item:hover {
+            color: #dddddd;
+            background: #007acc;
+        }
+    }
+}

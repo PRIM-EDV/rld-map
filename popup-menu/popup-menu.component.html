@@ -1,0 +1,6 @@
+<div #menu id="popup-menu">
+    <div #popupMenuTitleBar class="title">{{_title}}</div>
+    <object-context [ngClass]="this._activeContext==this.objectContext ? 'active' : 'in-active'" [_backend]="_backend"></object-context>
+    <friend-context [ngClass]="this._activeContext==this.friendContext ? 'active' : 'in-active'" [_backend]="_backend"></friend-context>
+    <foe-context [ngClass]="this._activeContext==this.foeContext ? 'active' : 'in-active'" [_backend]="_backend"></foe-context>
+</div>

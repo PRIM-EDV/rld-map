@@ -1,0 +1,15 @@
+<div class="content">    
+    <div class="input">
+        <div class="caption">Estimated numbers</div>
+        <slider [value]="_size" [max]="30" [tickValues]="['0', '~5', '~10', '~15', '~20', '~25', '~30']" [steps]="7" (valueChange)="_size = $event"></slider>
+    </div>
+    <div class="input">
+        <div class="caption">Description</div>
+        <textarea #description></textarea>
+    </div>
+    <!-- <div class=spacer>&nbsp;</div> -->
+</div>
+<div class="button-panel">
+    <div class="button" (click)="_onConfirm()">OK</div>
+    <div class="button" (click)="_onCancel()">CANCEL</div>
+</div>

@@ -1,0 +1,124 @@
+div.content {
+    div.center {
+        image-rendering: pixelated;
+        color: #adadad;
+        position: absolute;
+        left: 50px;
+        top: 50px;
+        width: 48px;
+        height: 48px;
+        // background-color: rgba(0,0,0, 0.6);
+        background-image: url('../../../../assets/imgs/cross.png');
+        line-height: 49px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+    
+    }
+    
+    div.button {
+        cursor: pointer;
+        position: absolute;
+        user-select: none;
+        width: 48px;
+        height: 48px;
+        // border-right: 2px solid #007acc;
+        background-color: #151515;
+        // box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.75);         
+    
+        div.label {
+            text-align: center;
+            line-height: 24px;
+            width: 148px;
+            height: 24px;
+            position: absolute;
+            display: none;
+            font-family: 'roboto';
+            font-size: 14px;
+            color: #a0a0a0;
+            background-color: #151515;
+    //            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
+    
+        img {
+            margin: 12px;
+            width: 24px;
+            height: 24px;
+        }
+    
+    }
+    
+    div.button:hover{
+        div.label {
+            display: block;
+        }
+    }
+    
+    div.button.tl {
+        top: 0;
+        left: 0;
+    
+        div.label {
+            top: 0;
+            left: -150px;
+        }
+    }
+    
+    div.button.tt {
+        top: 0;
+        left: 50px;
+    }
+    
+    div.button.tr {
+        top: 0;
+        left: 100px;
+    }
+    
+    div.button.rr {
+        top: 50px;
+        left: 100px;
+    }
+    
+    div.button.br {
+        top: 100px;
+        left: 100px ;
+    }
+    
+    div.button.bb {
+        top: 100px;
+        left: 50px;
+    }
+    
+    div.button.bl {
+        top: 100px;
+        left: 0;
+    
+        div.label {
+            top: 0;
+            left: -150px;
+        }
+    }
+    
+    div.button.ll {
+        top: 50px;
+        left: 0;
+    
+        div.label {
+            top: 0;
+            left: -150px;
+        }
+    }
+
+    div.button.centered {
+        top: 50px;
+        left: 50px;
+    }
+
+    div.button.animated {
+        transition: all 0.1s ease 0s;
+    }
+    
+    // div.button:hover {
+    //     // background-color: rgba(0,0,0, 0.6);
+    // }
+}

@@ -1,0 +1,76 @@
+div {
+    user-select: none;
+}
+
+div.slider {
+    flex-grow: 1;
+    float: left;
+    position: relative;
+    height: 20px;
+    padding-bottom: 6px;
+    margin-left: 12px;
+    margin-right: 11px;
+    margin-top: 4px;
+
+    div.track {
+        display: flex;
+        justify-content: space-between;
+
+        position: absolute;
+        top: 5px;
+        width: 100%;
+        height: 2px;
+
+        background-color: #2d2d2d;
+
+        overflow: visible;
+        div.bar {
+            position: absolute;
+            height:2px;
+            width: 0px;
+            background-color: #007acc;
+        }
+        div.dash {
+            position: relative;
+            width: 1px;
+            height: 3px;
+            margin-top: 2px;
+            overflow: visible;
+
+            background-color: #2d2d2d;
+            
+            div.tick-value {
+                position: absolute;
+                color: #a0a0a0;
+                text-align: center;
+                height: 12px;
+                width:24px;
+                left: -12px;
+                top: 6px;
+                font-size: 12px;
+            }
+        }
+
+    }
+}
+
+div.value {
+    color: #a0a0a0;
+    font-size: 14px;
+    height: 24px;
+    width: 32px;
+
+
+    text-align: center;
+}
+
+div.handle {
+    position: absolute;
+    background: #007acc;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+
+    top: 0px;
+    left: -6px;
+}

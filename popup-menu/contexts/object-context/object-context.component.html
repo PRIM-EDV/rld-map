@@ -1,0 +1,23 @@
+<div class="content">
+    <div class="input">
+        <div class="caption">Name</div>
+        <input #name />
+    </div>
+    <div class="input">
+        <div class="caption">Type</div>
+        <div class="icon-list">
+            <div class="item" (click)="this._subtype = idx;" [ngClass]="entry.type==this._subtype ? 'active' : 'in-active'" *ngFor="let entry of objectTypes; let idx = index">
+                <img src="{{entry.icon}}" style="background-image: url('assets/icons/object_subtype/object.png')"/>
+            </div>
+        </div>
+    </div>
+    <div class="input">
+        <div class="caption">Description</div>
+        <textarea #description></textarea>
+    </div>
+    <!-- <div class=spacer>&nbsp;</div> -->
+</div>
+<div class="button-panel">
+    <div class="button" (click)="_onConfirm()">OK</div>
+    <div class="button" (click)="_onCancel()">CANCEL</div>
+</div>

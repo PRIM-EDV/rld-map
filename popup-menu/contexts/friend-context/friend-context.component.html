@@ -1,0 +1,43 @@
+<div class="content">
+    <div class="split">
+        <div class="input">
+            <div class="caption">Name</div>
+            <dropdown [value]="_squadname" [entries]="_squadnames" (onValueChange)="_onSquadnameChange($event)"></dropdown>
+        </div>
+        <div class="input">
+            <div class="caption">Callsign</div>
+            <dropdown [value]="_callsign" [entries]="_callsigns" (onValueChange)="_onCallsignChange($event)"></dropdown>
+        </div>
+    </div>
+    <div class="input">
+        <div class="caption">Number of combatants</div>
+        <slider (valueChange)="onCombatantsChange($event)" [value]="_nbCombatants" [max]=30 [tickValues]=[0,5,10,15,20,25,30] [steps]=31></slider>
+    </div>
+    <div class="input">
+        <div class="caption">Number of casualties</div>
+        <slider (valueChange)="onWoundedChange($event)" [value]="_nbWounded" [max]="_nbCombatants" [tickValues]="_tickValues" [steps]="_nbCombatants + 1"></slider>
+    </div>
+    <div class="split third">
+        <div class="input">
+            <div class="caption">Medics</div>
+            <slider [value]="_medics" [max]="2" [tickValues]="[0, 2]" [steps]="3" (valueChange)="_medics = $event"></slider>
+        </div>
+        <div class="input">
+            <div class="caption">Technicians</div>
+            <slider [value]="_technitians" [max]="2" [tickValues]="[0, 2]" [steps]="3" (valueChange)="_technitians = $event"></slider>
+        </div>
+        <div class="input">
+            <div class="caption">Scientists</div>
+            <slider [value]="_scientists" [max]="2" [tickValues]="[0, 2]" [steps]="3" (valueChange)="_scientists = $event"></slider>
+        </div>
+    </div>
+    <div class="input">
+        <div class="caption">Description</div>
+        <textarea #description></textarea>
+    </div>
+    <!-- <div class=spacer>&nbsp;</div> -->
+</div>
+<div class="button-panel">
+    <div class="button" (click)="_onConfirm()">OK</div>
+    <div class="button" (click)="_onCancel()">CANCEL</div>
+</div>

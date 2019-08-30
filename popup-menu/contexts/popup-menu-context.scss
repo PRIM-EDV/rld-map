@@ -1,0 +1,114 @@
+::-webkit-scrollbar {     
+    background-color: #1e1e1e;
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #424242;
+}
+
+div.content {
+    max-height: 300px;
+    overflow-y: scroll;
+
+    div {
+        user-select: none;
+    }
+
+    div.split {
+        display: grid;
+        grid-template-columns: repeat(2, 50%);
+    }
+
+    div.split.third {
+        display: grid;
+        grid-template-columns: 33% 33% 34%;
+    }
+
+    div.input {
+        margin: 6px 12px 6px 12px;
+
+        div.caption {
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        input{
+            color: #dddddd;
+            font-size: 14px;
+            width: 100%;
+            height: 14px;
+            margin: 6px 0 6px 0;
+            background-color: transparent;
+            border: none;
+            border-bottom: 1px solid #2d2d2d;
+        }
+
+        input:focus {
+            outline: none;
+        }
+
+        textarea{
+            color: #dddddd;
+            font-size: 14px;
+            min-height: 34px;
+            width: 100%;
+            margin: 6px 0 6px 0;
+            background-color: transparent;
+            border: none;
+        }
+
+        textarea:focus {
+            outline: none;
+            resize: none;
+        }
+    }
+
+    div.spacer {
+        width: 100%;
+        height: 1px;
+        border-bottom: 1px solid #a0a0a0;
+    }
+}
+
+div.icon-list {
+    display: flex;
+
+    div.item {
+        margin: 8px 8px 4px 8px;
+        width: 32px;
+        height: 36px;
+        color:  #a0a0a0;
+        font-size: 12px;
+        text-align: center;
+        
+        img {
+            margin: -8px 0 0 -8px;
+            width: 48px;
+            background-size: contain;
+        }
+    }
+
+    div.item.active {
+        border-bottom: #dddddd solid 2px;
+    }
+}
+
+div.button-panel {
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 6px;
+    user-select: none;
+
+    div.button {
+        cursor: pointer;
+        padding: 6px;
+        font-size: 14px;
+        color: #a0a0a0;
+        user-select: none;
+    }
+
+    div.button:hover {
+        color: #007acc;
+    }
+}

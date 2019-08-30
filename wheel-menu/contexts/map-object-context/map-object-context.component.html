@@ -1,0 +1,18 @@
+<div class="content">
+    <div class="button tl" (click)="placeFoe()" [class.centered]="!this.isActive" [class.animated]="this.isActive">
+        <img src="assets/icons/btn_foe.png" />
+        <div class="label">New marker: Foe</div>
+    </div>
+    <div class="button ll" (click)="placeObject()" [class.centered]="!this.isActive" [class.animated]="this.isActive">
+        <img src="assets/icons/btn_object.png" />
+        <div class="label">New marker: Object</div>
+    </div>
+    <div class="button bl" (click)="placeFriend()" [class.centered]="!this.isActive" [class.animated]="this.isActive">
+        <img src="assets/icons/btn_ally.png" />
+        <div class="label">New marker: Friend</div>
+    </div>
+    <div class="center">
+        &nbsp;
+    </div>
+</div>
+
