@@ -75,55 +75,64 @@ export class MapLayer extends Layer {
 
     private _drawGrid() {
         const gridOrigin = new Coordinate();
-        let coord = new Coordinate();
-        // const cornerTL = new Coordinate();
-        // const cornerBR = new Coordinate();
+        //let coord = new Coordinate();
+        const cornerTL = new Coordinate();
+        const cornerBR = new Coordinate();
 
-        gridOrigin.inPixel = {x: 240, y: 2710};
+        gridOrigin.inPixel = {x: 240, y: 1600};
         
         
         this._ctx.strokeStyle= '#000000';
         this._ctx.lineWidth = 1;
 
-        coord.inPixel = gridOrigin.inPixel;
-        coord.inMeter = {x: coord.inMeter.x - 30, y: coord.inMeter.y};
-        for (let i = 0; i < 30; i++) {
-            this._ctx.font = '14px roboto';
-            this._ctx.fillStyle = '#000000';
-            this._ctx.fillText("X " + String(i + 1) , coord.inCanvas.x + 6, this._canvas.height / this._scale - 20 * this._scale);
+        cornerTL.inPixel = gridOrigin.inPixel;
+        cornerBR.inPixel = gridOrigin.inPixel;
 
-            coord.inMeter = {x: coord.inMeter.x + 30, y: coord.inMeter.y};
+        cornerTL.inMeter = {x: cornerTL.inMeter.x - 30, y: cornerTL.inMeter.y};
+        
+        for (let i = 0; i < 30; i++) {
+            let boxWidth =  cornerBR.inCanvas.x - cornerTL.inCanvas.x;
+            let boxHeight = cornerBR.inCanvas.y - cornerTL.inCanvas.y;
+            
+            this._ctx.fillStyle = '#151515';
+            this._ctx.fillRect(cornerTL.inCanvas.x + 1.5, this._canvas.height / this._scale - 28 * this._scale, boxWidth - 2, 20);
+            this._ctx.font = '14px roboto';
+            this._ctx.fillStyle = '#a0a0a0';
+            this._ctx.fillText("X " + String(i + 1) , cornerTL.inCanvas.x + boxWidth / 2 - 12, this._canvas.height / this._scale - 20 * this._scale);
+
+            cornerTL.inMeter = {x: cornerTL.inMeter.x + 30, y: cornerTL.inMeter.y};
+            cornerBR.inMeter = {x: cornerBR.inMeter.x + 30, y: cornerBR.inMeter.y};
             
             this._ctx.beginPath();
-            this._ctx.moveTo(coord.inCanvas.x + 0.5, 0);
-            this._ctx.lineTo(coord.inCanvas.x + 0.5, this._canvas.height / this._scale - 20 * this._scale);
+            this._ctx.moveTo(cornerTL.inCanvas.x + 0.5, 0);
+            this._ctx.lineTo(cornerTL.inCanvas.x + 0.5, this._canvas.height / this._scale);
             this._ctx.stroke();
             this._ctx.closePath();
         }
 
-        // cornerTL.inCanvas = {x: 0, y: 0};
-        // cornerBR.inCanvas = {x: this._canvas.width, y: this._canvas.height};
+        cornerTL.inMeter = {x: cornerTL.inMeter.x, y: cornerTL.inMeter.y + 30};
+        for (let i = 0; i < 35; i++) {
+            let boxHeight = Math.abs(cornerBR.inCanvas.y - cornerTL.inCanvas.y);
+            
+            this._ctx.fillStyle = '#151515';
+            this._ctx.fillRect(0,  cornerBR.inCanvas.y + 1.5, 20, boxHeight - 2);
+            
+            this._ctx.save()
+            this._ctx.translate(0, cornerTL.inCanvas.y);
+            this._ctx.rotate(-Math.PI/2);
+            this._ctx.font = '14px roboto';
+            this._ctx.fillStyle = '#a0a0a0';
+            this._ctx.fillText("Y " + String(i + 1) , boxHeight / 2 - 15, 15);
+            this._ctx.restore();
 
-        // const sx = cornerTL.inMeter.x + ( cornerTL.inMeter.x - gridOrigin.inMeter.x % 30 );
-        // const sy = cornerTL.inMeter.y + ( cornerTL.inMeter.y - gridOrigin.inMeter.y % 30 );
-
-       
-        
-        // let coord = new Coordinate();
-        // coord.inMeter = {x: sx, y: sy};
-
-        // console.log(Math.floor(Math.abs(cornerBR.inMeter.x - sx) / 30));
-
-        // for (let i = 0; i < Math.floor(Math.abs(cornerBR.inMeter.x - sx) / 30); i++) {
-
-        //     this._ctx.beginPath();
-        //     this._ctx.moveTo(coord.inCanvas.x + 0.5, 0);
-        //     this._ctx.lineTo(coord.inCanvas.x + 0.5, this._canvas.height);
-        //     this._ctx.stroke();
-        //     this._ctx.closePath();
-
-        //     coord.inMeter = {x: coord.inMeter.x + 30, y: coord.inMeter.y};
-        // }
-
+            cornerTL.inMeter = {x: cornerTL.inMeter.x, y: cornerTL.inMeter.y - 30};
+            cornerBR.inMeter = {x: cornerBR.inMeter.x, y: cornerBR.inMeter.y - 30};
+            
+            this._ctx.beginPath();
+            this._ctx.moveTo(0, cornerTL.inCanvas.y + 0.5);
+            this._ctx.lineTo(this._canvas.width / this._scale, cornerTL.inCanvas.y + 0.5);
+            this._ctx.stroke();
+            this._ctx.closePath();
+        }
     }
 }

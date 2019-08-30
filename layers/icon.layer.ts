@@ -172,7 +172,7 @@ export class IconLayer extends Layer {
             }
             case 'friend': {
                 let idx = 0;
-                let smallSize = 8;
+                let smallSize = 10;
 
                 this._ctx.drawImage(this._iconset.friend, mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
                 
