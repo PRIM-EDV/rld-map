@@ -97,8 +97,6 @@ export class MapComponent implements AfterViewInit {
         const width = this._canvas.nativeElement.clientWidth;
         const height = this._canvas.nativeElement.clientHeight;
 
-        console.log(`${width}:${height}`);
-
         this._canvas.nativeElement.width = width * this._imageQuality;
         this._canvas.nativeElement.height = height * this._imageQuality;
         this._ctx.scale(this._imageQuality, this._imageQuality);

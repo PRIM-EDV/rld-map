@@ -12,6 +12,7 @@ export class MapLayer extends Layer {
     private _contextMenuService: ContextMenuService;
     private _mapfile: MapFile = null;
     private _viewport: Direction = new Direction();
+    private _origin: Coordinate = new Coordinate();
 
     constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, mapfile: MapFile, contextMenuService: ContextMenuService, scale: number = 1.0) {
         super();
@@ -30,10 +31,10 @@ export class MapLayer extends Layer {
     }
 
     public draw() {
-        this._viewport.inPixel = {x: this._canvas.width, y: this._canvas.height};
+        // this._viewport.inPixel = {x: this._canvas.width, y: this._canvas.height}; #
         for (const map of this._mapfile.layers) {
             if (map.active) {
-                this._ctx.drawImage(map.image, Coordinate.offset.x, Coordinate.offset.y, this._viewport.inCanvas.x, this._viewport.inCanvas.y, 0, 0, this._canvas.width, this._canvas.height);
+                this._ctx.drawImage(map.image, this._origin.inCanvas.x, this._origin.inCanvas.y, 3237.02 / Coordinate.scale, 2935.81 / Coordinate.scale);
             }
         }
 
@@ -79,7 +80,7 @@ export class MapLayer extends Layer {
         const cornerTL = new Coordinate();
         const cornerBR = new Coordinate();
 
-        gridOrigin.inPixel = {x: 240, y: 1600};
+        gridOrigin.inPixel = {x: 567, y: 2594};
         
         
         this._ctx.strokeStyle= '#000000';
@@ -92,13 +93,12 @@ export class MapLayer extends Layer {
         
         for (let i = 0; i < 30; i++) {
             let boxWidth =  cornerBR.inCanvas.x - cornerTL.inCanvas.x;
-            let boxHeight = cornerBR.inCanvas.y - cornerTL.inCanvas.y;
             
             this._ctx.fillStyle = '#151515';
-            this._ctx.fillRect(cornerTL.inCanvas.x + 1.5, this._canvas.height / this._scale - 28 * this._scale, boxWidth - 2, 20);
+            this._ctx.fillRect(cornerTL.inCanvas.x + 1.5, this._canvas.height / this._scale - 20, boxWidth - 2, 20);
             this._ctx.font = '14px roboto';
             this._ctx.fillStyle = '#a0a0a0';
-            this._ctx.fillText("X " + String(i + 1) , cornerTL.inCanvas.x + boxWidth / 2 - 12, this._canvas.height / this._scale - 20 * this._scale);
+            this._ctx.fillText("X " + String(i + 1) , cornerTL.inCanvas.x + boxWidth / 2 - 12, this._canvas.height / this._scale - 4);
 
             cornerTL.inMeter = {x: cornerTL.inMeter.x + 30, y: cornerTL.inMeter.y};
             cornerBR.inMeter = {x: cornerBR.inMeter.x + 30, y: cornerBR.inMeter.y};
