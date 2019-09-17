@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Coordinate } from './utils/coordinate.util';
+import { Coordinate } from '../../core/coordinate';
 
 
 export interface MapObject {

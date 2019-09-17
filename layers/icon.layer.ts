@@ -1,6 +1,6 @@
 import { Layer } from '../core/layer';
 import { MapObject, BackendService } from '../backend/backend.service';
-import { Coordinate } from '../backend/utils/coordinate.util';
+import { Coordinate } from '../../core/coordinate';
 import { ContextMenuService } from '../shared/context-menu.service';
 import { PrimIconset } from '../utils/prim.iconset';
 
@@ -202,6 +202,9 @@ export class IconLayer extends Layer {
             }
             case 'foe': {
                 this._ctx.drawImage(this._iconset.foe, mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
+                if (mapObject.meta.size) {
+                    this._ctx.drawImage(this._iconset.unitSizeFoe[mapObject.meta.size], mapObject.coord.inCanvas.x - 24, mapObject.coord.inCanvas.y - 24, 48, 48);
+                }
                 break;
             }
             case 'object': {

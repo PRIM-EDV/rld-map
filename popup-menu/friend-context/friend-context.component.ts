@@ -1,8 +1,8 @@
 import { Component, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import { BackendService, MapObject, Squad, Operator } from 'src/app/map/backend/backend.service';
-import { ContextMenuService } from '../../../shared/context-menu.service';
-import { PopupMenuComponent } from '../../popup-menu.component';
-import { PopupContext } from '../popup-context';
+import { ContextMenuService } from '../../shared/context-menu.service';
+import { PopupMenuComponent } from '../popup-menu.component';
+import { PopupContext } from '../../core/popup-context/popup-context';
 
 
 @Component({

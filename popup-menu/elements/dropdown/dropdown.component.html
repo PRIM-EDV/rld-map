@@ -1,7 +1,0 @@
-<div #ddbox class="dd-box" (click)="toggle($event)">
-    <div class="dd-value">{{value}}</div>
-    <div class="dd-arrow"></div>
-    <div #ddlist class="dd-list">
-        <div class="dd-item" *ngFor="let entry of entries;" (click)="onItemClick(entry)">{{entry}}</div>
-    </div>
-</div>

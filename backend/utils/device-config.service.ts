@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { File } from '@ionic-native/file/ngx';
-import { Coordinate } from './coordinate.util';
+import { Coordinate } from '../../../core/coordinate';
 
 const DEFAULT_CONFIG = {
     device: null,

@@ -2,10 +2,10 @@ import {Component, AfterContentInit, Input, ViewChild, ElementRef} from '@angula
 import { BackendService } from '../backend/backend.service';
 import { ContextMenuService } from '../shared/context-menu.service';
 
-import { PopupContext } from './contexts/popup-context';
-import { ObjectContextComponent } from './contexts/object-context/object-context.component';
-import { FriendContextComponent } from './contexts/friend-context/friend-context.component';
-import { FoeContextComponent } from './contexts/foe-context/foe-context.component';
+import { PopupContext } from '../core/popup-context/popup-context';
+import { ObjectContextComponent } from './object-context/object-context.component';
+import { FriendContextComponent } from './friend-context/friend-context.component';
+import { FoeContextComponent } from './foe-context/foe-context.component';
 
 @Component({
     selector: 'popup-menu',

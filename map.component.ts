@@ -1,8 +1,8 @@
 import {Component, ViewChild, Injector, Input, AfterViewInit, AfterContentInit, ElementRef} from '@angular/core';
 import * as Hammer from 'hammerjs';
 import { BackendService, MapObject } from './backend/backend.service';
-import { Coordinate } from './backend/utils/coordinate.util';
-import { MapFile, MapData} from './utils/map.util';
+import { Coordinate } from '../core/coordinate';
+import { MapFile, MapData} from './core/map';
 import { ContextMenuService } from './shared/context-menu.service';
 import { MapService } from './map.service';
 

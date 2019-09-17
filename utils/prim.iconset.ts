@@ -1,4 +1,4 @@
-import { Iconset } from './iconset.util';
+import { Iconset } from '../core/iconset';
 import { BehaviorSubject } from 'rxjs';
 
 export class PrimIconset extends Iconset {
@@ -18,6 +18,15 @@ export class PrimIconset extends Iconset {
     public objectSubtype: Array<HTMLImageElement> = [];
     public unitSizeFriend: Array<HTMLImageElement> = [];
     public woundedFriend: Array<HTMLImageElement> = [];
+
+    public unitSizeFoe = {
+        5:  new Image(),
+        10: new Image(),
+        15: new Image(),
+        20: new Image(),
+        25: new Image(),
+        30: new Image()
+    }
 
 
     private _nbIconsReady = 0;
@@ -72,12 +81,30 @@ export class PrimIconset extends Iconset {
             this.woundedFriend[this.woundedFriend.length - 1].onload = this._onIconLoad.bind(this);
             this.woundedFriend[this.woundedFriend.length - 1].src = `assets/icons/casualties_size/s${i + 1}.svg`;
         }
+
+        this.unitSizeFoe[5].onload = this._onIconLoad.bind(this);
+        this.unitSizeFoe[5].src = 'assets/icons/foe_size/s5.svg'
+
+        this.unitSizeFoe[10].onload = this._onIconLoad.bind(this);
+        this.unitSizeFoe[10].src = 'assets/icons/foe_size/s10.svg'
+
+        this.unitSizeFoe[15].onload = this._onIconLoad.bind(this);
+        this.unitSizeFoe[15].src = 'assets/icons/foe_size/s15.svg'
+
+        this.unitSizeFoe[20].onload = this._onIconLoad.bind(this);
+        this.unitSizeFoe[20].src = 'assets/icons/foe_size/s20.svg'
+
+        this.unitSizeFoe[25].onload = this._onIconLoad.bind(this);
+        this.unitSizeFoe[25].src = 'assets/icons/foe_size/s25.svg'
+
+        this.unitSizeFoe[30].onload = this._onIconLoad.bind(this);
+        this.unitSizeFoe[30].src = 'assets/icons/foe_size/s30.svg'
     }
 
     private _onIconLoad() {
         this._nbIconsReady += 1;
 
-        if (this._nbIconsReady >= 76) {
+        if (this._nbIconsReady >= 82) {
             this.resourceReadyState.next(true);
         }
     }

@@ -15,7 +15,7 @@ export interface BluetoothData {
 @Injectable({
     providedIn: 'root'
 })
-export class Bluetooth {
+export class BluetoothService {
     public connectedDevice: any = null;
 
     private _disconnectEvent = new Subject<void>();

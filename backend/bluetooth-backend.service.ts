@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BackendService, MapObject } from './backend.service';
-import { Bluetooth, BluetoothData } from './utils/bluetooth.util';
-import { Coordinate } from './utils/coordinate.util';
+import { BluetoothService, BluetoothData } from './utils/bluetooth.service';
+import { Coordinate } from '../../core/coordinate';
 import { Platform } from '@ionic/angular';
 
 const UID_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
@@ -11,7 +11,7 @@ const UID_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
 })
 export class BluetoothBackendService extends BackendService {
 
-    constructor(private _platform: Platform, private _bluetooth: Bluetooth) {
+    constructor(private _platform: Platform, private _bluetooth: BluetoothService) {
         super();
 
         this.type = 'bluetooth';

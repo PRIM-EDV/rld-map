@@ -1,5 +1,5 @@
-import { MapFile } from './map.util';
-import { Coordinate } from '../backend/utils/coordinate.util';
+import { MapFile } from '../core/map';
+import { Coordinate } from '../../core/coordinate';
 
 const layers = [{
     image: new Image (),

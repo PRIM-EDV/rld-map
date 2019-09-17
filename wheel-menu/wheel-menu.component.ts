@@ -2,9 +2,9 @@ import {Component, AfterContentInit, Input, ViewChild, ElementRef, AfterViewInit
 
 import { BackendService } from '../backend/backend.service';
 import { ContextMenuService } from '../shared/context-menu.service';
-import { WheelMenuContext } from './contexts/wheel-menu-context';
-import { MapObjectContextComponent } from './contexts/map-object-context/map-object-context.component';
-import { EditObjectContextComponent } from './contexts/edit-object-context/edit-object-context.component';
+import { WheelMenuContext } from '../core/wheel-context/wheel-context';
+import { MapObjectContextComponent } from './map-object-context/map-object-context.component';
+import { EditObjectContextComponent } from './edit-object-context/edit-object-context.component';
 
 @Component({
     selector: 'wheel-menu',

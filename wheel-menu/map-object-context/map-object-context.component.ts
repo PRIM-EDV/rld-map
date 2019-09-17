@@ -2,12 +2,12 @@
 import { v4 as uuid } from 'uuid';
 
 import { Component, Input } from '@angular/core';
-import { WheelMenuContext } from '../wheel-menu-context';
-import { ContextMenuService } from '../../../shared/context-menu.service';
-import { BackendService, MapObject, Squad } from 'src/app/map/backend/backend.service';
-import { Coordinate } from 'src/app/map/backend/utils/coordinate.util';
-import { PopupMenuComponent } from '../../../popup-menu/popup-menu.component';
-import { WheelMenuComponent } from '../../wheel-menu.component';
+import { WheelMenuContext } from '../../core/wheel-context/wheel-context';
+import { ContextMenuService } from '../../shared/context-menu.service';
+import { BackendService, MapObject, Squad } from '../../../popup-menu/object-context/node_modules/src/app/map/backend/backend.service';
+import { Coordinate } from 'src/app/core/coordinate';
+import { PopupMenuComponent } from '../../popup-menu/popup-menu.component';
+import { WheelMenuComponent } from '../wheel-menu.component';
 
 
 

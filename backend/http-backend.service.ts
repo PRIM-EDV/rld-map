@@ -1,10 +1,10 @@
 import { BackendService, MapObject, Squad } from './backend.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Coordinate } from './utils/coordinate.util';
+import { Coordinate } from '../../core/coordinate';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-const url = 'http://yavin-iv.ddnss.de:3000/';
+const url = 'http://192.168.2.26:3000/';
 // let url = "http://localhost:3000/"
 
 const httpOptions = {

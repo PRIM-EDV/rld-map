@@ -1,7 +1,7 @@
 import { Layer } from '../core/layer';
-import { MapFile } from '../utils/map.util';
-import { Coordinate } from '../backend/utils/coordinate.util';
-import { Direction } from '../backend/utils/direction.util';
+import { MapFile } from '../core/map';
+import { Coordinate } from '../../core/coordinate';
+import { Direction } from '../../core/direction.';
 import { ContextMenuService } from '../shared/context-menu.service';
 import { BehaviorSubject } from 'rxjs';
 

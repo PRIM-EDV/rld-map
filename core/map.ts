@@ -1,4 +1,4 @@
-import { Coordinate } from '../backend/utils/coordinate.util';
+import { Coordinate } from '../../core/coordinate';
 import { BehaviorSubject } from 'rxjs';
 
 export interface MapData {
