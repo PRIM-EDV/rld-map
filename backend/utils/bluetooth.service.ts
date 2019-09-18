@@ -3,7 +3,7 @@ import { BLE } from '@ionic-native/ble/ngx';
 import { Platform } from '@ionic/angular';
 import { Subject } from 'rxjs';
 import { connect } from 'tls';
-import { DeviceConfigService } from './device-config.service';
+import { DeviceConfigService } from '../../shared/device-config.service';
 
 export interface BluetoothData {
     id: number;

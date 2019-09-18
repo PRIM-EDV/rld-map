@@ -1,8 +1,9 @@
-import { BackendService, MapObject, Squad } from './backend.service';
+import { BackendService } from './backend.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Coordinate } from '../../core/coordinate';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { MapObject } from 'src/app/core/map-object';
 
 const url = 'http://192.168.2.26:3000/';
 // let url = "http://localhost:3000/"

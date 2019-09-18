@@ -4,16 +4,16 @@ import { v4 as uuid } from 'uuid';
 import { Component, Input } from '@angular/core';
 import { WheelMenuContext } from '../../core/wheel-context/wheel-context';
 import { ContextMenuService } from '../../shared/context-menu.service';
-import { BackendService, MapObject, Squad } from '../../../popup-menu/object-context/node_modules/src/app/map/backend/backend.service';
 import { Coordinate } from 'src/app/core/coordinate';
 import { PopupMenuComponent } from '../../popup-menu/popup-menu.component';
 import { WheelMenuComponent } from '../wheel-menu.component';
-
+import { BackendService } from '../../backend/backend.service';
+import { MapObject } from 'src/app/core/map-object';
 
 
 @Component({
     selector: 'map-object-context',
-    styleUrls: ['../wheel-menu-context.scss'],
+    styleUrls: ['../../core/wheel-context/wheel-context.scss'],
     templateUrl: 'map-object-context.component.html',
 })
 export class MapObjectContextComponent extends WheelMenuContext {

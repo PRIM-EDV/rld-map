@@ -2,11 +2,12 @@ import { Component, Input, EventEmitter, Output, AfterViewInit, ViewChild, Eleme
 import { PopupContext } from '../../core/popup-context/popup-context';
 import { PopupMenuComponent } from '../popup-menu.component';
 import { ContextMenuService } from '../../shared/context-menu.service';
-import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
+import { BackendService } from 'src/app/map/backend/backend.service';
+import { MapObject } from 'src/app/core/map-object';
 
 @Component({
     selector: 'object-context',
-    styleUrls: ['../popup-menu-context.scss'],
+    styleUrls: ['../../core/popup-context/popup-context.scss'],
     templateUrl: 'object-context.component.html',
 })
 export class ObjectContextComponent extends PopupContext {

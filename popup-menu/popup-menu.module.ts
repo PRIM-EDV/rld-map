@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { PopupMenuComponent } from './popup-menu.component';
 import { ObjectContextComponent } from './object-context/object-context.component';
 import { FriendContextComponent } from './friend-context/friend-context.component';
-import { SliderComponent } from '../../core/ui/slider/slider.component';
-import { GridComponent } from '../../core/ui/grid/grid.component';
-import { DropdownComponent } from '../../core/ui/dropdown/dropdown.component';
+import { SliderComponent } from '../../elements/slider/slider.component';
+import { GridComponent } from '../../elements/grid/grid.component';
+import { DropdownComponent } from '../../elements/dropdown/dropdown.component';
 import { FoeContextComponent } from './foe-context/foe-context.component';
 
 

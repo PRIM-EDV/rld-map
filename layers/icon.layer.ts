@@ -1,8 +1,9 @@
 import { Layer } from '../core/layer';
-import { MapObject, BackendService } from '../backend/backend.service';
+import { BackendService } from '../backend/backend.service';
 import { Coordinate } from '../../core/coordinate';
 import { ContextMenuService } from '../shared/context-menu.service';
 import { PrimIconset } from '../utils/prim.iconset';
+import { MapObject } from 'src/app/core/map-object';
 
 export class IconLayer extends Layer {
     private _canvas: HTMLCanvasElement;

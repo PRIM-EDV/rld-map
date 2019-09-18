@@ -1,28 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Coordinate } from '../../core/coordinate';
-
-
-export interface MapObject {
-  id: string;
-  name: string;
-  coord: Coordinate;
-  pinned: boolean;
-  update: boolean;
-  type: string;
-
-  meta: {
-    description?: string;
-    size?: number;
-    subtype?: number;
-    wounded?: number;
-    callsign?: string;
-    tracked?: boolean;
-    timestamp?: number;
-    medics?: number;
-    technitians?: number;
-    scientists?: number;
-  };
-}
+import { MapObject } from 'src/app/core/map-object';
 
 export interface Squad {
   name: string;

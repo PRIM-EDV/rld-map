@@ -6,12 +6,13 @@ import { WheelMenuContext } from '../../core/wheel-context/wheel-context';
 import { ContextMenuService } from '../../shared/context-menu.service';
 import { PopupMenuComponent } from '../../popup-menu/popup-menu.component';
 import { WheelMenuComponent } from '../wheel-menu.component';
-import { BackendService, MapObject } from '../../backend/backend.service';
+import { BackendService } from '../../backend/backend.service';
+import { MapObject } from 'src/app/core/map-object';
 
 
 @Component({
     selector: 'edit-object-context',
-    styleUrls: ['../wheel-menu-context.scss'],
+    styleUrls: ['../../core/wheel-context/wheel-context.scss'],
     templateUrl: 'edit-object-context.component.html',
 })
 export class EditObjectContextComponent extends WheelMenuContext {

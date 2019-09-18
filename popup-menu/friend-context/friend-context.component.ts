@@ -1,14 +1,15 @@
 import { Component, Input, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { BackendService, MapObject, Squad, Operator } from 'src/app/map/backend/backend.service';
+import { BackendService, Squad, Operator } from 'src/app/map/backend/backend.service';
 import { ContextMenuService } from '../../shared/context-menu.service';
 import { PopupMenuComponent } from '../popup-menu.component';
 import { PopupContext } from '../../core/popup-context/popup-context';
+import { MapObject } from 'src/app/core/map-object';
 
 
 @Component({
     
     selector: 'friend-context',
-    styleUrls: ['../popup-menu-context.scss'],
+    styleUrls: ['../../core/popup-context/popup-context.scss'],
     templateUrl: 'friend-context.component.html',
 })
 export class FriendContextComponent extends PopupContext implements AfterViewInit{

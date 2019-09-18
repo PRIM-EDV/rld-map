@@ -1,13 +1,14 @@
 import { Component, Input, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { BackendService, MapObject } from 'src/app/map/backend/backend.service';
+import { BackendService } from 'src/app/map/backend/backend.service';
 import { ContextMenuService } from '../../shared/context-menu.service';
 import { PopupMenuComponent } from '../popup-menu.component';
 import { PopupContext } from '../../core/popup-context/popup-context';
+import { MapObject } from 'src/app/core/map-object';
 
 
 @Component({
     selector: 'foe-context',
-    styleUrls: ['../popup-menu-context.scss'],
+    styleUrls: ['../../core/popup-context/popup-context.scss'],
     templateUrl: 'foe-context.component.html',
 })
 export class FoeContextComponent extends PopupContext implements AfterViewInit{

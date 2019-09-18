@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BackendService, MapObject } from './backend.service';
+import { BackendService} from './backend.service';
 import { BluetoothService, BluetoothData } from './utils/bluetooth.service';
 import { Coordinate } from '../../core/coordinate';
 import { Platform } from '@ionic/angular';
+import { MapObject } from 'src/app/core/map-object';
 
 const UID_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
 
@@ -88,6 +89,7 @@ export class BluetoothBackendService extends BackendService {
 
         if (mapObject) {
             mapObject.coord.inMeter = {x: data.px, y: data.py};
+            mapObject.meta.timestamp = Date.now();
         } else {
             const coord = new Coordinate();
             coord.inMeter = {x: data.px, y: data.py};

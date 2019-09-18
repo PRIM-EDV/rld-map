@@ -1,9 +1,9 @@
 import { Layer } from '../core/layer';
 import { MapFile } from '../core/map';
-import { Coordinate } from '../../core/coordinate';
-import { Direction } from '../../core/direction.';
 import { ContextMenuService } from '../shared/context-menu.service';
 import { BehaviorSubject } from 'rxjs';
+import { Direction } from 'src/app/core/direction';
+import { Coordinate } from 'src/app/core/coordinate';
 
 export class MapLayer extends Layer {
     private _scale: number = 1.0;
