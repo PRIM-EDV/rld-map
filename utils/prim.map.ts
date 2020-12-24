@@ -1,9 +1,9 @@
-import { MapFile } from './map.util';
-import { Coordinate } from '../backend/utils/coordinate.util';
+import { MapFile } from '../core';
+import { Coordinate } from 'src/app/core';
 
 const layers = [{
     image: new Image (),
-    imageUrl: 'assets/maps/mw.jpg',
+    imageUrl: 'assets/maps/prim/prim.map.svg',
     origin: new Coordinate (),
     resolution: [2.6, 2.6],
     active: true
