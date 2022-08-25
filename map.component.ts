@@ -1,11 +1,16 @@
+import * as Hammer from 'hammerjs';
+
 import {Component, ViewChild, Input, AfterViewInit, ElementRef} from '@angular/core';
-// import * as Hammer from 'hammerjs';
+import { MapLayer } from './common/map-layer';
+import { TerrainLayer } from './map-layers/terrain.layer';
 // import { BackendService } from 'src/app/backend';
 // import { MapFile, MapData} from './core';
 import { MapService } from './map.service';
+import { ReplaySubject } from 'rxjs';
+import { EntitiesLayer } from './map-layers/entities.layer';
 
 @Component({
-    selector: 'map',
+    selector: 'rld-map',
     styleUrls: ['./map.component.scss'],
     templateUrl: 'map.component.html',
 
@@ -15,31 +20,36 @@ export class MapComponent implements AfterViewInit {
     // @Input() _movable = true;
     // @Input() _imageQuality = 1;
 
-    // @ViewChild('map', {static: true}) private _canvas: ElementRef<HTMLCanvasElement>;
-    // private _ctx: CanvasRenderingContext2D;
-    // private _mc: HammerManager;
+    @ViewChild('map', {static: true}) private canvas!: ElementRef<HTMLCanvasElement>;
 
-    // private _layers: Array<Layer> = [];
-    // private _mapfile: MapFile = null;
-    // private _origin: Coordinate = new Coordinate();
+    public onResourcesReady: ReplaySubject<void> = new ReplaySubject<void>(1);
 
+    private ctx!: CanvasRenderingContext2D;
+    private mc!: HammerManager;
+    private mapLayers: MapLayer[] = [];
 
-    constructor(private _mapService: MapService) {
-        // this._mapfile = new PrimMap();
-        // this._mapService.map = this;
+    constructor() {
+
     }
 
     ngAfterViewInit() {
-        // this._ctx = this._canvas.nativeElement.getContext('2d');
-        // this._mc = new Hammer(this._canvas.nativeElement);
+        this.ctx = this.canvas.nativeElement.getContext('2d')!;
+        this.mc = new Hammer(this.canvas.nativeElement);
 
         // //
         // Coordinate.viewportOffset = {x: this._canvas.nativeElement.getBoundingClientRect().left, y: this._canvas.nativeElement.getBoundingClientRect().top};
 
-        // // Add map layers
-        // this._layers.push(new MapLayer(this._canvas.nativeElement, this._ctx, this._mapfile, this._imageQuality));
+        // Add map layers
+        const layers = [
+            new TerrainLayer(this.canvas.nativeElement, this.ctx),
+            new EntitiesLayer(this.canvas.nativeElement, this.ctx)
+        ]
+        this.initializeLayers(layers);
         // this._layers.push(new IconLayer(this._canvas.nativeElement, this._ctx, this._backend));
 
+
+        this.initializePan();
+        this.initializeScroll()
         // this.startListenToResize();
 
         // if (this._movable) {
@@ -54,14 +64,8 @@ export class MapComponent implements AfterViewInit {
         //     this.startListenToMouseMove();
         // }
 
-        // this._onResourcesReady(() => {
-        //     this.resize.call(this);
-        //     this.update.call(this);
-        // });
+        this.onResourcesReady.subscribe(this.handleResourcesReady.bind(this));
 
-        // this._backend.onSynchronise(() => {
-        //     this.update.call(this);
-        // });
     }
 
     // public centerToMapObject(mapObject: MapObject) {
@@ -83,15 +87,15 @@ export class MapComponent implements AfterViewInit {
     //     return {x: width / 2, y: height / 2};
     // }
 
-    // public resize() {
-    //     const width = this._canvas.nativeElement.clientWidth;
-    //     const height = this._canvas.nativeElement.clientHeight;
+    public resize() {
+        const width = this.canvas.nativeElement.clientWidth;
+        const height = this.canvas.nativeElement.clientHeight;
 
-    //     this._canvas.nativeElement.width = width * this._imageQuality;
-    //     this._canvas.nativeElement.height = height * this._imageQuality;
-    //     this._ctx.scale(this._imageQuality, this._imageQuality);
-    //     this.update.call(this);
-    // }
+        this.canvas.nativeElement.width = width;
+        this.canvas.nativeElement.height = height;
+        // this._ctx.scale(this._imageQuality, this._imageQuality);
+        // this.update.call(this);
+    }
 
     // public startListenToClick() {
     //     this._canvas.nativeElement.addEventListener('mousedown', (e: MouseEvent) => {
@@ -134,34 +138,43 @@ export class MapComponent implements AfterViewInit {
     //     });
     // }
 
-    // private startListenToPan() {
-    //     let offset = {x: 0, y: 0};
-    //     let startPos = {x: 0, y: 0};
+    public update() {
+        this.resize();
+        for(const layer of this.mapLayers) {
+            layer.render();
+        }
+    }
 
-    //     this._mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
-    //     this._mc.on('panstart', (e: HammerInput) => {
-    //         offset = Coordinate.offset;
-    //         startPos = {x: e.center.x, y: e.center.y};
+    private initializePan() {
+        let offset = {x: 0, y: 0};
+        let startPos = {x: 0, y: 0};
 
-    //         for (const layer of this._layers) {
-    //             layer.onPanStart(e);
-    //         }
-    //     });
-    //     this._mc.on('pan', (e: HammerInput) => {
-    //         if (startPos.x < 50) { return; }
+        this.mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0 }) );
+        this.mc.on('panstart', (e: HammerInput) => {
+            offset = offset;
+            startPos = {x: e.center.x, y: e.center.y};
 
-    //         for (let i = this._layers.length - 1; i >= 0; i--) {
-    //             const layer = this._layers[i];
-    //             if (!layer.onPan(e, offset)) { break; }
-    //         }
-    //         this.update();
-    //     });
-    //     this._mc.on('panend', (e: HammerInput) => {
-    //         for (const layer of this._layers) {
-    //             layer.onPanEnd(e);
-    //         }
-    //     });
-    // }
+            for (let i = this.mapLayers.length - 1; i >= 0; i--) {
+                const layer = this.mapLayers[i];
+                if (!layer.onPanStart(e)) { break; }
+            }
+        });
+
+        this.mc.on('pan', (e: HammerInput) => {
+            if (startPos.x < 50) { return; }
+
+            for (let i = this.mapLayers.length - 1; i >= 0; i--) {
+                const layer = this.mapLayers[i];
+                if (!layer.onPan(e, offset)) { break; }
+            }
+            this.update();
+        });
+        this.mc.on('panend', (e: HammerInput) => {
+            for (const layer of this.mapLayers) {
+                layer.onPanEnd(e);
+            }
+        });
+    }
 
     // private startListenToPinch() {
     //     let pinch = 0;
@@ -186,23 +199,31 @@ export class MapComponent implements AfterViewInit {
     //     });
     // }
 
-    // private startListenToScroll() {
-    //     document.addEventListener('wheel', (e: any) => {
-    //         for (const layer of this._layers) {
-    //             layer.onScroll(e);
-    //         }
-    //         // this._menuService.wheelMenu.close();
-    //         this.update();
-    //     });
-    // }
+    private initializeScroll() {
+        document.addEventListener('wheel', (e: any) => {
+            for (const layer of this.mapLayers) {
+                layer.onScroll(e);
+            }
+            this.update();
+        });
+    }
 
-    // public update() {
-    //     this._ctx.clearRect(0, 0, this._canvas.nativeElement.width, this._canvas.nativeElement.height);
+    private handleResourcesReady() {
+        this.update();
+    }
 
-    //     for (const layer of this._layers) {
-    //         layer.draw();
-    //     }
-    // }
+    private initializeLayers(layers: MapLayer[]) {
+        this.mapLayers = layers;
+
+        for(const layer of layers) {
+            layer.resourceReadyState.subscribe((readySate) => {
+                for(const mapLayer of this.mapLayers) {
+                    if(!mapLayer.resourceReadyState.value) return;
+                }
+                this.onResourcesReady.next();
+            });
+        }
+    }
 
     // private _onResourcesReady(callback) {
     //     let readyLayers = 0;
