@@ -73,6 +73,18 @@ export class EntitiesLayer extends MapLayer {
 
     }
 
+    public override onContextMenu(e: MouseEvent) {
+        const cursorPosition = { x: e.x - this.canvas.offsetLeft, y: e.y - this.canvas.offsetTop };
+
+        for(const entity of this.entities) {
+            if(entity.isUnderCursor(cursorPosition)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // public draw() {
     //     const mapObjects = this._backend.getMapObjects();
 
@@ -131,23 +143,6 @@ export class EntitiesLayer extends MapLayer {
     public onClick(pos: {x: number, y: number}) {
 
     }
-
-    // public onContextMenu(e: MouseEvent): boolean {
-    //     const mapObjects = this._backend.getMapObjects();
-    //     const offset = this._canvas.getBoundingClientRect();
-
-    //     for (const object of mapObjects) {
-    //         if (this._isInBoundingBox(object, {x: e.x - offset.left, y: e.y - offset.top})) {
-    //             const position = {x: object.coord.inCanvas.x + offset.left, y: object.coord.inCanvas.y + offset.top};
-
-    //             // this._contextMenuService.wheelMenu.editObjectContext.open(position, object);
-                
-    //             return false;
-    //         }
-    //     }
-
-    //     return true;
-    // }
 
     // public onMouseMove(e: MouseEvent): boolean {
     //     const mapObjects = this._backend.getMapObjects();

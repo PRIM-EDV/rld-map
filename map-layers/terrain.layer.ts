@@ -37,8 +37,7 @@ export class TerrainLayer extends MapLayer {
         this.drawGrid();
     }
 
-    public onContextMenu(e: MouseEvent): boolean {
-        // this._contextMenuService.wheelMenu.mapObjectContext.open({x: e.x, y: e.y});
+    public override onContextMenu(e: MouseEvent) {
         return true;
     }
 
