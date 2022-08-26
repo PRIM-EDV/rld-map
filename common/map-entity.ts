@@ -41,9 +41,10 @@ export class MapEntity {
         const py = (e.y  - MapLayer.origin.y) / MapEntity.mapScale.y / MapLayer.scale;
 
         console.log({x:px, y: py})
+        console.log(this.position)
 
-        if (this.position.x - 48 < px && this.position.x + 48 > px){
-            if(this.position.y - 48 < py && this.position.y + 48 > py) {
+        if (this.position.x - 24 / MapLayer.scale < px && this.position.x + 24 / MapLayer.scale > px){
+            if(this.position.y - 24 / MapLayer.scale < py && this.position.y + 24 / MapLayer.scale > py) {
                 return true
             }
         }

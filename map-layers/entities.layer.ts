@@ -26,7 +26,9 @@ export class EntitiesLayer extends MapLayer {
         this.ctx = ctx;
         this.entityFactory = new MapEntityFactory(this.canvas, this.ctx);
 
-        this.entities.push(this.entityFactory.create(MapEntityType.TYPE_FRIEND))
+        // this.entities.push(this.entityFactory.create(MapEntityType.TYPE_FRIEND))
+        // this.entities.push(this.entityFactory.create(MapEntityType.TYPE_FRIEND))
+
 
 
         this.resourceReadyState.next(true);
