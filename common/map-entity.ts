@@ -1,7 +1,9 @@
+import { v4 } from "uuid";
 import { MapEntityType } from "./map-entity-data";
 import { MapLayer } from "./map-layer";
 
 export class MapEntity {
+    public id = v4();
     public position =  {x: 0, y: 0};
     public type: MapEntityType = MapEntityType.TYPE_OBJECT;
     public unitSize = 1;

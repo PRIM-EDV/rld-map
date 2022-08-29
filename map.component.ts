@@ -51,6 +51,17 @@ export class MapComponent implements AfterViewInit {
         this.update();
     }
 
+    public createOrUpdateMapEntity(data: MapEntityData) {
+        const entitiesLayer = this.mapLayers[1] as EntitiesLayer;
+        const entity = entitiesLayer.entities.find(el => el.id == data.id)
+        if (entity) {
+            entity.position = data.position;
+        } else {
+            this.createMapEntity(data);
+        }
+        this.update();
+    }
+
     // public centerToMapObject(mapObject: MapObject) {
     //         const width = this._canvas.nativeElement.clientWidth;
     //         const height = this._canvas.nativeElement.clientHeight;

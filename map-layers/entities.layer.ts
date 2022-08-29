@@ -13,7 +13,7 @@ export class EntitiesLayer extends MapLayer {
     private ctx: CanvasRenderingContext2D;
     private mapScale = {x: 2.74, y: 2.5}
 
-    private entities: MapEntity[] = [];
+    public entities: MapEntity[] = [];
     private entityFactory: MapEntityFactory;
     // private _iconset: PrimIconset = new PrimIconset();
     // private _backend: BackendService;
@@ -43,6 +43,7 @@ export class EntitiesLayer extends MapLayer {
     public createMapEntity(data: MapEntityData) {
         const entity = this.entityFactory.create(data.type);
 
+        entity.id = data.id;
         entity.position = data.position
         // entity.
         this.entities.push(entity);
