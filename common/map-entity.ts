@@ -1,10 +1,5 @@
+import { MapEntityType } from "./map-entity-data";
 import { MapLayer } from "./map-layer";
-
-export enum MapEntityType { 
-    TYPE_FOE,
-    TYPE_FRIEND,
-    TYPE_OBJECT,
-} 
 
 export class MapEntity {
     public position =  {x: 0, y: 0};
@@ -39,9 +34,6 @@ export class MapEntity {
     public isUnderCursor(e: any): boolean {
         const px = (e.x  - MapLayer.origin.x) / MapEntity.mapScale.x / MapLayer.scale;
         const py = (e.y  - MapLayer.origin.y) / MapEntity.mapScale.y / MapLayer.scale;
-
-        console.log({x:px, y: py})
-        console.log(this.position)
 
         if (this.position.x - 24 / MapLayer.scale < px && this.position.x + 24 / MapLayer.scale > px){
             if(this.position.y - 24 / MapLayer.scale < py && this.position.y + 24 / MapLayer.scale > py) {

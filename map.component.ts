@@ -5,6 +5,7 @@ import { MapLayer } from "./common/map-layer";
 import { TerrainLayer } from "./map-layers/terrain.layer";
 import { ReplaySubject } from "rxjs";
 import { EntitiesLayer } from "./map-layers/entities.layer";
+import { MapEntityData } from "./common/map-entity-data";
 
 @Component({
     selector: "rld-map",
@@ -13,8 +14,8 @@ import { EntitiesLayer } from "./map-layers/entities.layer";
 })
 export class MapComponent implements AfterViewInit {
 
-    @Output() onTerrainContextMenu = new EventEmitter<{x: number, y: number}>();
-    @Output() onEntityContextMenu = new EventEmitter<{x: number, y: number}>();
+    @Output() onTerrainContextMenu = new EventEmitter<{cursorPosition: {x: number, y: number}, mapPosition: {x: number, y: number}}>();
+    @Output() onEntityContextMenu = new EventEmitter<{cursorPosition: {x: number, y: number}, mapPosition: {x: number, y: number}}>();
 
     @ViewChild("map", { static: true }) private canvas!: ElementRef<HTMLCanvasElement>;
 
@@ -41,6 +42,13 @@ export class MapComponent implements AfterViewInit {
         this.initializeContextMenu();
 
         this.onResourcesReady.subscribe(this.handleResourcesReady.bind(this));
+    }
+
+    public createMapEntity(data: MapEntityData) {
+        const entitiesLayer = this.mapLayers[1] as EntitiesLayer;
+
+        entitiesLayer.createMapEntity(data);
+        this.update();
     }
 
     // public centerToMapObject(mapObject: MapObject) {
@@ -82,11 +90,15 @@ export class MapComponent implements AfterViewInit {
             ev.preventDefault();
 
             if (this.mapLayers[1].onContextMenu(ev)) {
-                this.onEntityContextMenu.emit(cursorPosition);
+                const mapPosition = this.mapLayers[1].getLocalPosition(ev);
+
+                this.onEntityContextMenu.emit({cursorPosition: cursorPosition, mapPosition: mapPosition});
                 return;
             }
             if (this.mapLayers[0].onContextMenu(ev)) {
-                this.onTerrainContextMenu.emit(cursorPosition);
+                const mapPosition = this.mapLayers[0].getLocalPosition(ev);
+
+                this.onTerrainContextMenu.emit({cursorPosition: cursorPosition, mapPosition: mapPosition});
                 return;
             }
         };

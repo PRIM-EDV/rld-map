@@ -1,4 +1,5 @@
-import { MapEntity, MapEntityType } from "./map-entity";
+import { MapEntity } from "./map-entity";
+import { MapEntityType } from "./map-entity-data";
 
 export class MapEntityFactory {
     private canvas: HTMLCanvasElement;

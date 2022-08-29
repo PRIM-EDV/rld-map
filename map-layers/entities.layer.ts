@@ -4,8 +4,9 @@
 // import { MapObject } from 'src/app/core/map-object';
 
 import { MapLayer } from "../common/map-layer";
-import { MapEntity, MapEntityType } from "../common/map-entity";
+import { MapEntity } from "../common/map-entity";
 import { MapEntityFactory } from "../common/map-entity.factory";
+import { MapEntityData } from "../common/map-entity-data";
 
 export class EntitiesLayer extends MapLayer {
     private canvas: HTMLCanvasElement;
@@ -37,6 +38,14 @@ export class EntitiesLayer extends MapLayer {
         //         this.resourceReadyState.next(true);
         //     }
         // });
+    }
+
+    public createMapEntity(data: MapEntityData) {
+        const entity = this.entityFactory.create(data.type);
+
+        entity.position = data.position
+        // entity.
+        this.entities.push(entity);
     }
 
     public override onPanStart(e: HammerInput): boolean {

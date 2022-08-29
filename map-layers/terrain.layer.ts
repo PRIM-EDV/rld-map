@@ -37,6 +37,15 @@ export class TerrainLayer extends MapLayer {
         this.drawGrid();
     }
 
+    public override getLocalPosition(e: MouseEvent): { x: number; y: number; } {
+        const cursorPosition = { x: e.x - this.canvas.offsetLeft, y: e.y - this.canvas.offsetTop};
+
+        const px = (cursorPosition.x  - MapLayer.origin.x) / this.mapScale.x / MapLayer.scale;
+        const py = (cursorPosition.y  - MapLayer.origin.y) / this.mapScale.y / MapLayer.scale;
+
+        return {x: px, y: py}
+    }
+
     public override onContextMenu(e: MouseEvent) {
         return true;
     }
