@@ -1,5 +1,5 @@
 import { MapEntity } from "./map-entity";
-import { MapEntityType } from "./map-entity-data";
+import { MapEntityData } from "./map-entity-data";
 
 export class MapEntityFactory {
     private canvas: HTMLCanvasElement;
@@ -12,7 +12,13 @@ export class MapEntityFactory {
         MapEntity.loadIcons();
     }
 
-    create(type: MapEntityType): MapEntity {
-        return new MapEntity(type, this.canvas, this.ctx);
+    create(data: MapEntityData): MapEntity {
+        const entity = new MapEntity(data.type, this.canvas, this.ctx);
+
+        entity.id = data.id;
+        entity.size = data.size;
+        entity.text = data.text;
+        
+        return entity;
     }
 }

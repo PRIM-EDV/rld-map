@@ -15,7 +15,8 @@ import { MapEntityData } from "./common/map-entity-data";
 export class MapComponent implements AfterViewInit {
 
     @Output() onTerrainContextMenu = new EventEmitter<{cursorPosition: {x: number, y: number}, mapPosition: {x: number, y: number}}>();
-    @Output() onEntityContextMenu = new EventEmitter<{cursorPosition: {x: number, y: number}, mapPosition: {x: number, y: number}}>();
+    @Output() onEntityContextMenu = new EventEmitter<{cursorPosition: {x: number, y: number}, mapPosition: {x: number, y: number}, entity: MapEntityData}>();
+    @Output() onEntityMoved = new EventEmitter<MapEntityData>();
 
     @ViewChild("map", { static: true }) private canvas!: ElementRef<HTMLCanvasElement>;
 
@@ -31,17 +32,23 @@ export class MapComponent implements AfterViewInit {
         this.ctx = this.canvas.nativeElement.getContext("2d")!;
         this.mc = new Hammer(this.canvas.nativeElement);
 
-        const layers = [
-            new TerrainLayer(this.canvas.nativeElement, this.ctx),
-            new EntitiesLayer(this.canvas.nativeElement, this.ctx),
-        ];
-        this.initializeLayers(layers);
-
+        this.initializeLayers();
         this.initializePan();
         this.initializeScroll();
         this.initializeContextMenu();
 
         this.onResourcesReady.subscribe(this.handleResourcesReady.bind(this));
+    }
+
+    public deleteMapEntity(id: string) {
+        const entitiesLayer = this.mapLayers[1] as EntitiesLayer;
+        const index = entitiesLayer.entities.findIndex((entity) => {return entity.id == id});
+          
+        if (index) {
+            entitiesLayer.entities.splice(index, 1);
+        }
+
+        this.update();
     }
 
     public createMapEntity(data: MapEntityData) {
@@ -101,9 +108,10 @@ export class MapComponent implements AfterViewInit {
             ev.preventDefault();
 
             if (this.mapLayers[1].onContextMenu(ev)) {
-                const mapPosition = this.mapLayers[1].getLocalPosition(ev);
+                const entitiesLayer = this.mapLayers[1] as EntitiesLayer;
+                const mapPosition = entitiesLayer.getLocalPosition(ev);
 
-                this.onEntityContextMenu.emit({cursorPosition: cursorPosition, mapPosition: mapPosition});
+                this.onEntityContextMenu.emit({cursorPosition: cursorPosition, mapPosition: mapPosition, entity: entitiesLayer.contextEntityData!});
                 return;
             }
             if (this.mapLayers[0].onContextMenu(ev)) {
@@ -169,10 +177,17 @@ export class MapComponent implements AfterViewInit {
         this.update();
     }
 
-    private initializeLayers(layers: MapLayer[]) {
-        this.mapLayers = layers;
+    private initializeLayers() {
+        const terrainLayer = new TerrainLayer(this.canvas.nativeElement, this.ctx);
+        const entitiesLayer = new EntitiesLayer(this.canvas.nativeElement, this.ctx);
 
-        for (const layer of layers) {
+        entitiesLayer.onEntityMoved.subscribe((data) => {
+            this.onEntityMoved.next(data);
+        })
+
+        this.mapLayers = [ terrainLayer, entitiesLayer ];
+
+        for (const layer of this.mapLayers) {
             layer.resourceReadyState.subscribe((readySate) => {
                 for (const mapLayer of this.mapLayers) {
                     if (!mapLayer.resourceReadyState.value) return;

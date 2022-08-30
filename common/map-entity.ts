@@ -1,14 +1,23 @@
 import { v4 } from "uuid";
-import { MapEntityType } from "./map-entity-data";
+import { MapEntityData } from "./map-entity-data";
 import { MapLayer } from "./map-layer";
+
+export enum MapEntityType { 
+    TYPE_UNDEFINED = 0,
+    TYPE_FOE = 1,
+    TYPE_FRIEND = 2,
+    TYPE_OBJECT = 3,
+} 
 
 export class MapEntity {
     public id = v4();
     public position =  {x: 0, y: 0};
     public type: MapEntityType = MapEntityType.TYPE_OBJECT;
-    public unitSize = 1;
+    public size = 1;
+    public text = "";
     
     private static unitIcons: HTMLImageElement[] = [];
+    private static enemyIcons: HTMLImageElement[] = [];
     private static mapScale = {x: 2.74, y: 2.5};
 
     private canvas: HTMLCanvasElement;
@@ -26,19 +35,30 @@ export class MapEntity {
         const py = MapLayer.origin.y + this.position.y * MapEntity.mapScale.y * MapLayer.scale;
 
         if(this.type == MapEntityType.TYPE_FRIEND) {
-            if (this.unitSize <  6) this.ctx.drawImage(MapEntity.unitIcons[0], px - 24, py - 24, 48, 48);
-            if (this.unitSize >  5 && this.unitSize < 11) this.ctx.drawImage(MapEntity.unitIcons[1], this.position.x - 24, this.position.y - 24, 48, 48);
-            if (this.unitSize > 10 && this.unitSize < 16) this.ctx.drawImage(MapEntity.unitIcons[2], this.position.x - 24, this.position.y - 24, 48, 48);
-            if (this.unitSize > 15 && this.unitSize < 21) this.ctx.drawImage(MapEntity.unitIcons[3], this.position.x - 24, this.position.y - 24, 48, 48);
+            this.ctx.drawImage(MapEntity.unitIcons[this.size - 1], px - 24, py - 24, 48, 48);
+
+            this.ctx.font = '11px Fira Code';
+            this.ctx.fillStyle = '#000000';
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeText(this.text, px, py+32);
+
+            this.ctx.font = '11px Fira Code';
+            this.ctx.fillStyle = '#ffffff';
+            this.ctx.lineWidth = 1;
+            this.ctx.fillText(this.text, px, py+32);
+        }
+        if(this.type == MapEntityType.TYPE_FOE) {
+            this.ctx.drawImage(MapEntity.enemyIcons[this.size - 1], px - 24, py - 24, 48, 48);
         }
     }
 
     public isUnderCursor(e: any): boolean {
+        const size = 12;
         const px = (e.x  - MapLayer.origin.x) / MapEntity.mapScale.x / MapLayer.scale;
         const py = (e.y  - MapLayer.origin.y) / MapEntity.mapScale.y / MapLayer.scale;
 
-        if (this.position.x - 24 / MapLayer.scale < px && this.position.x + 24 / MapLayer.scale > px){
-            if(this.position.y - 24 / MapLayer.scale < py && this.position.y + 24 / MapLayer.scale > py) {
+        if (this.position.x - size / MapLayer.scale / MapEntity.mapScale.x < px && this.position.x + size / MapLayer.scale / MapEntity.mapScale.x > px){
+            if(this.position.y - size / MapLayer.scale / MapEntity.mapScale.y < py && this.position.y + size / MapLayer.scale / MapEntity.mapScale.y > py) {
                 return true
             }
         }
@@ -51,13 +71,40 @@ export class MapEntity {
             "assets/icons/icon_friend10.svg",
             "assets/icons/icon_friend15.svg",
             "assets/icons/icon_friend20.svg",
+            "assets/icons/icon_friend25.svg",
+            "assets/icons/icon_friend30.svg",
         ]
+
+        const enemyAssetUrls = [
+            "assets/icons/icon_foe.svg",
+            "assets/icons/icon_foe10.svg",
+            "assets/icons/icon_foe15.svg",
+            "assets/icons/icon_foe20.svg",
+            "assets/icons/icon_foe25.svg",
+            "assets/icons/icon_foe30.svg",
+        ]
+
+        for (const url of enemyAssetUrls) {
+            this.enemyIcons.push(new Image());
+            this.enemyIcons[this.enemyIcons.length - 1].src = url;
+        }
 
         for (const url of unitAssetUrls) {
             this.unitIcons.push(new Image());
             this.unitIcons[this.unitIcons.length - 1].src = url;
         }
     }
+
+    public getData(): MapEntityData {
+        const data = new MapEntityData();
+
+        data.id = this.id;
+        data.position = this.position;
+        data.type = this.type;
+
+        return data;
+    }
+
 
 }
 

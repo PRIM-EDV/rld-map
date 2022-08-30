@@ -23,17 +23,7 @@ export class TerrainLayer extends MapLayer {
     }
 
     public render() {
-        // this.ctx.drawImage(map.image, this._origin.inCanvas.x, this._origin.inCanvas.y, 3237.02 / Coordinate.scale, 2935.81 / Coordinate.scale);
         this.ctx.drawImage(this.mapSvg, MapLayer.origin.x, MapLayer.origin.y, this.mapSize.w * MapLayer.scale, this.mapSize.h * MapLayer.scale);
-
-
-        // this._viewport.inPixel = {x: this._canvas.width, y: this._canvas.height}; #
-        // for (const map of this._mapfile.layers) {
-        //     if (map.active) {
-        //         this._ctx.drawImage(map.image, this._origin.inCanvas.x, this._origin.inCanvas.y, 3237.02 / Coordinate.scale, 2935.81 / Coordinate.scale);
-        //     }
-        // }
-
         this.drawGrid();
     }
 
