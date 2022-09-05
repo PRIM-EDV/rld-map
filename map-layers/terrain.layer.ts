@@ -73,8 +73,8 @@ export class TerrainLayer extends MapLayer {
     public override onScroll(e: WheelEvent) {
         const scale = MapLayer.scale / (1 + e.deltaY / 1000);
         const offset = {
-            x: ((e.x - this.canvas.offsetLeft - MapLayer.origin.x) / MapLayer.scale) * (MapLayer.scale - scale), 
-            y: ((e.y - this.canvas.offsetTop -MapLayer.origin.y) / MapLayer.scale) * (MapLayer.scale - scale)
+            x: ((e.x - this.canvas.getBoundingClientRect().left - MapLayer.origin.x) / MapLayer.scale) * (MapLayer.scale - scale), 
+            y: ((e.y - this.canvas.getBoundingClientRect().top - MapLayer.origin.y) / MapLayer.scale) * (MapLayer.scale - scale)
         }
 
         MapLayer.origin = {

@@ -75,7 +75,7 @@ export class EntitiesLayer extends MapLayer {
     }
 
     public override onContextMenu(e: MouseEvent) {
-        const cursorPosition = { x: e.x - this.canvas.offsetLeft, y: e.y - this.canvas.offsetTop };
+        const cursorPosition = { x: e.x - this.canvas.getBoundingClientRect().left, y: e.y - this.canvas.getBoundingClientRect().top };
 
         for(const entity of this.entities) {
             if(entity.isUnderCursor(cursorPosition)) {

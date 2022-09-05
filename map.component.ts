@@ -63,6 +63,8 @@ export class MapComponent implements AfterViewInit {
         const entity = entitiesLayer.entities.find(el => el.id == data.id)
         if (entity) {
             entity.position = data.position;
+            entity.size = data.size;
+            entity.text = data.text;
         } else {
             this.createMapEntity(data);
         }
@@ -104,7 +106,7 @@ export class MapComponent implements AfterViewInit {
 
     private initializeContextMenu() {
         this.canvas.nativeElement.oncontextmenu = (ev: MouseEvent) => {
-            const cursorPosition = { x: ev.x, y: ev.y};
+            const cursorPosition = { x: ev.x - this.canvas.nativeElement.getBoundingClientRect().left, y: ev.y - this.canvas.nativeElement.getBoundingClientRect().top};
             ev.preventDefault();
 
             if (this.mapLayers[1].onContextMenu(ev)) {
@@ -133,7 +135,6 @@ export class MapComponent implements AfterViewInit {
         this.mc.on("panstart", (e: HammerInput) => {
             offset = offset;
             startPos = { x: e.center.x, y: e.center.y };
-
             for (let i = this.mapLayers.length - 1; i >= 0; i--) {
                 const layer = this.mapLayers[i];
                 if (!layer.onPanStart(e)) {
