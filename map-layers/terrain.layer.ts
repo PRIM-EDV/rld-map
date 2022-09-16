@@ -28,7 +28,8 @@ export class TerrainLayer extends MapLayer {
     }
 
     public override getLocalPosition(e: MouseEvent): { x: number; y: number; } {
-        const cursorPosition = { x: e.x - this.canvas.offsetLeft, y: e.y - this.canvas.offsetTop};
+        const cursorPosition = { x: e.x - this.canvas.getBoundingClientRect().left, y: e.y - this.canvas.getBoundingClientRect().top };
+
 
         const px = (cursorPosition.x  - MapLayer.origin.x) / this.mapScale.x / MapLayer.scale;
         const py = (cursorPosition.y  - MapLayer.origin.y) / this.mapScale.y / MapLayer.scale;
