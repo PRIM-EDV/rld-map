@@ -63,12 +63,20 @@ export class TerrainLayer extends MapLayer {
         this.panStarted = false;
     }
 
-    public override onPinch(e: HammerInput, pinch: number, center: {x: number, y: number}, offset: {x: number, y: number}) {
-        // Coordinate.scale = pinch * (1 / e.scale);
-        // Coordinate.offset = {
-        //     x: offset.x - (center.x * (Coordinate.scale - pinch)),
-        //     y: offset.y - (center.y * (Coordinate.scale - pinch))
-        // };
+    public override onPinch(e: HammerInput, scale: number) {
+        scale = scale / (1 / e.scale);
+
+        const offset = {
+            x: ((e.center.x - this.canvas.getBoundingClientRect().left - MapLayer.origin.x) / MapLayer.scale) * (MapLayer.scale - scale), 
+            y: ((e.center.y - this.canvas.getBoundingClientRect().top - MapLayer.origin.y) / MapLayer.scale) * (MapLayer.scale - scale)
+        }
+
+        MapLayer.origin = {
+            x: MapLayer.origin.x + offset.x,
+            y: MapLayer.origin.y + offset.y
+        }
+
+        MapLayer.scale = scale;
     }
 
     public override onScroll(e: WheelEvent) {

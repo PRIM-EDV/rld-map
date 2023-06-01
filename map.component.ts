@@ -34,6 +34,7 @@ export class MapComponent implements AfterViewInit {
 
         this.initializeLayers();
         this.initializePan();
+        this.initializePinch();
         this.initializeScroll();
         this.initializeContextMenu();
 
@@ -160,6 +161,30 @@ export class MapComponent implements AfterViewInit {
             for (const layer of this.mapLayers) {
                 layer.onPanEnd(e);
             }
+        });
+    }
+
+    private initializePinch() {
+        let scale = 1;
+
+        this.mc.add(new Hammer.Pinch());
+
+        this.mc.on('pinchstart', (e: HammerInput) => {
+            scale = MapLayer.scale;
+            // pinch = Coordinate.scale;
+            // center = {x: e.center.x, y: e.center.y};
+            // offset = Coordinate.offset;
+
+            for (const layer of this.mapLayers) {
+                layer.onPinchStart(e);
+            }
+        });
+
+        this.mc.on('pinch', (e: HammerInput) => {
+            for (const layer of this.mapLayers) {
+                layer.onPinch(e, scale);
+            }
+            this.update();
         });
     }
 
