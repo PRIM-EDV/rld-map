@@ -4,10 +4,14 @@ export class TerrainLayer extends MapLayer {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
     private mapSvg: HTMLImageElement = new Image();
+    private mapSvg2: HTMLImageElement = new Image();
 
     private mapSize = {w: 3237.02, h: 2935.81}
     private mapScale = {x: 2.74, y: 2.5}
     private panStarted = false;
+
+    private _ox = -90;
+    private _oy = -320;
 
     constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
         super();
@@ -15,7 +19,8 @@ export class TerrainLayer extends MapLayer {
         this.canvas = canvas;
         this.ctx = ctx;
 
-        this.mapSvg.src = "assets/img/prim.map.svg";
+        // this.mapSvg.src = "assets/img/prim.map.svg";
+        this.mapSvg2.src = "assets/img/prim.map2.dark.svg";
 
         this.mapSvg.onload = () => {
             this.resourceReadyState.next(true);
@@ -23,7 +28,8 @@ export class TerrainLayer extends MapLayer {
     }
 
     public render() {
-        this.ctx.drawImage(this.mapSvg, MapLayer.origin.x, MapLayer.origin.y, this.mapSize.w * MapLayer.scale, this.mapSize.h * MapLayer.scale);
+        // this.ctx.drawImage(this.mapSvg, MapLayer.origin.x, MapLayer.origin.y, this.mapSize.w * MapLayer.scale, this.mapSize.h * MapLayer.scale);
+        this.ctx.drawImage(this.mapSvg2, MapLayer.origin.x - this._ox * MapLayer.scale, MapLayer.origin.y - this._oy * MapLayer.scale, 3540 * MapLayer.scale,  2440 * MapLayer.scale);
         this.drawGrid();
     }
 
@@ -95,8 +101,8 @@ export class TerrainLayer extends MapLayer {
 
     private drawGrid() {
         const offset = {x: 182, y: 248};
-        
-        for (let i = 0; i < 20; i++) {
+        this.ctx.globalAlpha = 0.3;
+        for (let i = 0; i < 35; i++) {
             let w30 = 30 * this.mapScale.x * MapLayer.scale;
             let px = MapLayer.origin.x + i * w30 + offset.x * this.mapScale.x * MapLayer.scale;
 
@@ -126,6 +132,8 @@ export class TerrainLayer extends MapLayer {
             this.ctx.closePath();
         }
 
+        this.ctx.globalAlpha = 1.0;
+
         this.ctx.fillStyle = '#1b1b1b';
         this.ctx.fillRect(0, this.canvas.height - 20, this.canvas.width, 20);
         this.ctx.fillRect(0, 0, 20, this.canvas.height);
@@ -133,7 +141,9 @@ export class TerrainLayer extends MapLayer {
         this.ctx.font = '12px Fira Code';
         this.ctx.fillStyle = '#ffffff';
         this.ctx.textAlign = "center";
-        for (let i = 0; i < 20; i++) {
+
+
+        for (let i = 0; i < 35; i++) {
             let w30 = 30 * this.mapScale.x * MapLayer.scale;
             let px = MapLayer.origin.x + i * w30 + offset.x * this.mapScale.x * MapLayer.scale;;
 
