@@ -36,26 +36,28 @@ export class MapEntity {
         const px = MapLayer.origin.x + this.position.x * MapEntity.mapScale.x * MapLayer.scale;
         const py = MapLayer.origin.y + this.position.y * MapEntity.mapScale.y * MapLayer.scale;
 
+        const factor = Math.min(0.5, MapLayer.scale) * 2;
+
         if(this.type == MapEntityType.TYPE_FRIEND) {
-            this.ctx.drawImage(MapEntity.unitIcons[this.size - 1], px - 24, py - 24, 48, 48);
+            this.ctx.drawImage(MapEntity.unitIcons[this.size - 1], px - 24 * factor, py - 24 * factor, 48 * factor, 48 * factor);
 
             this.ctx.font = '11px Fira Code';
             this.ctx.fillStyle = '#000000';
             this.ctx.lineWidth = 2;
-            this.ctx.strokeText(this.text, px, py+32);
+            this.ctx.strokeText(this.text, px, py + 12 + (24 * factor));
 
             this.ctx.font = '11px Fira Code';
             this.ctx.fillStyle = '#ffffff';
             this.ctx.lineWidth = 1;
-            this.ctx.fillText(this.text, px, py+32);
+            this.ctx.fillText(this.text, px, py + 12 + (24 * factor));
         }
 
         if(this.type == MapEntityType.TYPE_FOE) {
-            this.ctx.drawImage(MapEntity.enemyIcons[this.size - 1], px - 24, py - 24, 48, 48);
+            this.ctx.drawImage(MapEntity.enemyIcons[this.size - 1], px - 24 * factor, py - 24 * factor, 48 * factor, 48 * factor);
         }
 
         if(this.type == MapEntityType.TYPE_OBJECT) {
-            this.ctx.drawImage(MapEntity.objectIcons[0], px - 24, py - 24, 48, 48);
+            this.ctx.drawImage(MapEntity.objectIcons[0], px - 24 * factor, py - 24 * factor, 48 * factor, 48 * factor);
 
             this.ctx.font = '11px Fira Code';
             this.ctx.fillStyle = '#000000';
@@ -70,7 +72,8 @@ export class MapEntity {
     }
 
     public isUnderCursor(e: any): boolean {
-        const size = 12;
+        const factor = Math.min(0.5, MapLayer.scale) * 2;
+        const size = 12 * factor;
         const px = (e.x  - MapLayer.origin.x) / MapEntity.mapScale.x / MapLayer.scale;
         const py = (e.y  - MapLayer.origin.y) / MapEntity.mapScale.y / MapLayer.scale;
 

@@ -87,55 +87,6 @@ export class EntitiesLayer extends MapLayer {
         return false;
     }
 
-    // public draw() {
-    //     const mapObjects = this._backend.getMapObjects();
-
-    //     mapObjects.forEach((mapObject) => {
-    //         this._drawIcon(mapObject);
-    //     });
-
-    //     mapObjects.forEach((mapObject) => {
-    //         if(mapObject.meta.tracked) {
-    //             this._ctx.drawImage(this._iconset.tracked, mapObject.coord.inCanvas.x + 26, mapObject.coord.inCanvas.y - 38, 12, 12)
-    //         }
-    //     });
-
-    //     mapObjects.forEach((mapObject) => {
-    //         if (mapObject.type == 'friend') {
-    //             this._drawLine(mapObject.meta.callsign, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y - 24});
-    //         } else {
-    //             this._drawLine(mapObject.name, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y - 24});
-    //         }
-    //     });
-
-    //     mapObjects.forEach((mapObject) => {
-    //         if (mapObject == this._hoveredMapObject) {
-    //             this._drawIcon(mapObject);
-
-    //             if(mapObject.pinned && !mapObject.meta.tracked) {
-    //                 this._ctx.drawImage(this._iconset.pinned, mapObject.coord.inCanvas.x + 26, mapObject.coord.inCanvas.y - 38, 12, 12)
-    //             }
-
-    //             if (mapObject.type == 'friend') {
-    //                 this._drawLine(mapObject.meta.callsign, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y - 24});
-    //                 this._drawLine(mapObject.name, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y});
-                    
-    //                 if (mapObject.meta.description) {
-    //                     this._drawMultiLine(mapObject.meta.description, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y + 24}, 200);
-    //                 }
-    //             } else {
-    //                 this._drawLine(mapObject.name, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y - 24});
-                    
-    //                 if (mapObject.meta.description) {
-    //                     this._drawMultiLine(mapObject.meta.description, {x: mapObject.coord.inCanvas.x + 26, y: mapObject.coord.inCanvas.y}, 200);
-    //                 }
-    //             }
-    //         }
-    //     });
-
-        
-    // }
-
     public override render(): void {
         this.entities.forEach(entity => {
             entity.render();
@@ -145,34 +96,4 @@ export class EntitiesLayer extends MapLayer {
     public onClick(pos: {x: number, y: number}) {
 
     }
-
-    // public onMouseMove(e: MouseEvent): boolean {
-    //     const mapObjects = this._backend.getMapObjects();
-    //     const offset = this._canvas.getBoundingClientRect();
-    //     const nearMapObjects = [];
-
-    //     mapObjects.forEach(object => {
-    //         if (this._isInBoundingBox(object, {x: e.x - offset.left, y: e.y - offset.top})) {
-    //             nearMapObjects.push(object);
-    //         }
-    //     });
-
-    //     if (nearMapObjects.length > 0) {
-    //         const object = this._getMapObjectNearestToCursor(nearMapObjects, {x: e.x - offset.left, y: e.y - offset.top});
-
-    //         if (this._hoveredMapObject != object) {
-    //             this._hoveredMapObject = object;
-    //             return false;
-    //         }
-    //     } else {
-    //         if (this._hoveredMapObject != null) {
-    //             this._hoveredMapObject = null;
-    //             return false;
-    //         }
-    //     }
-
-    //     return true;
-    // }
-
-    // 
 }
