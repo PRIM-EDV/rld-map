@@ -20,5 +20,6 @@ export abstract class MapLayer {
     public onPinch(e: HammerInput, scale: number) {}
     public onScroll(e: WheelEvent) {}
     public onContextMenu(e: MouseEvent): boolean  {return false; }
+    public onDblClick(e: MouseEvent): boolean  {return false; }
 
 }

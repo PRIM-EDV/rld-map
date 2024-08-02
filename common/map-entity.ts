@@ -15,6 +15,8 @@ export class MapEntity {
     public type: MapEntityType = MapEntityType.TYPE_OBJECT;
     public size = 1;
     public text = "";
+
+    public hasAnimation = false;
     
     private static unitIcons: HTMLImageElement[] = [];
     private static enemyIcons: HTMLImageElement[] = [];
@@ -35,17 +37,19 @@ export class MapEntity {
 
     public animatePing() {
         const duration = 1000;
-        const speed = 0.2;
-        const color = "#ff0000";
         const start = Date.now();
-        const radius = 48;
 
         const animationFrame = () => {
             const px = MapLayer.origin.x + this.position.x * MapEntity.mapScale.x * MapLayer.scale;
             const py = MapLayer.origin.y + this.position.y * MapEntity.mapScale.y * MapLayer.scale;
             const factor = Math.min(0.5, MapLayer.scale) * 2;
+            const radius = 48 * factor;
             const elapsed = Date.now() - start;
             const progress = (elapsed % duration) / duration;
+
+            if (this.hasAnimation == false) {
+                return
+            }
 
             if (this.backgroundImageData) {
                 
@@ -61,6 +65,7 @@ export class MapEntity {
             requestAnimationFrame(animationFrame);
         };
 
+        this.hasAnimation = true;
         animationFrame();
     }
 
@@ -179,6 +184,16 @@ export class MapEntity {
 
     public updateBackgroundImageData() {
         this.backgroundImageData = this.getBackgroundImageData();
+    }
+
+    public stopAnimation() {
+        const px = MapLayer.origin.x + this.position.x * MapEntity.mapScale.x * MapLayer.scale;
+        const py = MapLayer.origin.y + this.position.y * MapEntity.mapScale.y * MapLayer.scale;
+        const factor = Math.min(0.5, MapLayer.scale) * 2;
+        this.hasAnimation = false;
+
+        this.ctx.putImageData(this.backgroundImageData!, px - 48 * factor, py - 48 * factor);
+        this.render();
     }
 }
 

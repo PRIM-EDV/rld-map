@@ -16,6 +16,7 @@ export class MapComponent implements AfterViewInit {
 
     @Output() onTerrainContextMenu = new EventEmitter<{cursorPosition: {x: number, y: number}, mapPosition: {x: number, y: number}}>();
     @Output() onEntityContextMenu = new EventEmitter<{cursorPosition: {x: number, y: number}, mapPosition: {x: number, y: number}, entity: MapEntityData}>();
+    @Output() onEntityDblClick = new EventEmitter<MapEntityData>();
     @Output() onEntityMoved = new EventEmitter<MapEntityData>();
 
     @ViewChild("map", { static: true }) private canvas!: ElementRef<HTMLCanvasElement>;
@@ -37,6 +38,7 @@ export class MapComponent implements AfterViewInit {
         this.initializePinch();
         this.initializeScroll();
         this.initializeContextMenu();
+        this.initializeDblClick();
 
         this.onResourcesReady.subscribe(this.handleResourcesReady.bind(this));
     }
@@ -46,6 +48,9 @@ export class MapComponent implements AfterViewInit {
         const index = entitiesLayer.entities.findIndex((entity) => {return entity.id == id});
           
         if (index) {
+            const entity = entitiesLayer.entities[index];
+            
+            entity.stopAnimation();
             entitiesLayer.entities.splice(index, 1);
         }
 
@@ -72,23 +77,17 @@ export class MapComponent implements AfterViewInit {
         this.update();
     }
 
-    // public centerToMapObject(mapObject: MapObject) {
-    //         const width = this._canvas.nativeElement.clientWidth;
-    //         const height = this._canvas.nativeElement.clientHeight;
-    //         const coords = mapObject.coord.inCanvas;
-
-    //         Coordinate.offset.x -= (width / 2 - coords.x) * Coordinate.scale;
-    //         Coordinate.offset.y -= (height / 2 - coords.y) * Coordinate.scale;
-
-    //         this.update();
-    // }
-
-    // public getCenter() {
-    //         const width = this._canvas.nativeElement.clientWidth;
-    //         const height = this._canvas.nativeElement.clientHeight;
-
-    //         return {x: width / 2, y: height / 2};
-    // }
+    public toggleEntityPing(id: string) {
+        const entitiesLayer = this.mapLayers[1] as EntitiesLayer;
+        const entity = entitiesLayer.entities.find((entity) => {return entity.id == id});
+        if (entity) {
+            if (entity.hasAnimation) {
+                entity.stopAnimation();
+            } else {
+                entity.animatePing();
+            }
+        }
+    }
 
     public resize() {
         const width = this.canvas.nativeElement.clientWidth;
@@ -124,6 +123,21 @@ export class MapComponent implements AfterViewInit {
                 return;
             }
         };
+    }
+
+    private initializeDblClick() {
+        this.canvas.nativeElement.ondblclick = (ev: MouseEvent) => {
+            const cursorPosition = { x: ev.x - this.canvas.nativeElement.getBoundingClientRect().left, y: ev.y - this.canvas.nativeElement.getBoundingClientRect().top};
+            ev.preventDefault();
+
+            if (this.mapLayers[1].onDblClick(ev)) {
+                const entitiesLayer = this.mapLayers[1] as EntitiesLayer;
+                const mapPosition = entitiesLayer.getLocalPosition(ev);
+
+                this.onEntityDblClick.emit(entitiesLayer.contextEntityData!);
+                return;
+            }
+        }
     }
 
     private initializePan() {

@@ -34,7 +34,6 @@ export class EntitiesLayer extends MapLayer {
         this.entities.push(entity);
 
         entity.updateBackgroundImageData();
-        entity.animatePing();
     }
 
     public override onPanStart(e: HammerInput): boolean {
@@ -72,11 +71,32 @@ export class EntitiesLayer extends MapLayer {
         }
     }
 
-    public override onScroll(e: WheelEvent) {
+    public override onPinch(e: HammerInput, scale: number) {
+        // this.entities.forEach(entity => {
+        //     entity.updateBackgroundImageData();
+        // })
+    }
 
+    public override onScroll(e: WheelEvent) {
+        // this.entities.forEach(entity => {
+        //     entity.updateBackgroundImageData();
+        // })
     }
 
     public override onContextMenu(e: MouseEvent) {
+        const cursorPosition = { x: e.x - this.canvas.getBoundingClientRect().left, y: e.y - this.canvas.getBoundingClientRect().top };
+
+        for(const entity of this.entities) {
+            if(entity.isUnderCursor(cursorPosition)) {
+                this.contextEntityData = entity.getData();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public override onDblClick(e: MouseEvent): boolean {
         const cursorPosition = { x: e.x - this.canvas.getBoundingClientRect().left, y: e.y - this.canvas.getBoundingClientRect().top };
 
         for(const entity of this.entities) {
@@ -93,7 +113,7 @@ export class EntitiesLayer extends MapLayer {
         this.entities.forEach(entity => {
             entity.updateBackgroundImageData();
         })
-
+        
         this.entities.forEach(entity => {
             entity.render();
         })
