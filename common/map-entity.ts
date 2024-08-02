@@ -24,12 +24,44 @@ export class MapEntity {
 
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
+    private backgroundImageData?: ImageData;
 
 
     constructor(type: MapEntityType, canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
         this.type = type;
         this.canvas = canvas;
         this.ctx = ctx;
+    }
+
+    public animatePing() {
+        const duration = 1000;
+        const speed = 0.2;
+        const color = "#ff0000";
+        const start = Date.now();
+        const radius = 48;
+
+        const animationFrame = () => {
+            const px = MapLayer.origin.x + this.position.x * MapEntity.mapScale.x * MapLayer.scale;
+            const py = MapLayer.origin.y + this.position.y * MapEntity.mapScale.y * MapLayer.scale;
+            const factor = Math.min(0.5, MapLayer.scale) * 2;
+            const elapsed = Date.now() - start;
+            const progress = (elapsed % duration) / duration;
+
+            if (this.backgroundImageData) {
+                
+                this.ctx.putImageData(this.backgroundImageData, px - 48 * factor, py - 48 * factor);
+                this.ctx.beginPath();
+                this.ctx.arc(px, py, progress * radius, 0, Math.PI * 2, false);
+                this.ctx.fillStyle = `rgba(255, 0, 0, ${1 - progress})`;
+                this.ctx.fill();
+                this.ctx.closePath();
+
+                this.render();
+            }
+            requestAnimationFrame(animationFrame);
+        };
+
+        animationFrame();
     }
 
     public render() {
@@ -124,6 +156,15 @@ export class MapEntity {
         }
     }
 
+    public getBackgroundImageData(): ImageData {
+        const px = MapLayer.origin.x + this.position.x * MapEntity.mapScale.x * MapLayer.scale;
+        const py = MapLayer.origin.y + this.position.y * MapEntity.mapScale.y * MapLayer.scale;
+
+        const factor = Math.min(0.5, MapLayer.scale) * 2;
+
+        return this.ctx.getImageData(px - 48 * factor, py - 48 * factor, 96 * factor, 96 * factor);
+    }
+
     public getData(): MapEntityData {
         const data = new MapEntityData();
 
@@ -136,6 +177,8 @@ export class MapEntity {
         return data;
     }
 
-
+    public updateBackgroundImageData() {
+        this.backgroundImageData = this.getBackgroundImageData();
+    }
 }
 

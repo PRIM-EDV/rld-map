@@ -12,8 +12,7 @@ export class EntitiesLayer extends MapLayer {
     public entities: MapEntity[] = [];
     private entityFactory: MapEntityFactory;
     private draggedEntity?: MapEntity;
-    // private _hoveredMapObject: MapObject = null;
-
+    
     public contextEntityData?: MapEntityData;
     public onEntityMoved: Subject<MapEntityData> = new Subject<MapEntityData>();
 
@@ -33,6 +32,9 @@ export class EntitiesLayer extends MapLayer {
         entity.id = data.id;
         entity.position = data.position
         this.entities.push(entity);
+
+        entity.updateBackgroundImageData();
+        entity.animatePing();
     }
 
     public override onPanStart(e: HammerInput): boolean {
@@ -88,6 +90,10 @@ export class EntitiesLayer extends MapLayer {
     }
 
     public override render(): void {
+        this.entities.forEach(entity => {
+            entity.updateBackgroundImageData();
+        })
+
         this.entities.forEach(entity => {
             entity.render();
         })
