@@ -6,6 +6,7 @@ import { TerrainLayer } from "./map-layers/terrain.layer";
 import { ReplaySubject } from "rxjs";
 import { EntitiesLayer } from "./map-layers/entities.layer";
 import { MapEntityData } from "./common/map-entity-data";
+import { MapEntityStatus } from "proto/trx/trx.entity";
 
 @Component({
     selector: "rld-map",
@@ -20,10 +21,15 @@ export class MapComponent implements AfterViewInit {
     @Output() onEntityMoved = new EventEmitter<MapEntityData>();
 
     @ViewChild("map", { static: true }) private canvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild("entity", { static: true }) private entityCanvas!: ElementRef<HTMLCanvasElement>;
+    @ViewChild("entityAnimation", { static: true }) private entityAnimationCanvas!: ElementRef<HTMLCanvasElement>;
+
 
     public onResourcesReady: ReplaySubject<void> = new ReplaySubject<void>(1);
 
     private ctx!: CanvasRenderingContext2D;
+    private ctx2!: CanvasRenderingContext2D;
+    private ctx3!: CanvasRenderingContext2D;
     private mc!: HammerManager;
     private mapLayers: MapLayer[] = [];
 
@@ -31,6 +37,8 @@ export class MapComponent implements AfterViewInit {
 
     ngAfterViewInit() {
         this.ctx = this.canvas.nativeElement.getContext("2d")!;
+        this.ctx2 = this.entityCanvas.nativeElement.getContext("2d")!;
+        this.ctx3 = this.entityAnimationCanvas.nativeElement.getContext("2d")!;
         this.mc = new Hammer(this.canvas.nativeElement);
 
         this.initializeLayers();
@@ -71,6 +79,12 @@ export class MapComponent implements AfterViewInit {
             entity.position = data.position;
             entity.size = data.size;
             entity.text = data.text;
+
+            if (data.status == MapEntityStatus.ENTITY_STATUS_REGULAR) {
+                entity.hasAnimation = false;
+            } else if (data.status == MapEntityStatus.ENTITY_STATUS_COMBAT) {
+                entity.hasAnimation = true;
+            }
         } else {
             this.createMapEntity(data);
         }
@@ -82,9 +96,10 @@ export class MapComponent implements AfterViewInit {
         const entity = entitiesLayer.entities.find((entity) => {return entity.id == id});
         if (entity) {
             if (entity.hasAnimation) {
-                entity.stopAnimation();
+                entity.hasAnimation = false;
             } else {
-                entity.animatePing();
+                entity.hasAnimation = true;
+                console.log("ping")
             }
         }
     }
@@ -95,6 +110,12 @@ export class MapComponent implements AfterViewInit {
 
         this.canvas.nativeElement.width = width;
         this.canvas.nativeElement.height = height;
+
+        this.entityCanvas.nativeElement.width = width;
+        this.entityCanvas.nativeElement.height = height;
+
+        this.entityAnimationCanvas.nativeElement.width = width;
+        this.entityAnimationCanvas.nativeElement.height = height;
     }
 
     public update() {
@@ -219,7 +240,7 @@ export class MapComponent implements AfterViewInit {
 
     private initializeLayers() {
         const terrainLayer = new TerrainLayer(this.canvas.nativeElement, this.ctx);
-        const entitiesLayer = new EntitiesLayer(this.canvas.nativeElement, this.ctx);
+        const entitiesLayer = new EntitiesLayer(this.entityCanvas.nativeElement, this.ctx2, this.ctx3);
 
         entitiesLayer.onEntityMoved.subscribe((data) => {
             this.onEntityMoved.next(data);

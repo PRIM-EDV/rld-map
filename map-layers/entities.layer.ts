@@ -9,6 +9,8 @@ export class EntitiesLayer extends MapLayer {
     private ctx: CanvasRenderingContext2D;
     private mapScale = {x: 2.74, y: 2.5}
 
+    private ctxAnimation: CanvasRenderingContext2D;
+
     public entities: MapEntity[] = [];
     private entityFactory: MapEntityFactory;
     private draggedEntity?: MapEntity;
@@ -16,14 +18,16 @@ export class EntitiesLayer extends MapLayer {
     public contextEntityData?: MapEntityData;
     public onEntityMoved: Subject<MapEntityData> = new Subject<MapEntityData>();
 
-    constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+    constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, ctxAnimation: CanvasRenderingContext2D) {
         super();
 
         this.canvas = canvas;
         this.ctx = ctx;
+        this.ctxAnimation = ctxAnimation;
         this.entityFactory = new MapEntityFactory(this.canvas, this.ctx);
 
         this.resourceReadyState.next(true);
+        this.animatePing();
     }
 
     public createMapEntity(data: MapEntityData) {
@@ -33,7 +37,7 @@ export class EntitiesLayer extends MapLayer {
         entity.position = data.position
         this.entities.push(entity);
 
-        entity.updateBackgroundImageData();
+        // entity.updateBackgroundImageData();
     }
 
     public override onPanStart(e: HammerInput): boolean {
@@ -110,16 +114,37 @@ export class EntitiesLayer extends MapLayer {
     }
 
     public override render(): void {
-        this.entities.forEach(entity => {
-            entity.updateBackgroundImageData();
-        })
+
         
         this.entities.forEach(entity => {
             entity.render();
         })
+        // this.entities.forEach(entity => {
+        //     entity.updateBackgroundImageData();
+        // })
     }
 
     public onClick(pos: {x: number, y: number}) {
 
+    }
+
+    private animatePing() {
+        const duration = 1000;
+        const start = Date.now();
+
+        const animationFrame = () => {
+            const elapsed = Date.now() - start;
+            const progress = (elapsed % duration) / duration;
+            this.ctxAnimation.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            for (const entity of this.entities) {
+
+                if (entity.hasAnimation) {
+                    entity.animatePing(this.ctxAnimation, progress);
+                }
+            }
+            requestAnimationFrame(animationFrame);
+        };
+
+        animationFrame();
     }
 }

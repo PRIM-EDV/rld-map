@@ -35,38 +35,22 @@ export class MapEntity {
         this.ctx = ctx;
     }
 
-    public animatePing() {
-        const duration = 1000;
-        const start = Date.now();
+    public animatePing(ctx: CanvasRenderingContext2D, progress: number) {
+        // const duration = 1000;
+        // const start = Date.now();
 
-        const animationFrame = () => {
-            const px = MapLayer.origin.x + this.position.x * MapEntity.mapScale.x * MapLayer.scale;
-            const py = MapLayer.origin.y + this.position.y * MapEntity.mapScale.y * MapLayer.scale;
-            const factor = Math.min(0.5, MapLayer.scale) * 2;
-            const radius = 48 * factor;
-            const elapsed = Date.now() - start;
-            const progress = (elapsed % duration) / duration;
+        const px = MapLayer.origin.x + this.position.x * MapEntity.mapScale.x * MapLayer.scale;
+        const py = MapLayer.origin.y + this.position.y * MapEntity.mapScale.y * MapLayer.scale;
+        const factor = Math.min(0.5, MapLayer.scale) * 2;
+        const radius = 48 * factor;
+        // const elapsed = Date.now() - start;
+        // const progress = (elapsed % duration) / duration;
 
-            if (this.hasAnimation == false) {
-                return
-            }
-
-            if (this.backgroundImageData) {
-                
-                this.ctx.putImageData(this.backgroundImageData, px - 48 * factor, py - 48 * factor);
-                this.ctx.beginPath();
-                this.ctx.arc(px, py, progress * radius, 0, Math.PI * 2, false);
-                this.ctx.fillStyle = `rgba(255, 0, 0, ${1 - progress})`;
-                this.ctx.fill();
-                this.ctx.closePath();
-
-                this.render();
-            }
-            requestAnimationFrame(animationFrame);
-        };
-
-        this.hasAnimation = true;
-        animationFrame();
+        ctx.beginPath();
+        ctx.arc(px, py, progress * radius, 0, Math.PI * 2, false);
+        ctx.fillStyle = `rgba(255, 0, 0, ${1 - progress})`;
+        ctx.fill();
+        ctx.closePath();
     }
 
     public render() {
