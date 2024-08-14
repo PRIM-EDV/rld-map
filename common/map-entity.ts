@@ -61,6 +61,7 @@ export class MapEntity {
 
         if(this.type == MapEntityType.TYPE_FRIEND) {
             this.ctx.drawImage(MapEntity.unitIcons[this.size - 1], px - 24 * factor, py - 24 * factor, 48 * factor, 48 * factor);
+            this.ctx.textAlign = "center";
 
             this.ctx.font = '11px Fira Code';
             this.ctx.fillStyle = '#000000';

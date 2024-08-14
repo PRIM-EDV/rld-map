@@ -99,7 +99,6 @@ export class MapComponent implements AfterViewInit {
                 entity.hasAnimation = false;
             } else {
                 entity.hasAnimation = true;
-                console.log("ping")
             }
         }
     }
