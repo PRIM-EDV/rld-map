@@ -54,11 +54,9 @@ export class MapComponent implements AfterViewInit {
     public deleteMapEntity(id: string) {
         const entitiesLayer = this.mapLayers[1] as EntitiesLayer;
         const index = entitiesLayer.entities.findIndex((entity) => {return entity.id == id});
-          
+        console.log(index); 
         if (index) {
             const entity = entitiesLayer.entities[index];
-            
-            entity.stopAnimation();
             entitiesLayer.entities.splice(index, 1);
         }
 
